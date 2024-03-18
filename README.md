@@ -1,65 +1,87 @@
-# SoPra FS24 - Client Template with build pack
+# SoPra RESTful Service Template FS24
 
-## Getting started
+## Getting started with Spring Boot
+-   Documentation: https://docs.spring.io/spring-boot/docs/current/reference/html/index.html
+-   Guides: http://spring.io/guides
+    -   Building a RESTful Web Service: http://spring.io/guides/gs/rest-service/
+    -   Building REST services with Spring: https://spring.io/guides/tutorials/rest/
 
-Read and go through these Tutorials. It will make your life easier:)
+## Setup this Template with your IDE of choice
+Download your IDE of choice (e.g., [IntelliJ](https://www.jetbrains.com/idea/download/), [Visual Studio Code](https://code.visualstudio.com/), or [Eclipse](http://www.eclipse.org/downloads/)). Make sure Java 17 is installed on your system (for Windows, please make sure your `JAVA_HOME` environment variable is set to the correct version of Java).
 
-- Read the React [Docs](https://react.dev/learn)
-- Do this React [Getting Started](https://react.dev/learn/tutorial-tic-tac-toe) Tutorial (it doesn't assume any existing React knowledge)
-- Get an Understanding of [CSS](https://www.w3schools.com/Css/), [SCSS](https://sass-lang.com/documentation/syntax), and [HTML](https://www.w3schools.com/html/html_intro.asp)!
+### IntelliJ
+If you consider to use IntelliJ as your IDE of choice, you can make use of your free educational license [here](https://www.jetbrains.com/community/education/#students).
+1. File -> Open... -> SoPra server template
+2. Accept to import the project as a `gradle project`
+3. To build right click the `build.gradle` file and choose `Run Build`
 
-Next, there are two other technologies that you should look at:
+### VS Code
+The following extensions can help you get started more easily:
+-   `vmware.vscode-spring-boot`
+-   `vscjava.vscode-spring-initializr`
+-   `vscjava.vscode-spring-boot-dashboard`
+-   `vscjava.vscode-java-pack`
 
-* [react-router-dom](https://reactrouter.com/en/main/start/concepts) offers declarative routing for React. It is a collection of navigational components that fit nicely with the application. 
-* [react-hooks](https://blog.logrocket.com/using-hooks-react-router/) let you access the router's state and perform navigation from inside your components.
+**Note:** You'll need to build the project first with Gradle, just click on the `build` command in the _Gradle Tasks_ extension. Then check the _Spring Boot Dashboard_ extension if it already shows `soprafs24` and hit the play button to start the server. If it doesn't show up, restart VS Code and check again.
 
-## Prerequisites and Installation
-For your local development environment, you will need Node.js.\
-We urge you to install the exact version **v20.11.0** which comes with the npm package manager. You can download it [here](https://nodejs.org/download/release/v20.11.0/).\
-If you are confused about which download to choose, feel free to use these direct links:
+## Building with Gradle
+You can use the local Gradle Wrapper to build the application.
+-   macOS: `./gradlew`
+-   Linux: `./gradlew`
+-   Windows: `./gradlew.bat`
 
-- **MacOS:** [node-v20.11.0.pkg](https://nodejs.org/download/release/v20.11.0/node-v20.11.0.pkg)
-- **Windows 32-bit:** [node-v20.11.0-x86.msi](https://nodejs.org/download/release/v20.11.0/node-v20.11.0-x86.msi)
-- **Windows 64-bit:** [node-v20.11.0-x64.msi](https://nodejs.org/download/release/v20.11.0/node-v20.11.0-x64.msi)
-- **Linux:** [node-v20.11.0.tar.xz](https://nodejs.org/dist/v20.11.0/node-v20.11.0-linux-x64.tar.xz) (use this [installation guide](https://github.com/nodejs/help/wiki/Installation#how-to-install-nodejs-via-binary-archive-on-linux) if you are new to Linux)
-
-If you happen to have a package manager the following commands can be used:
-
-- **Homebrew:** `brew install node@20.11.0`
-- **Chocolatey:** `choco install nodejs-lts --version=20.11.0`
-
-After the installation, update the npm package manager to **10.4.0** by running ```npm install -g npm@10.4.0```\
-You can ensure the correct version of node and npm by running ```node -v``` and ```npm --version```, which should give you **v20.11.0** and **10.4.0** respectively.\
-Before you start your application for the first time, run this command to install all other dependencies, including React:
-
-```npm install```
-
-Next, you can start the app with:
-
-```npm run dev```
-
-Now you can open [http://localhost:3000](http://localhost:3000) to view it in the browser.\
-Notice that the page will reload if you make any edits. You will also see any lint errors in the console (use a Chrome-based browser).\
-The client will send HTTP requests to the server which can be found [here](https://github.com/HASEL-UZH/sopra-fs24-template-server).\
-In order for these requests to work, you need to install and start the server as well.
-
-### Testing
-Testing is optional, and you can run the tests with `npm run test`\
-This launches the test runner in an interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-> For macOS user running into a 'fsevents' error: https://github.com/jest-community/vscode-jest/issues/423
+More Information about [Gradle Wrapper](https://docs.gradle.org/current/userguide/gradle_wrapper.html) and [Gradle](https://gradle.org/docs/).
 
 ### Build
-Finally, `npm run build` builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance:\
-The build is minified, and the filenames include hashes.<br>
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+./gradlew build
+```
 
-## Learn More
+### Run
 
-To learn React, check out the [React documentation](https://react.dev/).
+```bash
+./gradlew bootRun
+```
 
+You can verify that the server is running by visiting `localhost:8080` in your browser.
 
-> Thanks to Lucas Pelloni Kyrill Hux and Marco Leder for working on the template.
+### Test
+
+```bash
+./gradlew test
+```
+
+### Development Mode
+You can start the backend in development mode, this will automatically trigger a new build and reload the application
+once the content of a file has been changed.
+
+Start two terminal windows and run:
+
+`./gradlew build --continuous`
+
+and in the other one:
+
+`./gradlew bootRun`
+
+If you want to avoid running all tests with every change, use the following command instead:
+
+`./gradlew build --continuous -xtest`
+
+## API Endpoint Testing with Postman
+We recommend using [Postman](https://www.getpostman.com) to test your API Endpoints.
+
+## Debugging
+If something is not working and/or you don't know what is going on. We recommend using a debugger and step-through the process step-by-step.
+
+To configure a debugger for SpringBoot's Tomcat servlet (i.e. the process you start with `./gradlew bootRun` command), do the following:
+
+1. Open Tab: **Run**/Edit Configurations
+2. Add a new Remote Configuration and name it properly
+3. Start the Server in Debug mode: `./gradlew bootRun --debug-jvm`
+4. Press `Shift + F9` or the use **Run**/Debug "Name of your task"
+5. Set breakpoints in the application where you need it
+6. Step through the process one step at a time
+
+## Testing
+Have a look here: https://www.baeldung.com/spring-boot-testing
