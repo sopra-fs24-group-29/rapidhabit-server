@@ -4,7 +4,7 @@ plugins {
     id 'java'
     id 'idea'
     id 'jacoco'
-    // id "org.sonarqube" version "4.4.1.3373"
+    id "org.sonarqube" version "4.4.1.3373"
 }
 
 group 'ch.uzh.ifi.hasel'
@@ -56,13 +56,13 @@ bootJar {
     archiveFileName = "${archiveBaseName.get()}.${archiveExtension.get()}"
 }
 
-/*sonar {
+sonar {
     properties {
         property "sonar.projectKey", "sopra-fs24-group-29_rapidhabit-server"
         property "sonar.organization", "sopra-fs24-group-29"
         property "sonar.host.url", "https://sonarcloud.io"
     }
-}*/
+}
 
 
 jacocoTestReport {
