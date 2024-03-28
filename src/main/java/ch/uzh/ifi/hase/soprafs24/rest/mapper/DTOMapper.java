@@ -1,7 +1,9 @@
 package ch.uzh.ifi.hase.soprafs24.rest.mapper;
 
+import ch.uzh.ifi.hase.soprafs24.entity.Group;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.*;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupPostDTO;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
@@ -23,6 +25,10 @@ public interface DTOMapper {
     @Mapping(source = "lastname", target = "lastname")
     @Mapping(source = "email", target = "email")
     User convertUserPostDTOtoEntity(UserPostDTO userPostDTO);
+
+    @Mapping(source = "name", target = "name")
+    @Mapping(source = "description", target = "description")
+    Group convertGroupPostDTOtoEntity(GroupPostDTO groupPostDTO);
 
     @Mapping(source = "id", target = "id")
     @Mapping(source = "firstname", target = "firstname")
