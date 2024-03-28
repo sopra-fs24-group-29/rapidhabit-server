@@ -1,13 +1,13 @@
 package ch.uzh.ifi.hase.soprafs24.rest.dto.group;
 
 public class GroupJoinPostDTO {
-    private String accesskey;
+    private String accessKey;
     public String getAccessKey() {
-        return accesskey;
+        return accessKey;
     }
 
     public void setAccessKey(String accessKey) {
-        this.accesskey = accesskey;
+        this.accessKey = accessKey;
     }
 
 }
