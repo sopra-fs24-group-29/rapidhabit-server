@@ -4,6 +4,7 @@ import ch.uzh.ifi.hase.soprafs24.entity.Group;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.*;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupPostDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupJoinPostDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs24.service.AuthService;
 import ch.uzh.ifi.hase.soprafs24.service.GroupService;
@@ -51,6 +52,22 @@ public class GroupController {
             System.out.println("Convert internal representation back to API ...");
             return ResponseEntity.status(HttpStatus.CREATED).body(createdGroup);
     }
+        else {
+            String msg = "Invalid request token!";
+            return ResponseEntity.badRequest().body(msg);
+        }
+    }
+
+    @PostMapping("/groups/{groupId}/users") // defines a method to for handling post methods for creating new users
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public ResponseEntity<?> createUser(@RequestHeader("Authorization") String authHeader, @RequestBody GroupJoinPostDTO groupJoinPostDTO, @PathVariable String groupId) {
+        if(authService.isTokenValid(authHeader)){
+            String userId = authService.getId(authHeader);
+            System.out.println("POST Request received. Convert group to internal representation ...");
+            groupService.addUserByAccessCode(groupId, userId, groupJoinPostDTO.getAccessKey());
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        }
         else {
             String msg = "Invalid request token!";
             return ResponseEntity.badRequest().body(msg);

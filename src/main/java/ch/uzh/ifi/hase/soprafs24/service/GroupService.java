@@ -8,9 +8,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 // import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 // import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.ArrayList;
@@ -62,15 +64,37 @@ public class GroupService {
         String accessCode = "AccessKey123";
         return accessCode;
     }
-    public Boolean accessCodeValid(String accessCode){
-        // implement logic for validating access key
-        return true;
+    public Boolean accessCodeValid(String accessCode, String groupId){
+        Group group = groupRepository.findById(groupId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No group with id " + groupId + " found."));
+        if(group.getAccessCode().equals(accessCode)){
+            return true;
+        }
+        else {return false;}
     }
 
-    public void addUserById(Group group, String userId, String accessCode){
-        // if accessCode is encoded, decode it first
-        if (accessCodeValid(accessCode)){
-            group.addUserId(userId);
+    public void addUserByAccessCode(String groupId, String userId, String accessCode) {
+        Group group = groupRepository.findById(groupId).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "No group with id " + groupId + " found."));
+
+        // check if user already exists
+        if(group.getUserIdList().contains(userId)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already exists in this group!");
         }
+
+        // check if accesskey is valid
+        // System.out.println(accessCode);
+        // System.out.println(group.getAccessCode());
+        if (!accessCodeValid(accessCode, groupId)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid access code for group " + groupId);
+        }
+
+        // add user
+        group.addUserId(userId);
+        groupRepository.save(group);
+    }
+
+
+    public Group getGroupById(String groupId){
+        return groupRepository.findById(groupId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No group with id " + groupId + " found."));
     }
 }

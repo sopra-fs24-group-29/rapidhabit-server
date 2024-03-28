@@ -19,5 +19,6 @@ public class GroupPostDTO {
     public void setDescription(String description) {
         this.description = description;
     }
+    
 
 }
