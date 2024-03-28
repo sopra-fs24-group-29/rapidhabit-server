@@ -1,9 +1,7 @@
 package ch.uzh.ifi.hase.soprafs24.rest.mapper;
 
 import ch.uzh.ifi.hase.soprafs24.entity.User;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.UserGetDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPostDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPutDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.*;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
@@ -21,19 +19,16 @@ import org.mapstruct.factory.Mappers;
 @Mapper
 public interface DTOMapper {
     DTOMapper INSTANCE = Mappers.getMapper(DTOMapper.class);
-    @Mapping(source = "username", target = "username")
+    @Mapping(source = "firstname", target = "firstname")
+    @Mapping(source = "lastname", target = "lastname")
+    @Mapping(source = "email", target = "email")
     User convertUserPostDTOtoEntity(UserPostDTO userPostDTO);
 
     @Mapping(source = "id", target = "id")
-    @Mapping(source = "username", target = "username")
-    @Mapping(source = "creationDate",target = "creationDate")
+    @Mapping(source = "firstname", target = "firstname")
+    @Mapping(source = "lastname", target = "lastname")
+    @Mapping(source = "email", target = "email")
     @Mapping(source = "status", target = "status")
-    @Mapping(source = "birthdate", target = "birthdate")
     UserGetDTO convertEntityToUserGetDTO(User user);
 
-    // Assuming this is the method causing issues, adjust as needed for your use case
-
-    @Mapping(target = "username", source = "username") // Map 'username' from DTO to 'name' in User if that's the intended mapping
-    @Mapping(source = "birthdate", target = "birthdate") // Ignore this if your UserPutDTO does not have a 'birthdate' field
-    User convertPutDTOtoEntity(UserPutDTO userPutDTO);
 }

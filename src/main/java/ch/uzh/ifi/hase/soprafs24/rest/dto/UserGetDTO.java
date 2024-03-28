@@ -8,32 +8,44 @@ import java.time.LocalDateTime;
 
 public class UserGetDTO {
 
-    private Long id;
-    private String username;
-    private LocalDateTime creationDate;
-
+    private String id;
+    private String firstname;
+    private String lastname;
+    private String email;
     private UserStatus status;
 
-    private LocalDate birthdate;
-
-    public Long getId() {
+    public String getId() {
         return id;
     }
-    public void setId(Long id) {
+
+    public void setId(String id) {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public LocalDateTime getCreationDate(){return creationDate;}
+    public String getFirstname() {
+        return firstname;
+    }
 
-    public void setCreationDate(LocalDateTime date){this.creationDate = date;}
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
 
     public UserStatus getStatus() {
         return status;
@@ -42,10 +54,5 @@ public class UserGetDTO {
     public void setStatus(UserStatus status) {
         this.status = status;
     }
-
-
-    public void setBirthdate(LocalDate birthdate){this.birthdate = birthdate;}
-
-    public LocalDate getBirthdate(){return birthdate;}
 }
 

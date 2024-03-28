@@ -60,8 +60,8 @@ public class UserController {
     @ResponseBody
     public ResponseEntity<?> createUser(@RequestBody UserPostDTO userPostDTO) {
         System.out.println("POST Request received. Convert user to internal representation ...");
-        if(userPostDTO.getUsername().equals("") || userPostDTO.getPassword().equals("")){
-            String msg = "Username or password must not be empty!";
+        if(userPostDTO.getFirstname().equals("") || userPostDTO.getLastname().equals("") || userPostDTO.getEmail().equals("") || userPostDTO.getPassword().equals("")){
+            String msg = "None of the fields must be empty!";
             return ResponseEntity.badRequest().body(msg);
         }
         // convert API user to internal representation
@@ -73,11 +73,13 @@ public class UserController {
         UserGetDTO userGetDTO = DTOMapper.INSTANCE.convertEntityToUserGetDTO(createdUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(userGetDTO);
     }
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody UserPostDTO userPostDTO){
-        String token = authService.userLogin(userPostDTO.getUsername(), userPostDTO.getPassword());
+    @PostMapping("/users/login")
+    public ResponseEntity<?> login(@RequestBody UserLoginPostDTO userLoginPostDTO){
+        String token = authService.userLogin(userLoginPostDTO.getEmail(), userLoginPostDTO.getPassword());
         if (token != null){
-            return ResponseEntity.ok(token);
+            Map<String, String> tokenMap = new HashMap<>();
+            tokenMap.put("token", token);
+            return ResponseEntity.ok(tokenMap);
         }
         else {
             String msg = "Incorrect username or password";
@@ -86,7 +88,7 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<?> getDetailedUser(@RequestHeader("Authorization") String authHeader, @PathVariable Long id) {
+    public ResponseEntity<?> getDetailedUser(@RequestHeader("Authorization") String authHeader, @PathVariable String id) {
         boolean isValid = authService.isTokenValid(authHeader);
         if (isValid) {
             User user = userService.getUserDetails(id);
@@ -103,45 +105,43 @@ public class UserController {
     }
 
     @GetMapping("/allowEdit")
-    public ResponseEntity<?> allowEdit(@RequestHeader("Authorization") String authHeader, @RequestParam Long id){
-        boolean isValid = authService.isTokenValid(authHeader);
+    public ResponseEntity<?> allowEdit(@RequestHeader("Authorization") String authHeaderToken, @RequestParam String id){
+        boolean isValid = authService.isTokenValid(authHeaderToken);
         if(isValid){
             User user = userService.getUserDetails(id);
             Boolean allowEdit = false;
-            if(authService.getUsername(authHeader).equals(user.getUsername())){
+            if(authService.getId(authHeaderToken).equals(user.getId())){
                 allowEdit = true;
             }
             return ResponseEntity.ok(allowEdit);
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();}
-    @PostMapping("/logout")
-    public ResponseEntity<?> logout(@RequestHeader("Authorization") String authHeader){
-        boolean isValid = authService.isTokenValid(authHeader);
-        String username = authService.getUsername(authHeader);
+    @PostMapping("/users/logout")
+    public ResponseEntity<?> logout(@RequestHeader("Authorization") String authHeaderToken){
+        boolean isValid = authService.isTokenValid(authHeaderToken);
+        String id = authService.getId(authHeaderToken);
         if(isValid){
-            authService.logout(authHeader);
-            userService.setUserStatusToOffline(username);
+            authService.logout(authHeaderToken);
+            userService.setUserStatusToOffline(id);
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
     }
     @PutMapping("/users/{id}")
-    public ResponseEntity<?> updateUser(@RequestHeader("Authorization") String authHeader, @RequestBody UserPutDTO userPutDTO, @PathVariable Long id) {
-        boolean isValid = authService.isTokenValid(authHeader);
+    public ResponseEntity<?> updateUser(@RequestHeader("Authorization") String authHeaderToken, @RequestBody UserPutDTO userPutDTO, @PathVariable String id) {
+        boolean isValid = authService.isTokenValid(authHeaderToken);
         if (isValid) {
-            if (userPutDTO.getUsername() == ""){
-                String msg = "Username must not be empty!";
+            if (userPutDTO.getEmail() == "" || userPutDTO.getFirstname() == "" || userPutDTO.getLastname() == ""){
+                String msg = "None of the fields must be empty!";
                 return ResponseEntity.badRequest().body(msg);
             }
             // check if the user with the token is the same user
-            String username_token = authService.getUsername(authHeader);
-            String username_to_edit =  userService.getUserDetails(id).getUsername();
-            if (username_token.equals(username_to_edit)){
-                User updatedUser = userService.updateUser(username_token, userPutDTO);
-                if (username_token != userPutDTO.getUsername()){
-                    authService.setUsername(authHeader, userPutDTO.getUsername());
-                }
-                return ResponseEntity.noContent().build();
+            String tokenId = authService.getId(authHeaderToken);
+            User userToEdit = userService.getUserDetails(id);
+            String userIdToEdit =  userToEdit.getId();
+            if (tokenId.equals(userIdToEdit)){
+                User updatedUser = userService.updateUser(tokenId, userIdToEdit, userPutDTO);
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
             }
             // Altering the data of other users is prohibited!
             ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

@@ -18,9 +18,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 // import org.springframework.security.crypto.password.PasswordEncoder;
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
 
 /**
  * User Service
@@ -51,17 +53,19 @@ public class UserService {
 
     public User createUser(User newUser) {
         checkIfUserExists(newUser);
+        newUser.onPrePersist();
         newUser.setStatus(UserStatus.OFFLINE);
         String hashedPassword = passwordEncoder.encode(newUser.getPassword());
         newUser.setPassword(hashedPassword);
         // saves the given entity but data is only persisted in the database once
         // flush() is called
         newUser = userRepository.save(newUser);
-        userRepository.flush();
+        // userRepository.flush();
 
         log.debug("Created Information for User: {}", newUser);
         return newUser;
     }
+
 
     /**
      * This is a helper method that will check the uniqueness criteria of the
@@ -74,52 +78,58 @@ public class UserService {
      * @see User
      */
     private void checkIfUserExists(User userToBeCreated) {
-        User userByUsername = userRepository.findByUsername(userToBeCreated.getUsername());
-        String baseErrorMessage = "The %s provided %s not unique. Therefore, the user could not be created!";
-        if (userByUsername != null) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, String.format(baseErrorMessage, "username", "is"));
+        Optional<User> existingUser = userRepository.findByEmail(userToBeCreated.getEmail());
+        if (existingUser.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "User with email " + userToBeCreated.getEmail() + " already exists.");
         }
     }
 
 
-    public boolean isUserExists(String username, String password) {
-        User userEntityOptional = userRepository.findByUsername(username);
-        if(userEntityOptional != null){
-            if(passwordEncoder.matches(password, userEntityOptional.getPassword())){
-                userEntityOptional.setStatus(UserStatus.ONLINE);
-                userRepository.save(userEntityOptional);
+
+    public boolean authenticateUser(String email, String password) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong username or password."));
+        if(passwordEncoder.matches(password, user.getPassword())){
+                user.setStatus(UserStatus.ONLINE);
+                userRepository.save(user);
                 return true;
             }
-        }
         return false;
     }
 
-    public User getUser(String userName) {
-        User userPostDTO = userRepository.findByUsername(userName);
-        if(userPostDTO != null){
-            return userPostDTO;
-        }
-        return null;
+    public User getUser(String email) {
+        return userRepository.findByEmail(email).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No user with email " + email + " found."));
     }
 
-    public User getUserDetails(Long id) {
+
+    public User getUserDetails(String id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No user with id " + id + " found."));
     }
 
 
-    public void setUserStatusToOffline(String username) {
-        User user = userRepository.findByUsername(username);
-        if (user != null) {
+    public void setUserStatusToOffline(String id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No user with id " + id + " found."));
             user.setStatus(UserStatus.OFFLINE); // Assuming you have a setStatus method and UserStatus enum
             userRepository.save(user); // This persists the updated status to the database
         }
-    }
-    public User updateUser(String username, UserPutDTO userPutDTO) {
-        User user = userRepository.findByUsername(username);
-        user.setUsername(userPutDTO.getUsername());
-        user.setBirthdate(userPutDTO.getBirthdate());
-        return userRepository.save(user);
+    public User updateUser(String tokenId, String userIdToEdit, UserPutDTO userPutDTO) {
+        User user = userRepository.findById(userIdToEdit).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No user with id " + userIdToEdit + " found."));
+        if (userPutDTO.getEmail().equals(user.getEmail())){
+            user.setFirstname(userPutDTO.getFirstname());
+            user.setLastname(userPutDTO.getLastname());
+            return userRepository.save(user);
+        }
+        else {
+            if(userRepository.findByEmail(userPutDTO.getEmail()).isPresent()){
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "Email is already used.");
+            }
+            else {
+                user.setFirstname(userPutDTO.getFirstname());
+                user.setLastname(userPutDTO.getLastname());
+                user.setEmail(userPutDTO.getEmail());
+                return userRepository.save(user);
+            }
+        }
     }
 
 

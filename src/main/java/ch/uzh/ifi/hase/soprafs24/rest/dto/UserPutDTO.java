@@ -6,28 +6,31 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 public class UserPutDTO {
-    private String username;
-    private LocalDate birthdate;
-
-    // Constructors
-    public UserPutDTO() {
-        // Default constructor
+    private String firstname;
+    private String lastname;
+    private String email;
+    public String getEmail() {
+        return email;
     }
 
-    // Getters and setters
-    public String getUsername() {
-        return username;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public String getFirstname() {
+        return firstname;
     }
 
-    public LocalDate getBirthdate() {
-        return birthdate;
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
     }
 
-    public void setBirthdate(LocalDate birthdate) {
-        this.birthdate = birthdate;
+    public String getLastname() {
+        return lastname;
     }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
 }

@@ -1,6 +1,8 @@
 package ch.uzh.ifi.hase.soprafs24.entity;
 
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -18,79 +20,64 @@ import java.time.LocalDateTime;
  * - unique = true -> this value must be unqiue across the database -> composes
  * the primary key
  */
-@Entity
-@Table(name = "USER")
-public class User implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
+@Document(collection = "Users")
+public class User {
     @Id
-    @GeneratedValue
-    private Long id;
+    private String id;
 
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime creationDate;
+    private String firstname;
+    private String lastname;
+    private String email;
 
-    @Column(nullable = false, unique = true)
-    private String username;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Column()
-    private String name;
-
-    @Column(nullable = false)
     private String password;
 
-
-    @Column(nullable = false)
     private UserStatus status;
 
-    @Column()
-    private LocalDate birthdate;
+    private LocalDateTime creationDate;
 
-    public Long getId() {
+    // Getter und Setter
+    public String getId() {
         return id;
     }
 
-    @PrePersist // executed when User is created
-    public void prePersist() {
-        this.creationDate = LocalDateTime.now();
-    }
-
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public String getPassword(){
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password){
+    public void setPassword(String password) {
         this.password = password;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-
     public LocalDateTime getCreationDate() {
         return creationDate;
-    }
-
-    public void setCreationDate(LocalDateTime creationDate) {
-        this.creationDate = creationDate;
     }
 
     public UserStatus getStatus() {
@@ -101,16 +88,9 @@ public class User implements Serializable {
         this.status = status;
     }
 
-    public void setBirthdate(LocalDate localDate){this.birthdate = localDate;}
-    public LocalDate getBirthdate(){return this.birthdate;}
-
-    public void emitInfo() {
-        System.out.println("User Information:");
-        System.out.println("ID: " + id);
-        System.out.println("Creation Date: " + creationDate);
-        System.out.println("Username: " + username);
-        System.out.println("Status: " + status);
+    public void onPrePersist() {
+        if (this.id == null) {
+            this.creationDate = LocalDateTime.now();
+        }
     }
-
-
 }
