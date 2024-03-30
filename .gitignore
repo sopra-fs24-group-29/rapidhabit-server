@@ -9,6 +9,7 @@
 /coverage
 
 # production
+.gradle/
 /build
 
 # misc

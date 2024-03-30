@@ -3,6 +3,7 @@ package ch.uzh.ifi.hase.soprafs24.controller;
 import ch.uzh.ifi.hase.soprafs24.entity.Group;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.*;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupGetDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupPostDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupJoinPostDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
@@ -13,6 +14,9 @@ import org.apache.catalina.SessionListener;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * User Controller
@@ -32,6 +36,28 @@ public class GroupController {
         this.groupService = groupService;
         this.authService = authService;
     }
+
+    @GetMapping("/groups")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public ResponseEntity<?> getAllGroups(@RequestHeader("Authorization") String authHeader) {
+        boolean isValid = authService.isTokenValid(authHeader);
+        if(isValid){
+            // fetch all users in the internal representation
+            List<Group> group = groupService.getGroups();
+            List<GroupGetDTO> groupGetDTOs = new ArrayList<>();
+
+            // convert each user to the API representation
+            for (Group group_ : group) {
+                groupGetDTOs.add(DTOMapper.INSTANCE.convertEntityToGroupGetDTO(group_));
+            }
+            return ResponseEntity.ok(groupGetDTOs);
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
+
 
     @PostMapping("/groups") // defines a method to for handling post methods for creating new users
     @ResponseStatus(HttpStatus.CREATED)

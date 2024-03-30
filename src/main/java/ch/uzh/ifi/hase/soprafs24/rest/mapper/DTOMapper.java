@@ -3,6 +3,7 @@ package ch.uzh.ifi.hase.soprafs24.rest.mapper;
 import ch.uzh.ifi.hase.soprafs24.entity.Group;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.*;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupGetDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupPostDTO;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
@@ -37,4 +38,5 @@ public interface DTOMapper {
     @Mapping(source = "status", target = "status")
     UserGetDTO convertEntityToUserGetDTO(User user);
 
+    GroupGetDTO convertEntityToGroupGetDTO(Group group);
 }
