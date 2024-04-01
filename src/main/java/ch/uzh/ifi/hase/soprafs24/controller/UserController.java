@@ -148,4 +148,27 @@ public class UserController {
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
+    @PutMapping("/users/{id}/password")
+    public ResponseEntity<?> updateUserPassword(@RequestHeader("Authorization") String authHeaderToken, @RequestBody UserPasswordPutDTO userPasswordPutDTO, @PathVariable String id) {
+        boolean isValid = authService.isTokenValid(authHeaderToken);
+        if (isValid) {
+            if (userPasswordPutDTO.getCurrentPassword() == "" || userPasswordPutDTO.getNewPassword() == ""){
+                String msg = "None of the fields must be empty!";
+                return ResponseEntity.badRequest().body(msg);
+            }
+            // check if the user with the token is the same user
+            String tokenId = authService.getId(authHeaderToken);
+            User userToEdit = userService.getUserDetails(id);
+            String userIdToEdit =  userToEdit.getId();
+            if (tokenId.equals(userIdToEdit)){
+                User updatedUser = userService.updateUserPassword(userIdToEdit, userPasswordPutDTO);
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            }
+            // Altering the data of other users is prohibited!
+            ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
+
 }

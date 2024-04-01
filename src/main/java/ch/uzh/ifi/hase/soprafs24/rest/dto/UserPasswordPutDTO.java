@@ -8,8 +8,15 @@ public class UserPasswordPutDTO {
         this.currentPassword = currentPassword;
     }
 
+    public String getCurrentPassword() {
+        return currentPassword;
+    }
+
     public void setNewPassword(String newPassword) {
         this.newPassword = newPassword;
     }
 
+    public String getNewPassword() {
+        return newPassword;
+    }
 }

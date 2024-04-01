@@ -4,6 +4,7 @@ import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
 // import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPostDTO; // wird verwendet um die User Daten aus der intern verwendeten DTO Representation zu lesen
+import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPasswordPutDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPostDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPutDTO;
 import org.slf4j.Logger;
@@ -85,7 +86,6 @@ public class UserService {
     }
 
 
-
     public boolean authenticateUser(String email, String password) {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong username or password."));
         if(passwordEncoder.matches(password, user.getPassword())){
@@ -132,6 +132,13 @@ public class UserService {
         }
     }
 
-
-
+    public User updateUserPassword(String userIdToEdit, UserPasswordPutDTO userPasswordPutDTO) {
+        User user = userRepository.findById(userIdToEdit).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No user with id " + userIdToEdit + " found."));
+        if (passwordEncoder.matches(userPasswordPutDTO.getCurrentPassword(), user.getPassword())){
+            String hashedPassword = passwordEncoder.encode(userPasswordPutDTO.getNewPassword());
+            user.setPassword(hashedPassword);
+            return userRepository.save(user);
+        }
+        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Current Password is false.");
+    }
 }
