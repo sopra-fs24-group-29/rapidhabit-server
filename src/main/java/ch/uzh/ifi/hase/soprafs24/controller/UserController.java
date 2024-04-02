@@ -170,5 +170,26 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<?> deleteUser(@RequestHeader("Authorization") String authHeaderToken, @RequestBody UserPasswordPutDTO userPasswordPutDTO, @PathVariable String id) {
+        boolean isValid = authService.isTokenValid(authHeaderToken);
+        if (isValid) {
+            if (userPasswordPutDTO.getCurrentPassword() == ""){
+                String msg = "Current password must not be empty!";
+                return ResponseEntity.badRequest().body(msg);
+            }
+            // Check if the user with the token is the same user
+            String tokenId = authService.getId(authHeaderToken);
+            User userToEdit = userService.getUserDetails(id);
+            String userIdToEdit = userToEdit.getId();
+            if (tokenId.equals(userIdToEdit)){
+                User delUser = userService.delUserPassword(userIdToEdit, userPasswordPutDTO);
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            }
+            // Altering the data of other users is prohibited!
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
 
 }

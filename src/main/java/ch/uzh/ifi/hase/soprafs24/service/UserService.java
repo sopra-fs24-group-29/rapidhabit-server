@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 // import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -140,5 +141,16 @@ public class UserService {
             return userRepository.save(user);
         }
         throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Current Password is false.");
+    }
+
+    public User delUserPassword(String userIdToEdit, UserPasswordPutDTO userPasswordPutDTO) {
+        User user = userRepository.findById(userIdToEdit).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No user with id " + userIdToEdit + " found."));
+        if (passwordEncoder.matches(userPasswordPutDTO.getCurrentPassword(), user.getPassword())) {
+            userRepository.delete(user);
+            return null;
+        }
+        else{
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Current Password is false.");
+        }
     }
 }
