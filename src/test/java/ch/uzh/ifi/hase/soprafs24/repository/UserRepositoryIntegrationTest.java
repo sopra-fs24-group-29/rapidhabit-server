@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -23,7 +25,7 @@ public class UserRepositoryIntegrationTest {
   public void findByName_success() {
     // given
     User user = new User();
-    user.setUsername("firstname@lastname");
+    user.setEmail("firstname@lastname");
     user.setStatus(UserStatus.OFFLINE);
     user.setPassword("password");
 
@@ -31,11 +33,11 @@ public class UserRepositoryIntegrationTest {
     entityManager.flush();
 
     // when
-    User found = userRepository.findByUsername(user.getUsername());
+    Optional<User> found = userRepository.findByEmail(user.getEmail());
 
     // then
     assertNotNull(found.getId());
-    assertEquals(found.getUsername(), user.getUsername());
+    assertEquals(found.getfirstname(), user.getFirstname());
     assertEquals(found.getStatus(), user.getStatus());
   }
 }

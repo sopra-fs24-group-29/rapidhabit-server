@@ -57,11 +57,11 @@ public class UserControllerTest {
     public void givenUsers_whenGetUsers_thenReturnJsonArray() throws Exception {
         // Given
         User user = new User();
-        user.setId(1L);
-        user.setUsername("Simon");
+        user.setId(String.valueOf(1L));
+        user.setFirstname("Simon");
+        user.setLastname("Hafner");
+        user.setEmail("Simon.hafner@uzh.ch");
         user.setStatus(UserStatus.ONLINE);
-        user.setCreationDate(LocalDateTime.parse("2024-03-05T23:31:05.781639"));
-        user.setBirthdate(null);
 
         List<User> allUsers = Collections.singletonList(user);
 
@@ -80,24 +80,23 @@ public class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].id", is(1)))
-                .andExpect(jsonPath("$[0].username", is("Simon")))
-                .andExpect(jsonPath("$[0].creationDate", is("2024-03-05T23:31:05.781639")))
-                .andExpect(jsonPath("$[0].status", is(UserStatus.ONLINE.toString())))
-                .andExpect(jsonPath("$[0].birthdate", is(nullValue())));
+                .andExpect(jsonPath("$[0].firstname", is("Simon")))
+                .andExpect(jsonPath("$[0].lastname", is("Hafner")))
+                .andExpect(jsonPath("$[0].email", is("Simon.hafner@uzh.ch")))
+                .andExpect(jsonPath("$[0].status", is(UserStatus.ONLINE.toString())));
     }
 
     @Test
     public void createUser_validInput_userCreated() throws Exception {
         // Given
         UserPostDTO newUser = new UserPostDTO();
-        newUser.setUsername("Simon");
+        newUser.setEmail("Simon.hafner@uzh.ch");
         newUser.setPassword("password123");
 
         User createdUser = new User();
-        createdUser.setId(1L);
-        createdUser.setUsername(newUser.getUsername());
+        createdUser.setId(String.valueOf(1L));
+        createdUser.setFirstname(newUser.getFirstname());
         createdUser.setStatus(UserStatus.OFFLINE);
-        createdUser.setCreationDate(LocalDateTime.parse("2024-03-05T23:31:05.781639"));
 
         // When UserService#createUser is called, return 'createdUser'
         given(userService.createUser(Mockito.any(User.class))).willReturn(createdUser);
@@ -111,21 +110,19 @@ public class UserControllerTest {
                         .content(newUserJson))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id", is(1)))
-                .andExpect(jsonPath("$.username", is("Simon")))
-                .andExpect(jsonPath("$.creationDate", is("2024-03-05T23:31:05.781639")))
-                .andExpect(jsonPath("$.status", is("OFFLINE")))
-                .andExpect(jsonPath("$.birthdate", is(nullValue())));
+                .andExpect(jsonPath("$.email", is("Simon")))
+                .andExpect(jsonPath("$.status", is("OFFLINE")));
     }
 
     @Test
     public void createUser_whenUsernameAlreadyExists() throws Exception {
         // given
         UserPostDTO userPostDTO = new UserPostDTO();
-        userPostDTO.setUsername("Simon");
+        userPostDTO.setEmail("Simon.hafner@uzh.ch");
         userPostDTO.setPassword("Password123");
 
         // Simulate that userService throws an exception when username already exists
-        Mockito.when(userService.createUser(Mockito.any(User.class))).thenThrow(new ResponseStatusException(HttpStatus.CONFLICT, "Username already exists"));
+        Mockito.when(userService.createUser(Mockito.any(User.class))).thenThrow(new ResponseStatusException(HttpStatus.CONFLICT, "Email already exists"));
 
         // Convert userPostDTO into a JSON string to pass into the post request
         String userPostDTOJson = asJsonString(userPostDTO);
@@ -236,6 +233,7 @@ public class UserControllerTest {
                         .content(updateUserJson))
                 .andExpect(status().isNotFound()); // Expects Status COde 404.
     }
+
 
 
 
