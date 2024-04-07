@@ -37,28 +37,28 @@ public class UserServiceIntegrationTest {
   @Test
   public void createUser_validInputs_success() {
      // given
-     assertNull(userRepository.findByUsername("testUsername"));
+     assertNull(userRepository.findByEmail("lukas.guebeli@uzh.ch"));
 
      User testUser = new User();
-     testUser.setUsername("testUsername");
-     testUser.setPassword("testPassword"); // Setze ein Passwort hier
+     testUser.setEmail("lukas.guebeli@uzh.ch");
+     testUser.setPassword("lukas.guebeli@uzh.ch"); // Setze ein Passwort hier
  
      // when
      User createdUser = userService.createUser(testUser);
  
      // then
      assertNotNull(createdUser.getId());
-     assertEquals(testUser.getUsername(), createdUser.getUsername());
+     assertEquals(testUser.getEmail(), createdUser.getEmail());
      assertEquals(UserStatus.OFFLINE, createdUser.getStatus());
   }
 
   @Test
   public void createUser_duplicateUsername_throwsException() {
-    assertNull(userRepository.findByUsername("testUsername"));
+    assertNull(userRepository.findByEmail("lukas.guebeli@uzh.ch"));
 
     User testUser = new User();
-    testUser.setUsername("testUsername");
-    testUser.setPassword("testPassword");
+    testUser.setEmail("lukas.guebeli@uzh.ch");
+    testUser.setPassword("lukas.guebeli@uzh.ch");
     
     // create the first test user
     User createdUser = userService.createUser(testUser);
@@ -67,7 +67,7 @@ public class UserServiceIntegrationTest {
     User testUser2 = new User();
 
     // change the name but forget about the username
-    testUser2.setUsername("testUsername");
+    testUser2.setEmail("lukas.guebeli@uzh.ch");
     testUser2.setPassword("testPassword");
 
     // check that an error is thrown

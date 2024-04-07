@@ -15,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.NoSuchElementException;
 
 @ControllerAdvice(annotations = RestController.class)
 public class GlobalExceptionAdvice extends ResponseEntityExceptionHandler {
@@ -39,5 +40,10 @@ public class GlobalExceptionAdvice extends ResponseEntityExceptionHandler {
     public ResponseStatusException handleException(Exception ex) {
         log.error("Default Exception Handler -> caught:", ex);
         return new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), ex);
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<String> handleNoSuchElementException(NoSuchElementException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 }

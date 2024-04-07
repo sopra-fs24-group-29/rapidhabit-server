@@ -18,20 +18,20 @@ public class DTOMapperTest {
   public void testCreateUser_fromUserPostDTO_toUser_success() {
     // create UserPostDTO
     UserPostDTO userPostDTO = new UserPostDTO();
-    userPostDTO.setUsername("username");
+    userPostDTO.setEmail("lukas.guebeli@uzh.ch");
 
     // MAP -> Create user
     User user = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
 
     // check content
-    assertEquals(userPostDTO.getUsername(), user.getUsername());
+    assertEquals(userPostDTO.getEmail(), user.getEmail());
   }
 
   @Test
   public void testGetUser_fromUser_toUserGetDTO_success() {
     // create User
     User user = new User();
-    user.setUsername("firstname@lastname");
+    user.setEmail("lukas.guebeli@uzh.ch");
     user.setStatus(UserStatus.OFFLINE);
 
     // MAP -> Create UserGetDTO
@@ -39,7 +39,7 @@ public class DTOMapperTest {
 
     // check content
     assertEquals(user.getId(), userGetDTO.getId());
-    assertEquals(user.getUsername(), userGetDTO.getUsername());
+    assertEquals(user.getEmail(), userGetDTO.getEmail());
     assertEquals(user.getStatus(), userGetDTO.getStatus());
   }
 }

@@ -30,6 +30,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -54,7 +55,7 @@ public class UserControllerTest {
   private AuthService authService;
 
     @Test
-    public void givenUsers_whenGetUsers_thenReturnJsonArray() throws Exception {
+    public void GET_users_givenUsers_whenGetUsers_thenReturnJsonArray() throws Exception {
         // Given
         User user = new User();
         user.setId(String.valueOf(1L));
@@ -79,7 +80,7 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].id", is(1)))
+                .andExpect(jsonPath("$[0].id", is("1")))
                 .andExpect(jsonPath("$[0].firstname", is("Simon")))
                 .andExpect(jsonPath("$[0].lastname", is("Hafner")))
                 .andExpect(jsonPath("$[0].email", is("Simon.hafner@uzh.ch")))
@@ -87,15 +88,19 @@ public class UserControllerTest {
     }
 
     @Test
-    public void createUser_validInput_userCreated() throws Exception {
+    public void POST_users_createUser_validInput_userCreated() throws Exception {
         // Given
         UserPostDTO newUser = new UserPostDTO();
+        newUser.setFirstname("Simon");
+        newUser.setLastname("Hafner");
         newUser.setEmail("Simon.hafner@uzh.ch");
         newUser.setPassword("password123");
 
         User createdUser = new User();
         createdUser.setId(String.valueOf(1L));
         createdUser.setFirstname(newUser.getFirstname());
+        createdUser.setEmail(newUser.getEmail());
+        createdUser.setLastname(newUser.getLastname());
         createdUser.setStatus(UserStatus.OFFLINE);
 
         // When UserService#createUser is called, return 'createdUser'
@@ -109,15 +114,19 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(newUserJson))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id", is(1)))
-                .andExpect(jsonPath("$.email", is("Simon")))
+                .andExpect(jsonPath("$.id", is("1")))
+                .andExpect(jsonPath("$.firstname", is("Simon")))
+                .andExpect(jsonPath("$.lastname", is("Hafner")))
+                .andExpect(jsonPath("$.email", is("Simon.hafner@uzh.ch")))
                 .andExpect(jsonPath("$.status", is("OFFLINE")));
     }
 
     @Test
-    public void createUser_whenUsernameAlreadyExists() throws Exception {
+    public void POST_users_createUser_whenUsernameAlreadyExists() throws Exception {
         // given
         UserPostDTO userPostDTO = new UserPostDTO();
+        userPostDTO.setFirstname("Simon");
+        userPostDTO.setLastname("Hafner");
         userPostDTO.setEmail("Simon.hafner@uzh.ch");
         userPostDTO.setPassword("Password123");
 
@@ -134,71 +143,74 @@ public class UserControllerTest {
                 .andExpect(status().isConflict());
     }
 
-    // Test for retrieving user details successfully with valid token
+    // Test for retrieving user details successfully with valid token.
     @Test
-    void givenUserIdAndValidToken_whenGetUserDetails_thenReturnsUser() throws Exception {
+    void GET_users_givenUserIdAndValidToken_whenGetUserDetails_thenReturnsUser() throws Exception {
         Long userId = 1L;
         User user = new User();
 
-        user.setId(userId);
-        user.setUsername("Simon");
-        user.setStatus(UserStatus.ONLINE);
-        user.setCreationDate(LocalDateTime.parse("2024-03-05T23:31:05.781639"));
-        user.setBirthdate(null);
+        user.setId(String.valueOf(1L));
+        user.setFirstname("Simon");
+        user.setLastname("Hafner");
+        user.setEmail("Simon.hafner@uzh.ch");
+        user.setPassword("Password123");
 
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
 
         when(authService.isTokenValid(token)).thenReturn(true);
-        when(userService.getUserDetails(userId)).thenReturn(user);
+        when(userService.getUserDetails(String.valueOf(userId))).thenReturn(user);
 
         mockMvc.perform(get("/users/{id}", userId)
                         .header("Authorization", token)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(userId.intValue())))
-                .andExpect(jsonPath("$.username", is("Simon")))
-                .andExpect(jsonPath("$.creationDate", is("2024-03-05T23:31:05.781639")))
-                .andExpect(jsonPath("$.status", is("ONLINE")))
-                .andExpect(jsonPath("$.birthdate", is(nullValue())));
+                .andExpect(jsonPath("$.id", is("1")))
+                .andExpect(jsonPath("$.firstname", is("Simon")))
+                .andExpect(jsonPath("$.lastname", is("Hafner")))
+                .andExpect(jsonPath("$.email", is("Simon.hafner@uzh.ch")));
     }
 
     // Test for user not found with valid token
     @Test
-    void givenUserIdAndValidToken_whenGetUserDetails_thenReturnsNotFound() throws Exception {
-        Long userId = 1L;
+    void GET_users_givenUserIdAndValidToken_whenGetUserDetails_thenReturnsNotFound() throws Exception {
+        Long userId = 999L;
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
 
+        User user = new User();
+        user.setId(String.valueOf(999L));
+
         when(authService.isTokenValid(token)).thenReturn(true);
+        when(userService.getUserDetails(String.valueOf(userId))).thenThrow(new NoSuchElementException("User with id " + userId + " not found"));
 
         mockMvc.perform(get("/users/{id}", userId)
                         .header("Authorization", token)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error").value("User with id " + userId + " not found"));
     }
 
     @Test
-    public void updateUser_ValidUserAndToken_UpdatesUser() throws Exception {
+    public void PUT_usersID_updateUser_ValidUserAndToken_UpdatesUser() throws Exception {
         // Given
         Long userId = 1L;
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
-        String usernameUpdate = "Simon";
-        String birthdateUpdate = "1994-06-16";
+        String firstnameUpdate = "Lukas";
+        String emailUpdate = "lukas.guebeli@uzh.ch";
+        String lastnameUpdate = "guebeli";
 
         // Mocking a user object within the database layer
         User mockUser = new User();
-        mockUser.setId(userId);
-        mockUser.setUsername(usernameUpdate);
-        mockUser.setBirthdate(LocalDate.of(1994, 6, 16)); // Datum anpassen, falls erforderlich
-        mockUser.setStatus(UserStatus.ONLINE); // oder anderer Status, falls benötigt
-        mockUser.setCreationDate(LocalDateTime.now());
+        mockUser.setId(String.valueOf(userId));
+        mockUser.setFirstname(firstnameUpdate);
+        mockUser.setEmail(emailUpdate);
+        mockUser.setLastname(lastnameUpdate);
+
+        // Write update information into JSON file for PUT request
+        String updateUserJson = "{\"firstname\":\"" + firstnameUpdate + "\",\"eMail\":\"" + emailUpdate + "\",\"lastname\":\"" + lastnameUpdate + "\"}";
 
         // Service Layer Mocks
         when(authService.isTokenValid(token)).thenReturn(true);
-        when(authService.getUsername(token)).thenReturn(usernameUpdate);
-        when(userService.getUserDetails(userId)).thenReturn(mockUser); // Stelle sicher, dass ein User-Objekt zurückgegeben wird
-
-        // Write update information into JSON file for PUT request
-        String updateUserJson = "{\"username\":\"" + usernameUpdate + "\",\"birthdate\":\"" + birthdateUpdate + "\"}";
+        when(userService.getUserDetails(String.valueOf(userId))).thenReturn(mockUser); // Stelle sicher, dass ein User-Objekt zurückgegeben wird
 
         // When & Then
         mockMvc.perform(put("/users/{id}", userId)
@@ -211,20 +223,20 @@ public class UserControllerTest {
 
 
     @Test
-    public void updateUser_InvalidUserId_ReturnsNotFound() throws Exception {
+    public void PUT_usersID_updateUser_InvalidUserId_ReturnsNotFound() throws Exception {
         // Given
         Long invalidUserId = 2L;
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
-        String usernameUpdate = "SimonUpdate";
-        String birthdateUpdate = "1990-01-01";
+        String firstnameUpdate = "Lukas";
+        String emailUpdate = "lukas.guebeli@uzh.ch";
+        String lastnameUpdate = "guebeli";
 
         // Writing update information into JSON
-        String updateUserJson = "{\"username\":\"" + usernameUpdate + "\",\"birthdate\":\"" + birthdateUpdate + "\"}";
+        String updateUserJson = "{\"firstname\":\"" + firstnameUpdate + "\",\"eMail\":\"" + emailUpdate + "\",\"lastname\":\"" + lastnameUpdate + "\"}";
 
         // Service Layer Mocks
         when(authService.isTokenValid(token)).thenReturn(true);
-        when(authService.getUsername(token)).thenReturn(usernameUpdate);
-        when(userService.getUserDetails(invalidUserId)).thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "No user with id " + invalidUserId + " found."));
+        when(userService.getUserDetails(String.valueOf(invalidUserId))).thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "No user with id " + invalidUserId + " found."));
 
         // When & Then
         mockMvc.perform(put("/users/{id}", invalidUserId)

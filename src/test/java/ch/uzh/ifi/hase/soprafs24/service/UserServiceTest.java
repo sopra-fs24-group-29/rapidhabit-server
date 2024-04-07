@@ -12,6 +12,8 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class UserServiceTest {
@@ -35,8 +37,8 @@ public class UserServiceTest {
 
     // given
     testUser = new User();
-    testUser.setId(1L);
-    testUser.setUsername("testUsername");
+    testUser.setId(String.valueOf(1L));
+    testUser.setEmail("lukas.guebeli@uzh.ch");
 
     // when -> any object is being save in the userRepository -> return the dummy
     // testUser
@@ -47,11 +49,11 @@ public class UserServiceTest {
     public void createUser_validInputs_success() {
         // Given
         User newUser = new User();
-        newUser.setUsername("newUsername");
+        newUser.setEmail("lukas.guebeli@uzh.ch");
         newUser.setPassword("newPassword"); // Assume the service hashes this
         User savedUser = new User();
-        savedUser.setId(1L);
-        savedUser.setUsername("newUsername");
+        savedUser.setId(String.valueOf(1L));
+        savedUser.setEmail("lukas.guebeli@uzh.ch");
         savedUser.setStatus(UserStatus.OFFLINE); // Assuming default status is OFFLINE
         Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(savedUser);
 
@@ -61,7 +63,7 @@ public class UserServiceTest {
         // Then
         Mockito.verify(userRepository, Mockito.times(1)).save(Mockito.any(User.class));
         assertNotNull(createdUser.getId());
-        assertEquals("newUsername", createdUser.getUsername());
+        assertEquals("lukas.guebeli@uzh.ch", createdUser.getEmail());
         assertEquals(UserStatus.OFFLINE, createdUser.getStatus());
     }
 
@@ -69,7 +71,7 @@ public class UserServiceTest {
   @Test
   public void createUser_duplicateName_throwsException() {
     // when -> setup additional mocks for UserRepository
-      Mockito.when(userRepository.findByUsername("testUsername")).thenReturn(testUser);
+      Mockito.when(userRepository.findByEmail("lukas.guebeli@uzh.ch")).thenReturn(Optional.ofNullable(testUser));
 
     // then -> attempt to create second user with same user -> check that an error
     // is thrown
@@ -80,7 +82,7 @@ public class UserServiceTest {
   public void createUser_duplicateInputs_throwsException() {
 
     // when -> setup additional mocks for UserRepository
-      Mockito.when(userRepository.findByUsername("testUsername")).thenReturn(testUser);
+      Mockito.when(userRepository.findByEmail("lukas.guebeli@uzh.ch")).thenReturn(Optional.ofNullable(testUser));
 
     // then -> attempt to create second user with same user -> check that an error
     // is thrown
