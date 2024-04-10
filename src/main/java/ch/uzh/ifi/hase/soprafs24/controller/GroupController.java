@@ -1,16 +1,13 @@
 package ch.uzh.ifi.hase.soprafs24.controller;
 
 import ch.uzh.ifi.hase.soprafs24.entity.Group;
-import ch.uzh.ifi.hase.soprafs24.entity.User;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.*;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupGetDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupPostDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupJoinPostDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupPutDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs24.service.AuthService;
 import ch.uzh.ifi.hase.soprafs24.service.GroupService;
-import ch.uzh.ifi.hase.soprafs24.service.UserService;
-import org.apache.catalina.SessionListener;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -59,14 +56,14 @@ public class GroupController {
     }
 
 
-    @PostMapping("/groups") // defines a method to for handling post methods for creating new users
+    @PostMapping("/groups") // defines a method to for handling post methods for creating new groups
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public ResponseEntity<?> createUser(@RequestHeader("Authorization") String authHeader, @RequestBody GroupPostDTO groupPostDTO) {
+    public ResponseEntity<?> createGroup(@RequestHeader("Authorization") String authHeader, @RequestBody GroupPostDTO groupPostDTO) {
         if(authService.isTokenValid(authHeader)){
             String userId = authService.getId(authHeader);
             System.out.println("POST Request received. Convert group to internal representation ...");
-            if(groupPostDTO.getName().equals("")){
+            if(groupPostDTO.getName().isEmpty()){
                 String msg = "Group name must not be empty!";
                 return ResponseEntity.badRequest().body(msg);
             }
@@ -99,4 +96,29 @@ public class GroupController {
             return ResponseEntity.badRequest().body(msg);
         }
     }
+
+    @PutMapping("/groups/{groupId}") // defines a method to for handling post methods for creating new users
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public ResponseEntity<?> updateGroup(@RequestHeader("Authorization") String authHeader, @RequestBody GroupPutDTO groupPutDTO, @PathVariable String groupId) {
+        if (authService.isTokenValid(authHeader)) {
+            String userID = authService.getId(authHeader);
+            System.out.println("PUT Request received. Convert group to internal representation ...");
+            if (groupPutDTO.getName().isEmpty()) {
+                String msg = "Group name must not be empty!";
+                return ResponseEntity.badRequest().body(msg);
+            }
+
+            Group groupInput = DTOMapper.INSTANCE.convertGroupPutDTOtoEntity(groupPutDTO);
+            System.out.println("Update group ...");
+
+            Group updateGroup = groupService.updateGroup(groupInput, groupId);
+            System.out.println("Convert internal representation back to API ...");
+            return ResponseEntity.status(HttpStatus.OK).body(updateGroup);
+        }
+        else {
+                String msg = "Invalid request token!";
+                return ResponseEntity.badRequest().body(msg);
+            }
+        }
 }

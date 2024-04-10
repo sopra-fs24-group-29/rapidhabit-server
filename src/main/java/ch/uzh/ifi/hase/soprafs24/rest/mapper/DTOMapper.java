@@ -5,6 +5,7 @@ import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.*;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupGetDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupPostDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupPutDTO;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
@@ -30,6 +31,10 @@ public interface DTOMapper {
     @Mapping(source = "name", target = "name")
     @Mapping(source = "description", target = "description")
     Group convertGroupPostDTOtoEntity(GroupPostDTO groupPostDTO);
+
+    @Mapping(source = "name", target = "name")
+    @Mapping(source = "description", target = "description")
+    Group convertGroupPutDTOtoEntity(GroupPutDTO groupPutDTO);
 
     @Mapping(source = "id", target = "id")
     @Mapping(source = "firstname", target = "firstname")

@@ -97,4 +97,11 @@ public class GroupService {
     public Group getGroupById(String groupId){
         return groupRepository.findById(groupId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No group with id " + groupId + " found."));
     }
+
+    public Group updateGroup(Group groupInput, String groupId) {
+        Group group = groupRepository.findById(groupId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No group with id " + groupId + " found."));
+        group.setName(groupInput.getName());
+        group.setDescription(groupInput.getDescription());
+        return groupRepository.save(group);
+    }
 }

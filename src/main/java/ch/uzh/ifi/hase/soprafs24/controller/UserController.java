@@ -5,7 +5,6 @@ import ch.uzh.ifi.hase.soprafs24.rest.dto.*;
 import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs24.service.AuthService;
 import ch.uzh.ifi.hase.soprafs24.service.UserService;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -60,7 +59,7 @@ public class UserController {
     @ResponseBody
     public ResponseEntity<?> createUser(@RequestBody UserPostDTO userPostDTO) {
         System.out.println("POST Request received. Convert user to internal representation ...");
-        if(userPostDTO.getFirstname().equals("") || userPostDTO.getLastname().equals("") || userPostDTO.getEmail().equals("") || userPostDTO.getPassword().equals("")){
+        if(userPostDTO.getFirstname().isEmpty() || userPostDTO.getLastname().isEmpty() || userPostDTO.getEmail().isEmpty() || userPostDTO.getPassword().isEmpty()){
             String msg = "None of the fields must be empty!";
             return ResponseEntity.badRequest().body(msg);
         }
