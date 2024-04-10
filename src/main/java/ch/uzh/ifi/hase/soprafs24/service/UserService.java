@@ -143,7 +143,7 @@ public class UserService {
         throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Current Password is false.");
     }
 
-    public User delUserPassword(String userIdToEdit, UserPasswordPutDTO userPasswordPutDTO) {
+    public User delUser(String userIdToEdit, UserPasswordPutDTO userPasswordPutDTO) {
         User user = userRepository.findById(userIdToEdit).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No user with id " + userIdToEdit + " found."));
         if (passwordEncoder.matches(userPasswordPutDTO.getCurrentPassword(), user.getPassword())) {
             userRepository.delete(user);

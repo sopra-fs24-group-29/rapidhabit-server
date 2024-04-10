@@ -2,6 +2,7 @@ package ch.uzh.ifi.hase.soprafs24.controller;
 
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPasswordPutDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPostDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPutDTO;
 import ch.uzh.ifi.hase.soprafs24.service.UserService;
@@ -169,6 +170,36 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.lastname", is("Hafner")))
                 .andExpect(jsonPath("$.email", is("Simon.hafner@uzh.ch")));
     }
+
+    @Test
+    void DELETE_users_givenUserIdAndValidToken_whenDeleteUser_thenReturnsNoContent() throws Exception {
+        Long userId = 1L;
+        User user = new User();
+
+        user.setId(String.valueOf(userId));
+        user.setFirstname("Simon");
+        user.setLastname("Hafner");
+        user.setEmail("Simon.hafner@uzh.ch");
+        user.setPassword("Password123");
+
+        String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
+        String userIdToEdit = user.getId();
+
+        UserPasswordPutDTO expectedDTO = new UserPasswordPutDTO();
+        expectedDTO.setCurrentPassword("Password123");
+
+        when(authService.isTokenValid(token)).thenReturn(true);
+        when(userService.delUser(userIdToEdit, expectedDTO)).thenReturn(user);
+
+        // Perform the DELETE request
+        mockMvc.perform(delete("/users/{id}", userId)
+                        .header("Authorization", token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"currentPassword\":\"Password123\"}"))
+                .andExpect(status().isNoContent());
+    }
+
+
 
     // Test for user not found with valid token
     @Test

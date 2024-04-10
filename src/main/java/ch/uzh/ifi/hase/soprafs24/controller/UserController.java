@@ -183,7 +183,7 @@ public class UserController {
             User userToEdit = userService.getUserDetails(id);
             String userIdToEdit = userToEdit.getId();
             if (tokenId.equals(userIdToEdit)){
-                User delUser = userService.delUserPassword(userIdToEdit, userPasswordPutDTO);
+                User del_User = userService.delUser(userIdToEdit, userPasswordPutDTO);
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
             }
             // Altering the data of other users is prohibited!
