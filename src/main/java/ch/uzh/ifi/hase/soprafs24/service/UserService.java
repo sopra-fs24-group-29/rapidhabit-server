@@ -4,14 +4,14 @@ import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
 // import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPostDTO; // wird verwendet um die User Daten aus der intern verwendeten DTO Representation zu lesen
-import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPasswordPutDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPostDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPutDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.user.UserPasswordPutDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.user.UserPostDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.user.UserPutDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.user.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 // import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,10 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 // import org.springframework.security.crypto.password.PasswordEncoder;
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 
 /**
@@ -47,7 +45,6 @@ public class UserService {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
-
 
     public List<User> getUsers() {
         return this.userRepository.findAll();
@@ -86,7 +83,6 @@ public class UserService {
         }
     }
 
-
     public boolean authenticateUser(String email, String password) {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong username or password."));
         if(passwordEncoder.matches(password, user.getPassword())){
@@ -101,12 +97,10 @@ public class UserService {
         return userRepository.findByEmail(email).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No user with email " + email + " found."));
     }
 
-
     public User getUserDetails(String id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No user with id " + id + " found."));
     }
-
 
     public void setUserStatusToOffline(String id) {
         User user = userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No user with id " + id + " found."));

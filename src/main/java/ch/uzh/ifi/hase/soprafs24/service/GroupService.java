@@ -42,7 +42,6 @@ public class GroupService {
         this.encoder = encoder;
     }
 
-
     public List<Group> getGroups() {
         return this.groupRepository.findAll();
     }
@@ -92,7 +91,6 @@ public class GroupService {
         group.addUserId(userId);
         groupRepository.save(group);
     }
-
 
     public Group getGroupById(String groupId){
         return groupRepository.findById(groupId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No group with id " + groupId + " found."));

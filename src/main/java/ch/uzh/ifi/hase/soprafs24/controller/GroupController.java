@@ -2,6 +2,8 @@ package ch.uzh.ifi.hase.soprafs24.controller;
 
 import ch.uzh.ifi.hase.soprafs24.entity.Group;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupGetDTO;
+import ch.uzh.ifi.hase.soprafs24.entity.User;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.user.*;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupPostDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupJoinPostDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupPutDTO;

@@ -1,26 +1,13 @@
-package ch.uzh.ifi.hase.soprafs24.rest.dto;
+package ch.uzh.ifi.hase.soprafs24.rest.dto.user;
 
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
-
-public class UserGetDTO {
-
-    private String id;
+public class UserPostDTO {
     private String firstname;
     private String lastname;
     private String email;
-    private UserStatus status;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
+    private String password;
 
     public String getEmail() {
         return email;
@@ -47,12 +34,10 @@ public class UserGetDTO {
     }
 
 
-    public UserStatus getStatus() {
-        return status;
+    public String getPassword(){return password;}
+
+    public void setPassword(String password){
+        this.password = password;
     }
 
-    public void setStatus(UserStatus status) {
-        this.status = status;
-    }
 }
-

@@ -54,8 +54,6 @@ public class AuthService {
         return false;
     }
 
-
-
     public String getId(String token) {
         if(tokenCache != null && token != null){
             String id = tokenCache.get(token);
