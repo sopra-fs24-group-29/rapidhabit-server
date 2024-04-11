@@ -130,7 +130,7 @@ public class UserController {
     public ResponseEntity<?> updateUser(@RequestHeader("Authorization") String authHeaderToken, @RequestBody UserPutDTO userPutDTO, @PathVariable String id) {
         boolean isValid = authService.isTokenValid(authHeaderToken);
         if (isValid) {
-            if (userPutDTO.getEmail() == "" || userPutDTO.getFirstname() == "" || userPutDTO.getLastname() == ""){
+            if (userPutDTO.getEmail().isEmpty() || userPutDTO.getFirstname().isEmpty() || userPutDTO.getLastname().isEmpty()){
                 String msg = "None of the fields must be empty!";
                 return ResponseEntity.badRequest().body(msg);
             }
@@ -151,7 +151,7 @@ public class UserController {
     public ResponseEntity<?> updateUserPassword(@RequestHeader("Authorization") String authHeaderToken, @RequestBody UserPasswordPutDTO userPasswordPutDTO, @PathVariable String id) {
         boolean isValid = authService.isTokenValid(authHeaderToken);
         if (isValid) {
-            if (userPasswordPutDTO.getCurrentPassword() == "" || userPasswordPutDTO.getNewPassword() == ""){
+            if (userPasswordPutDTO.getCurrentPassword().isEmpty() || userPasswordPutDTO.getNewPassword().isEmpty()){
                 String msg = "None of the fields must be empty!";
                 return ResponseEntity.badRequest().body(msg);
             }
@@ -173,7 +173,7 @@ public class UserController {
     public ResponseEntity<?> deleteUser(@RequestHeader("Authorization") String authHeaderToken, @RequestBody UserPasswordPutDTO userPasswordPutDTO, @PathVariable String id) {
         boolean isValid = authService.isTokenValid(authHeaderToken);
         if (isValid) {
-            if (userPasswordPutDTO.getCurrentPassword() == ""){
+            if (userPasswordPutDTO.getCurrentPassword().isEmpty()){
                 String msg = "Current password must not be empty!";
                 return ResponseEntity.badRequest().body(msg);
             }

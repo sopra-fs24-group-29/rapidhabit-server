@@ -233,26 +233,77 @@ public class UserControllerTest {
 
     @Test //PUT Mapping "/users/ID" - CODE 404 Not Found (error)
     public void PUT_usersID_updateUser_InvalidUserId_ReturnsNotFound() throws Exception {
-        // Given
         Long invalidUserId = 2L;
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
         String firstnameUpdate = "Lukas";
         String emailUpdate = "lukas.guebeli@uzh.ch";
         String lastnameUpdate = "guebeli";
 
-        // Writing update information into JSON
         String updateUserJson = "{\"firstname\":\"" + firstnameUpdate + "\",\"eMail\":\"" + emailUpdate + "\",\"lastname\":\"" + lastnameUpdate + "\"}";
 
-        // Service Layer Mocks
         when(authService.isTokenValid(token)).thenReturn(true);
         when(userService.getUserDetails(String.valueOf(invalidUserId))).thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "No user with id " + invalidUserId + " found."));
 
-        // When & Then
         mockMvc.perform(put("/users/{id}", invalidUserId)
                         .header("Authorization", token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(updateUserJson))
-                .andExpect(status().isNotFound()); // Expects Status COde 404.
+                .andExpect(status().isNotFound());
+    }
+
+    @Test //PUT Mapping "/users/ID" - CODE 401 Unauthorized (error)
+    public void PUT_usersID_updateUser_InvalidToken_ReturnsUnauthorized() throws Exception {
+        Long userId = 2L;
+        String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
+        String firstnameUpdate = "Lukas";
+        String emailUpdate = "lukas.guebeli@uzh.ch";
+        String lastnameUpdate = "guebeli";
+
+        String updateUserJson = "{\"firstname\":\"" + firstnameUpdate + "\",\"eMail\":\"" + emailUpdate + "\",\"lastname\":\"" + lastnameUpdate + "\"}";
+
+        when(authService.isTokenValid(token)).thenReturn(false);
+
+        mockMvc.perform(put("/users/{id}", userId)
+                        .header("Authorization", token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(updateUserJson))
+                .andExpect(status().isUnauthorized());
+    }
+
+
+    @Test //PUT Mapping "/users/login" - CODE 200 OK (pass)
+    public void PUT_usersLogin_valid_ReturnsToken() throws Exception {
+
+    }
+
+    @Test //PUT Mapping "/users/login" - CODE 404 NotFound (error)
+    public void PUT_usersLogin_Invalid_ReturnsNotFound() throws Exception {
+
+    }
+
+    @Test //PUT Mapping "/users/logout" - CODE 200 OK (pass)
+    public void PUT_usersLogout_valid() throws Exception {
+
+    }
+
+    @Test //PUT Mapping "/users/logout" - CODE 404 NotFound (error)
+    public void PUT_usersLogout_Invalid_ReturnsNotFound() throws Exception {
+
+    }
+
+    @Test //PUT Mapping "/users/ID/password" - CODE 204 NoContent (pass)
+    public void PUT_usersPasswordChange_valid_ReturnsNoContent() throws Exception {
+
+    }
+
+    @Test //PUT Mapping "/users/ID/password" - CODE 404 NotFound (error)
+    public void PUT_usersPasswordChange_Invalid_ReturnsNotFound() throws Exception {
+
+    }
+
+    @Test //PUT Mapping "/users/ID/password" - CODE 401 Unauthorized (error)
+    public void PUT_usersPasswordChange_Invalid_ReturnsUnauthorized() throws Exception {
+
     }
 
     /**
@@ -260,10 +311,9 @@ public class UserControllerTest {
      */
 
     @Test //DELETE Mapping "/users/ID" - CODE 204 No Content (pass)
-    void DELETE_users_givenUserIdAndValidToken_whenDeleteUser_thenReturnsNoContent() throws Exception {
+    void DELETE_users_given_ValidToken_ValidUserID_ReturnsNoContent() throws Exception {
         Long userId = 1L;
         User user = new User();
-
         user.setId(String.valueOf(userId));
         user.setFirstname("Simon");
         user.setLastname("Hafner");
@@ -276,8 +326,11 @@ public class UserControllerTest {
         UserPasswordPutDTO expectedDTO = new UserPasswordPutDTO();
         expectedDTO.setCurrentPassword("Password123");
 
+        // Mocking
         when(authService.isTokenValid(token)).thenReturn(true);
-        when(userService.delUser(userIdToEdit, expectedDTO)).thenReturn(user);
+        when(authService.getId(token)).thenReturn(String.valueOf(userId));
+        when(userService.getUserDetails(String.valueOf(userId))).thenReturn(user);
+        when(userService.delUser(userIdToEdit, expectedDTO)).thenReturn(null);
 
         // Perform the DELETE request
         mockMvc.perform(delete("/users/{id}", userId)
@@ -285,6 +338,16 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"currentPassword\":\"Password123\"}"))
                 .andExpect(status().isNoContent());
+    }
+
+    @Test //DELETE Mapping "/users/ID" - CODE 404 NotFound (error)
+    public void DELETE_users_given_ValidToken_InvalidUserID_ReturnsNoContent() throws Exception {
+
+    }
+
+    @Test //DELETE Mapping "/users/ID" - CODE 401 Unauthorized (error)
+    public void DELETE_users_given_InvalidToken_ValidUserID_ReturnsNoContent() throws Exception {
+
     }
 
     /**
