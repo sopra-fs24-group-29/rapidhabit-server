@@ -1,5 +1,4 @@
 package ch.uzh.ifi.hase.soprafs24.service;
-
 import ch.uzh.ifi.hase.soprafs24.entity.Group;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
@@ -56,6 +55,16 @@ public class GroupService {
         newGroup = groupRepository.save(newGroup);
         log.debug("Created Information for User: {}", newGroup);
         return newGroup;
+    }
+
+    public void addHabitToGroup(String groupId, String habitId) {
+        Group group = groupRepository.findById(groupId).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "No group with id " + groupId + " found."));
+        // Check if habit id is already present in the list
+        if (!group.getHabitIdList().contains(habitId)) {
+            group.getHabitIdList().add(habitId);
+            groupRepository.save(group);
+        }
     }
     public String generateAccessCode(){
         // here the logic for generating the access code will be implemented

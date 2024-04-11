@@ -1,13 +1,18 @@
 package ch.uzh.ifi.hase.soprafs24.rest.mapper;
 
-import ch.uzh.ifi.hase.soprafs24.entity.Group;
-import ch.uzh.ifi.hase.soprafs24.entity.User;
+import ch.uzh.ifi.hase.soprafs24.entity.*;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupGetDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.habit.DailyRepeatDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.habit.RepeatStrategyDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.habit.WeeklyRepeatDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.user.*;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupPostDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupPutDTO;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.habit.HabitPostDTO;
+
+
 
 /**
  * DTOMapper
@@ -23,6 +28,7 @@ import org.mapstruct.factory.Mappers;
 @Mapper
 public interface DTOMapper {
     DTOMapper INSTANCE = Mappers.getMapper(DTOMapper.class);
+
     @Mapping(source = "firstname", target = "firstname")
     @Mapping(source = "lastname", target = "lastname")
     @Mapping(source = "email", target = "email")
@@ -44,4 +50,7 @@ public interface DTOMapper {
     UserGetDTO convertEntityToUserGetDTO(User user);
 
     GroupGetDTO convertEntityToGroupGetDTO(Group group);
+
+
+
 }

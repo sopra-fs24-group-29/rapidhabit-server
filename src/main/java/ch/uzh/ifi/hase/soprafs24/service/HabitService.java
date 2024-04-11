@@ -1,5 +1,4 @@
 package ch.uzh.ifi.hase.soprafs24.service;
-
 import ch.uzh.ifi.hase.soprafs24.entity.Habit;
 import ch.uzh.ifi.hase.soprafs24.repository.HabitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,14 +11,15 @@ import java.util.Optional;
 public class HabitService {
 
     private final HabitRepository habitRepository;
+    private final GroupService groupService;
 
     @Autowired
-    public HabitService(HabitRepository habitRepository) {
+    public HabitService(HabitRepository habitRepository, GroupService groupService) {
         this.habitRepository = habitRepository;
+        this.groupService = groupService;
     }
 
     public Habit createHabit(Habit habit) {
-        // ...
         return habitRepository.save(habit);
     }
 

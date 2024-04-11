@@ -4,13 +4,15 @@ import ch.uzh.ifi.hase.soprafs24.constant.RepeatType;
 import ch.uzh.ifi.hase.soprafs24.constant.Weekday;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class WeeklyRepeat implements RepeatStrategy{
-    private HashMap<Weekday, Integer> weekdayMap = new HashMap<>();
+    private HashMap<Weekday, Boolean> weekdayMap = new HashMap<>();
 
     public WeeklyRepeat() {
+        // Initialisiere weekdayMap mit Werten für alle Wochentage als "true".
         for (Weekday weekday : Weekday.values()) {
-            weekdayMap.put(weekday, 0);
+            weekdayMap.put(weekday, true);
         }
     }
 
@@ -19,15 +21,16 @@ public class WeeklyRepeat implements RepeatStrategy{
         return RepeatType.WEEKLY;
     }
 
-    public HashMap<Weekday, Integer> getWeekdayMap() {
+    public HashMap<Weekday, Boolean> getWeekdayMap() {
         return this.weekdayMap;
     }
 
-    public void setWeekdayToRepeat(Weekday weekday, Integer repeats) {
+    public void setWeekdayToRepeat(Weekday weekday, Boolean repeats) {
         weekdayMap.put(weekday, repeats);
     }
 
-    public int getWeeklyReps() {
-        return weekdayMap.values().stream().mapToInt(Integer::intValue).sum();
+    public void setWeekdayMap(Map<Weekday, Boolean> weekdayMap) {
+        this.weekdayMap.clear();
+        this.weekdayMap.putAll(weekdayMap);
     }
 }
