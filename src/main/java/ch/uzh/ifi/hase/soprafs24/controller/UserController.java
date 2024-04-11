@@ -119,7 +119,7 @@ public class UserController {
     public ResponseEntity<?> logout(@RequestHeader("Authorization") String authHeaderToken){
         boolean isValid = authService.isTokenValid(authHeaderToken);
         String id = authService.getId(authHeaderToken);
-        if(isValid){
+        if(isValid && id != null){
             authService.logout(authHeaderToken);
             userService.setUserStatusToOffline(id);
             return ResponseEntity.ok().build();

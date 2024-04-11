@@ -2,6 +2,7 @@ package ch.uzh.ifi.hase.soprafs24.controller;
 
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.user.UserLoginPutDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.user.UserPasswordPutDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.user.UserPostDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.user.UserPutDTO;
@@ -273,22 +274,66 @@ public class UserControllerTest {
 
     @Test //PUT Mapping "/users/login" - CODE 200 OK (pass)
     public void PUT_usersLogin_valid_ReturnsToken() throws Exception {
+        String email = "test@example.com";
+        String password = "password";
+        String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
 
+        UserLoginPutDTO userLoginPutDTO = new UserLoginPutDTO();
+        userLoginPutDTO.setEmail(email);
+        userLoginPutDTO.setPassword(password);
+
+        when(authService.userLogin(email, password)).thenReturn(token);
+
+        // When & Then
+        mockMvc.perform(put("/users/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"email\":\"" + email + "\", \"password\":\"" + password + "\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.token").value(token));
     }
 
-    @Test //PUT Mapping "/users/login" - CODE 404 NotFound (error)
+    @Test //PUT Mapping "/users/login" - CODE 400 BadRequest (error)
     public void PUT_usersLogin_Invalid_ReturnsNotFound() throws Exception {
+        String email = "test@example.com";
+        String password = "password";
 
+        UserLoginPutDTO userLoginPutDTO = new UserLoginPutDTO();
+        userLoginPutDTO.setEmail(email);
+        userLoginPutDTO.setPassword(password);
+
+        when(authService.userLogin(email, password)).thenThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unknown email or wrong password."));
+
+        mockMvc.perform(put("/users/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"email\":\"" + email + "\", \"password\":\"" + password + "\"}"))
+                .andExpect(status().isBadRequest()); // Expecting 400 Bad Request for incorrect credentials
     }
 
     @Test //PUT Mapping "/users/logout" - CODE 200 OK (pass)
     public void PUT_usersLogout_valid() throws Exception {
+        Long userId = 1L;
+        String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
 
+        when(authService.isTokenValid(token)).thenReturn(true);
+        when(authService.getId(token)).thenReturn(String.valueOf(userId));
+
+        mockMvc.perform(put("/users/logout")
+                        .header("Authorization", token)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
     @Test //PUT Mapping "/users/logout" - CODE 404 NotFound (error)
     public void PUT_usersLogout_Invalid_ReturnsNotFound() throws Exception {
+        String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
 
+        when(authService.isTokenValid(token)).thenReturn(true);
+        when(authService.getId(token)).thenReturn(null);
+
+        mockMvc.perform(put("/users/logout")
+                        .header("Authorization", token)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 
     @Test //PUT Mapping "/users/ID/password" - CODE 204 NoContent (pass)
