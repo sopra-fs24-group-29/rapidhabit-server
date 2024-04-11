@@ -3,7 +3,7 @@ package ch.uzh.ifi.hase.soprafs24.entity;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "habits")
+@Document(collection = "Habits")
 public class Habit {
     @Id
     private String id;
@@ -18,6 +18,12 @@ public class Habit {
         this.name = name;
         this.description = description;
         this.repeatStrategy = repeatStrategy;
+        this.rewardPoints = rewardPoints;
+    }
+
+    public Habit(String name, String description, int rewardPoints) {
+        this.name = name;
+        this.description = description;
         this.rewardPoints = rewardPoints;
     }
 

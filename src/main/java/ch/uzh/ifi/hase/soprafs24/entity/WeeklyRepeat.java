@@ -10,9 +10,9 @@ public class WeeklyRepeat implements RepeatStrategy{
     private HashMap<Weekday, Boolean> weekdayMap = new HashMap<>();
 
     public WeeklyRepeat() {
-        // Initialisiere weekdayMap mit Werten für alle Wochentage als "true".
+        // Initialize weekdayMap where all values for each weekday are "false" by default.
         for (Weekday weekday : Weekday.values()) {
-            weekdayMap.put(weekday, true);
+            weekdayMap.put(weekday, false);
         }
     }
 

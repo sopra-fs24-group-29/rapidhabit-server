@@ -111,4 +111,14 @@ public class GroupService {
         group.setDescription(groupInput.getDescription());
         return groupRepository.save(group);
     }
+
+    public Boolean isUserAdmin(String userId, String groupId){
+        Group group = groupRepository.findById(groupId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No group with id " + groupId + " found."));
+        if(group.getAdminIdList().contains(userId)){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 }
