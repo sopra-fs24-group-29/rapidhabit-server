@@ -72,9 +72,9 @@ public class UserController {
         UserGetDTO userGetDTO = DTOMapper.INSTANCE.convertEntityToUserGetDTO(createdUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(userGetDTO);
     }
-    @PostMapping("/users/login")
-    public ResponseEntity<?> login(@RequestBody UserLoginPostDTO userLoginPostDTO){
-        String token = authService.userLogin(userLoginPostDTO.getEmail(), userLoginPostDTO.getPassword());
+    @PutMapping("/users/login")
+    public ResponseEntity<?> login(@RequestBody UserLoginPutDTO userLoginPutDTO){
+        String token = authService.userLogin(userLoginPutDTO.getEmail(), userLoginPutDTO.getPassword());
         if (token != null){
             Map<String, String> tokenMap = new HashMap<>();
             tokenMap.put("token", token);
@@ -94,7 +94,7 @@ public class UserController {
             if (user != null) {
                 return ResponseEntity.ok(DTOMapper.INSTANCE.convertEntityToUserGetDTO(user));
             } else {
-                String errorMessage = String.format("User with id %d was not found", id);
+                String errorMessage = String.format("User with id " + id + " not found");
                 Map<String, String> errorResponse = new HashMap<>();
                 errorResponse.put("error", errorMessage);
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
@@ -115,7 +115,7 @@ public class UserController {
             return ResponseEntity.ok(allowEdit);
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();}
-    @PostMapping("/users/logout")
+    @PutMapping ("/users/logout")
     public ResponseEntity<?> logout(@RequestHeader("Authorization") String authHeaderToken){
         boolean isValid = authService.isTokenValid(authHeaderToken);
         String id = authService.getId(authHeaderToken);

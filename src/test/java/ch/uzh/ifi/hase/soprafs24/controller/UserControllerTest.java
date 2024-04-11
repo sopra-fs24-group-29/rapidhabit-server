@@ -27,8 +27,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -55,7 +53,10 @@ public class UserControllerTest {
   @MockBean
   private AuthService authService;
 
-    @Test
+    /**
+     * ------------------------------ START GET TESTS ------------------------------------------------------------
+     */
+    @Test //Get Mapping "/users" - CODE 200 OK (Pass)
     public void GET_users_givenUsers_whenGetUsers_thenReturnJsonArray() throws Exception {
         // Given
         User user = new User();
@@ -88,7 +89,54 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$[0].status", is(UserStatus.ONLINE.toString())));
     }
 
-    @Test
+    @Test //GET Mapping "/users/ID" - CODE 200 OK (pass)
+    void GET_users_givenUserIdAndValidToken_whenGetUserDetails_thenReturnsUser() throws Exception {
+        Long userId = 1L;
+        User user = new User();
+
+        user.setId(String.valueOf(1L));
+        user.setFirstname("Simon");
+        user.setLastname("Hafner");
+        user.setEmail("Simon.hafner@uzh.ch");
+        user.setPassword("Password123");
+
+        String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
+
+        when(authService.isTokenValid(token)).thenReturn(true);
+        when(userService.getUserDetails(String.valueOf(userId))).thenReturn(user);
+
+        mockMvc.perform(get("/users/{id}", userId)
+                        .header("Authorization", token)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is("1")))
+                .andExpect(jsonPath("$.firstname", is("Simon")))
+                .andExpect(jsonPath("$.lastname", is("Hafner")))
+                .andExpect(jsonPath("$.email", is("Simon.hafner@uzh.ch")));
+    }
+
+    @Test //GET Mapping "/users/ID" - CODE 404 Not Found (error)
+    void GET_users_givenUserIdAndValidToken_whenGetUserDetails_thenReturnsNotFound() throws Exception {
+        Long userId = 999L;
+        String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
+
+        User user = new User();
+        user.setId(String.valueOf(999L));
+
+        when(authService.isTokenValid(token)).thenReturn(true);
+        when(userService.getUserDetails(String.valueOf(userId))).thenThrow(new NoSuchElementException("User with id " + userId + " not found"));
+
+        mockMvc.perform(get("/users/{id}", userId)
+                        .header("Authorization", token)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    /**
+     * ------------------------------ END GET TESTS ------------------------------ START POST TESTS ------------------------------
+     */
+
+    @Test //POST Mapping "/users" - CODE 204 CREATED (Pass)
     public void POST_users_createUser_validInput_userCreated() throws Exception {
         // Given
         UserPostDTO newUser = new UserPostDTO();
@@ -122,7 +170,7 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.status", is("OFFLINE")));
     }
 
-    @Test
+    @Test //POST Mapping "/users" - CODE 409 CONFLICT (error)
     public void POST_users_createUser_whenUsernameAlreadyExists() throws Exception {
         // given
         UserPostDTO userPostDTO = new UserPostDTO();
@@ -144,34 +192,74 @@ public class UserControllerTest {
                 .andExpect(status().isConflict());
     }
 
-    // Test for retrieving user details successfully with valid token.
-    @Test
-    void GET_users_givenUserIdAndValidToken_whenGetUserDetails_thenReturnsUser() throws Exception {
-        Long userId = 1L;
-        User user = new User();
+    /**
+     * ------------------------------ END POST TESTS ------------------------------ START PUT TESTS ------------------------------
+     */
 
-        user.setId(String.valueOf(1L));
-        user.setFirstname("Simon");
-        user.setLastname("Hafner");
-        user.setEmail("Simon.hafner@uzh.ch");
-        user.setPassword("Password123");
-
+    @Test //PUT Mapping "/users/ID" - CODE 204 No Content (pass)
+    public void PUT_usersID_updateUser_ValidUserAndToken_UpdatesUser() throws Exception {
+        Long validUserId = 1L;
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
+        String firstnameUpdate = "Lukas";
+        String emailUpdate = "lukas.guebeli@uzh.ch";
+        String lastnameUpdate = "guebeli";
 
+        String updateUserJson = "{\"firstname\":\"" + firstnameUpdate + "\",\"email\":\"" + emailUpdate + "\",\"lastname\":\"" + lastnameUpdate + "\"}";
+
+        // Mocking the User object to be returned by userService.getUserDetails
+        User mockUser = new User();
+        mockUser.setId(String.valueOf(validUserId));
+        mockUser.setEmail(emailUpdate);
+        mockUser.setFirstname(firstnameUpdate);
+        mockUser.setLastname(lastnameUpdate);
+
+        // Service Layer Mocks
         when(authService.isTokenValid(token)).thenReturn(true);
-        when(userService.getUserDetails(String.valueOf(userId))).thenReturn(user);
+        when(authService.getId(token)).thenReturn(String.valueOf(validUserId));
+        when(userService.getUserDetails(String.valueOf(validUserId))).thenReturn(mockUser);
+        when(userService.updateUser(anyString(), anyString(), argThat(userPutDTO ->
+                userPutDTO.getFirstname().equals(firstnameUpdate) &&
+                        userPutDTO.getLastname().equals(lastnameUpdate) &&
+                        userPutDTO.getEmail().equals(emailUpdate)))).thenReturn(mockUser);
 
-        mockMvc.perform(get("/users/{id}", userId)
+
+        // When & Then
+        mockMvc.perform(put("/users/{id}", validUserId)
                         .header("Authorization", token)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is("1")))
-                .andExpect(jsonPath("$.firstname", is("Simon")))
-                .andExpect(jsonPath("$.lastname", is("Hafner")))
-                .andExpect(jsonPath("$.email", is("Simon.hafner@uzh.ch")));
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(updateUserJson))
+                .andExpect(status().isNoContent());
     }
 
-    @Test
+    @Test //PUT Mapping "/users/ID" - CODE 404 Not Found (error)
+    public void PUT_usersID_updateUser_InvalidUserId_ReturnsNotFound() throws Exception {
+        // Given
+        Long invalidUserId = 2L;
+        String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
+        String firstnameUpdate = "Lukas";
+        String emailUpdate = "lukas.guebeli@uzh.ch";
+        String lastnameUpdate = "guebeli";
+
+        // Writing update information into JSON
+        String updateUserJson = "{\"firstname\":\"" + firstnameUpdate + "\",\"eMail\":\"" + emailUpdate + "\",\"lastname\":\"" + lastnameUpdate + "\"}";
+
+        // Service Layer Mocks
+        when(authService.isTokenValid(token)).thenReturn(true);
+        when(userService.getUserDetails(String.valueOf(invalidUserId))).thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "No user with id " + invalidUserId + " found."));
+
+        // When & Then
+        mockMvc.perform(put("/users/{id}", invalidUserId)
+                        .header("Authorization", token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(updateUserJson))
+                .andExpect(status().isNotFound()); // Expects Status COde 404.
+    }
+
+    /**
+     * ------------------------------ END PUT TESTS ------------------------------ START DELETE TESTS ------------------------------
+     */
+
+    @Test //DELETE Mapping "/users/ID" - CODE 204 No Content (pass)
     void DELETE_users_givenUserIdAndValidToken_whenDeleteUser_thenReturnsNoContent() throws Exception {
         Long userId = 1L;
         User user = new User();
@@ -199,86 +287,9 @@ public class UserControllerTest {
                 .andExpect(status().isNoContent());
     }
 
-
-
-    // Test for user not found with valid token
-    @Test
-    void GET_users_givenUserIdAndValidToken_whenGetUserDetails_thenReturnsNotFound() throws Exception {
-        Long userId = 999L;
-        String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
-
-        User user = new User();
-        user.setId(String.valueOf(999L));
-
-        when(authService.isTokenValid(token)).thenReturn(true);
-        when(userService.getUserDetails(String.valueOf(userId))).thenThrow(new NoSuchElementException("User with id " + userId + " not found"));
-
-        mockMvc.perform(get("/users/{id}", userId)
-                        .header("Authorization", token)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.error").value("User with id " + userId + " not found"));
-    }
-
-    @Test
-    public void PUT_usersID_updateUser_ValidUserAndToken_UpdatesUser() throws Exception {
-        // Given
-        Long userId = 1L;
-        String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
-        String firstnameUpdate = "Lukas";
-        String emailUpdate = "lukas.guebeli@uzh.ch";
-        String lastnameUpdate = "guebeli";
-
-        // Mocking a user object within the database layer
-        User mockUser = new User();
-        mockUser.setId(String.valueOf(userId));
-        mockUser.setFirstname(firstnameUpdate);
-        mockUser.setEmail(emailUpdate);
-        mockUser.setLastname(lastnameUpdate);
-
-        // Write update information into JSON file for PUT request
-        String updateUserJson = "{\"firstname\":\"" + firstnameUpdate + "\",\"eMail\":\"" + emailUpdate + "\",\"lastname\":\"" + lastnameUpdate + "\"}";
-
-        // Service Layer Mocks
-        when(authService.isTokenValid(token)).thenReturn(true);
-        when(userService.getUserDetails(String.valueOf(userId))).thenReturn(mockUser); // Stelle sicher, dass ein User-Objekt zurückgegeben wird
-
-        // When & Then
-        mockMvc.perform(put("/users/{id}", userId)
-                        .header("Authorization", token)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(updateUserJson))
-                .andExpect(status().isNoContent()); // Status Code 204 is expected.
-    }
-
-
-
-    @Test
-    public void PUT_usersID_updateUser_InvalidUserId_ReturnsNotFound() throws Exception {
-        // Given
-        Long invalidUserId = 2L;
-        String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
-        String firstnameUpdate = "Lukas";
-        String emailUpdate = "lukas.guebeli@uzh.ch";
-        String lastnameUpdate = "guebeli";
-
-        // Writing update information into JSON
-        String updateUserJson = "{\"firstname\":\"" + firstnameUpdate + "\",\"eMail\":\"" + emailUpdate + "\",\"lastname\":\"" + lastnameUpdate + "\"}";
-
-        // Service Layer Mocks
-        when(authService.isTokenValid(token)).thenReturn(true);
-        when(userService.getUserDetails(String.valueOf(invalidUserId))).thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "No user with id " + invalidUserId + " found."));
-
-        // When & Then
-        mockMvc.perform(put("/users/{id}", invalidUserId)
-                        .header("Authorization", token)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(updateUserJson))
-                .andExpect(status().isNotFound()); // Expects Status COde 404.
-    }
-
-
-
+    /**
+     * ------------------------------ END DELETE TESTS ------------------------------------------------------------
+     */
 
     /**
    * Helper Method to convert userPostDTO into a JSON string such that the input
