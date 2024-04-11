@@ -5,7 +5,6 @@ import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.user.UserLoginPutDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.user.UserPasswordPutDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.user.UserPostDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.user.UserPutDTO;
 import ch.uzh.ifi.hase.soprafs24.service.UserService;
 import ch.uzh.ifi.hase.soprafs24.service.AuthService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -240,7 +239,7 @@ public class UserControllerTest {
         String emailUpdate = "lukas.guebeli@uzh.ch";
         String lastnameUpdate = "guebeli";
 
-        String updateUserJson = "{\"firstname\":\"" + firstnameUpdate + "\",\"eMail\":\"" + emailUpdate + "\",\"lastname\":\"" + lastnameUpdate + "\"}";
+        String updateUserJson = "{\"firstname\":\"" + firstnameUpdate + "\",\"email\":\"" + emailUpdate + "\",\"lastname\":\"" + lastnameUpdate + "\"}";
 
         when(authService.isTokenValid(token)).thenReturn(true);
         when(userService.getUserDetails(String.valueOf(invalidUserId))).thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "No user with id " + invalidUserId + " found."));
@@ -339,16 +338,72 @@ public class UserControllerTest {
     @Test //PUT Mapping "/users/ID/password" - CODE 204 NoContent (pass)
     public void PUT_usersPasswordChange_valid_ReturnsNoContent() throws Exception {
 
+        Long userId = 1L;
+        String current_password = "currentPassword";
+        String new_password = "newPassword";
+        String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
+
+        UserPasswordPutDTO userPasswordPutDTO = new UserPasswordPutDTO();
+        userPasswordPutDTO.setCurrentPassword(current_password);
+        userPasswordPutDTO.setNewPassword(new_password);
+
+        User user = new User();
+        user.setId(userId.toString());
+        user.setPassword("hashedCurrentPassword");
+
+        when(userService.getUserDetails(String.valueOf(userId))).thenReturn(user);
+        when(authService.isTokenValid(token)).thenReturn(true);
+        when(authService.getId(token)).thenReturn(userId.toString());
+        when(userService.updateUserPassword(String.valueOf(userId), userPasswordPutDTO)).thenReturn(user);
+
+        mockMvc.perform(put("/users/{id}/password", userId)
+                        .header("Authorization", token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"currentPassword\":\"currentPassword\",\"newPassword\":\"newPassword\"}"))
+                .andExpect(status().isNoContent());
     }
 
     @Test //PUT Mapping "/users/ID/password" - CODE 404 NotFound (error)
     public void PUT_usersPasswordChange_Invalid_ReturnsNotFound() throws Exception {
+        Long userId = 1L;
+        String current_password = "currentPassword";
+        String new_password = "newPassword";
+        String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
 
+        UserPasswordPutDTO userPasswordPutDTO = new UserPasswordPutDTO();
+        userPasswordPutDTO.setCurrentPassword(current_password);
+        userPasswordPutDTO.setNewPassword(new_password);
+
+        // Simulate the scenario where the user ID is not found
+        when(authService.isTokenValid(token)).thenReturn(true);
+        when(userService.getUserDetails(String.valueOf(userId))).thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "No user with id " + userId + " found."));
+
+        mockMvc.perform(put("/users/{id}/password", userId)
+                        .header("Authorization", token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"currentPassword\":\"currentPassword\",\"newPassword\":\"newPassword\"}"))
+                .andExpect(status().isNotFound());
     }
 
     @Test //PUT Mapping "/users/ID/password" - CODE 401 Unauthorized (error)
     public void PUT_usersPasswordChange_Invalid_ReturnsUnauthorized() throws Exception {
+        Long userId = 1L;
+        String current_password = "currentPassword";
+        String new_password = "newPassword";
+        String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
 
+        UserPasswordPutDTO userPasswordPutDTO = new UserPasswordPutDTO();
+        userPasswordPutDTO.setCurrentPassword(current_password);
+        userPasswordPutDTO.setNewPassword(new_password);
+
+        // Simulate the scenario where the user ID is not found
+        when(authService.isTokenValid(token)).thenReturn(false);
+
+        mockMvc.perform(put("/users/{id}/password", userId)
+                        .header("Authorization", token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"currentPassword\":\"currentPassword\",\"newPassword\":\"newPassword\"}"))
+                .andExpect(status().isUnauthorized());
     }
 
     /**
@@ -387,12 +442,54 @@ public class UserControllerTest {
 
     @Test //DELETE Mapping "/users/ID" - CODE 404 NotFound (error)
     public void DELETE_users_given_ValidToken_InvalidUserID_ReturnsNoContent() throws Exception {
+        Long userId = 1L;
+        User user = new User();
+        user.setId(String.valueOf(userId));
+        user.setFirstname("Simon");
+        user.setLastname("Hafner");
+        user.setEmail("Simon.hafner@uzh.ch");
+        user.setPassword("Password123");
 
+        String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
+
+        UserPasswordPutDTO expectedDTO = new UserPasswordPutDTO();
+        expectedDTO.setCurrentPassword("Password123");
+
+        // Mocking
+        when(authService.isTokenValid(token)).thenReturn(true);
+        when(userService.getUserDetails(String.valueOf(userId))).thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "No user with id " + userId + " found."));
+
+
+        // Perform the DELETE request
+        mockMvc.perform(delete("/users/{id}", userId)
+                        .header("Authorization", token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"currentPassword\":\"Password123\"}"))
+                .andExpect(status().isNotFound());
     }
 
     @Test //DELETE Mapping "/users/ID" - CODE 401 Unauthorized (error)
     public void DELETE_users_given_InvalidToken_ValidUserID_ReturnsNoContent() throws Exception {
+        Long userId = 1L;
+        User user = new User();
+        user.setId(String.valueOf(userId));
+        user.setFirstname("Simon");
+        user.setLastname("Hafner");
+        user.setEmail("Simon.hafner@uzh.ch");
+        user.setPassword("Password123");
 
+        String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
+
+        UserPasswordPutDTO expectedDTO = new UserPasswordPutDTO();
+        expectedDTO.setCurrentPassword("Password123");
+
+        when(authService.isTokenValid(token)).thenReturn(false);
+
+        mockMvc.perform(delete("/users/{id}", userId)
+                        .header("Authorization", token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"currentPassword\":\"Password123\"}"))
+                .andExpect(status().isUnauthorized());
     }
 
     /**
