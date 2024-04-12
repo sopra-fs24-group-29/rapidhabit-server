@@ -1,8 +1,10 @@
 package ch.uzh.ifi.hase.soprafs24.service;
 import ch.uzh.ifi.hase.soprafs24.entity.Group;
+import ch.uzh.ifi.hase.soprafs24.entity.GroupStatistics;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
 // import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPostDTO; // wird verwendet um die User Daten aus der intern verwendeten DTO Representation zu lesen
+import ch.uzh.ifi.hase.soprafs24.repository.GroupStatisticsRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,28 +35,38 @@ public class GroupService {
     private final Logger log = LoggerFactory.getLogger(GroupService.class);
 
     private final GroupRepository groupRepository;
+    private final GroupStatisticsRepository groupStatisticsRepository;
     private final BCryptPasswordEncoder encoder;
 
     @Autowired
-    public GroupService(GroupRepository groupRepository, BCryptPasswordEncoder encoder) {
+    public GroupService(GroupRepository groupRepository, BCryptPasswordEncoder encoder, GroupStatisticsRepository groupStatisticsRepository) {
         this.groupRepository = groupRepository;
         this.encoder = encoder;
+        this.groupStatisticsRepository = groupStatisticsRepository;
+    }
+
+    // Deine Methoden hier...
+
+    public Group createGroup(Group newGroup, String creatorId) {
+        newGroup.setAccessCode(this.generateAccessCode());
+        newGroup.setAdminIdList(new ArrayList<>());
+        newGroup.setUserIdList(new ArrayList<>());
+        newGroup.setHabitIdList(new ArrayList<>());
+        newGroup.addAdminId(creatorId);
+        newGroup.addUserId(creatorId);
+        newGroup = groupRepository.save(newGroup);
+        log.debug("Created Group: {}", newGroup);
+
+        // Initialisiere GroupStatistics für die neue Gruppe
+        GroupStatistics newGroupStatistics = new GroupStatistics();
+        newGroupStatistics.setGroupId(newGroup.getId());
+        groupStatisticsRepository.save(newGroupStatistics);
+
+        return newGroup;
     }
 
     public List<Group> getGroups() {
         return this.groupRepository.findAll();
-    }
-
-    public Group createGroup(Group newGroup, String creatorId) {
-        newGroup.setAccessCode(this.generateAccessCode());
-        newGroup.setAdminIdList(new ArrayList<String>());
-        newGroup.setUserIdList(new ArrayList<String>());
-        newGroup.setHabitIdList(new ArrayList<String>());
-        newGroup.addAdminId(creatorId);
-        newGroup.addUserId(creatorId);
-        newGroup = groupRepository.save(newGroup);
-        log.debug("Created Information for User: {}", newGroup);
-        return newGroup;
     }
 
     public void addHabitToGroup(String groupId, String habitId) {

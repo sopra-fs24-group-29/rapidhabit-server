@@ -12,6 +12,10 @@ public class Habit {
     private RepeatStrategy repeatStrategy;
     private int rewardPoints;
 
+    // Standard Constructor
+    public Habit() {
+    }
+
 
     public Habit(String id, String name, String description, RepeatStrategy repeatStrategy, int rewardPoints) {
         this.id = id;

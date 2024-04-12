@@ -2,16 +2,22 @@ package ch.uzh.ifi.hase.soprafs24.entity;
 
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatsStatus;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Document(collection = "UserStatsEntries")
 public class UserStatsEntry {
     @Id
     private String id;
+
+    @Indexed(unique = true)
+    private String groupId;
     private String userId;
     private String habitId;
-    private LocalDateTime dueDate;
+    private LocalDate dueDate;
     private UserStatsStatus status;
 
     // Constructor
@@ -27,11 +33,19 @@ public class UserStatsEntry {
         return userId;
     }
 
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
     public String getHabitId() {
         return habitId;
     }
 
-    public LocalDateTime getDueDate() {
+    public LocalDate getDueDate() {
         return dueDate;
     }
 
@@ -52,7 +66,7 @@ public class UserStatsEntry {
         this.habitId = habitId;
     }
 
-    public void setDueDate(LocalDateTime dueDate) {
+    public void setDueDate(LocalDate dueDate) {
         this.dueDate = dueDate;
     }
 

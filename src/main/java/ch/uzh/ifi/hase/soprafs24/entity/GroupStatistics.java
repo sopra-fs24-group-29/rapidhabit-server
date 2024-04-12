@@ -1,14 +1,17 @@
 package ch.uzh.ifi.hase.soprafs24.entity;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
-@Document(collection = "groupStatistics")
+@Document(collection = "GroupStatistics")
 public class GroupStatistics {
     @Id
     private String id;
+    @Indexed(unique = true)
+    private String groupId;
     private List<String> userStatsEntryIds; // Updated from userData
     private List<String> habitStatsEntryIds; // Updated from habitData
     private List<String> userHabitStatsEntryIds; // Updated from userHabitData
@@ -18,6 +21,8 @@ public class GroupStatistics {
     private List<String> feedEntryIds; // Updated from feedData
     private List<String> chatEntryIds; // Updated from chatData
 
+    public GroupStatistics(){
+    }
     // Getters and Setters
     public String getId() {
         return id;
@@ -25,6 +30,13 @@ public class GroupStatistics {
 
     public void setId(String id) {
         this.id = id;
+    }
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
     }
 
     public List<String> getUserStatsEntryIds() {

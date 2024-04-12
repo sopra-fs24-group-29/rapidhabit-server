@@ -11,15 +11,26 @@ public class WeeklyRepeat implements RepeatStrategy{
 
     public WeeklyRepeat() {
         // Initialize weekdayMap where all values for each weekday are "false" by default.
-        for (Weekday weekday : Weekday.values()) {
-            weekdayMap.put(weekday, false);
-        }
+        this.weekdayMap = weekdayMap;
+        weekdayMap.put(Weekday.MONDAY, false);
+        weekdayMap.put(Weekday.TUESDAY, false);
+        weekdayMap.put(Weekday.WEDNESDAY, false);
+        weekdayMap.put(Weekday.THURSDAY, false);
+        weekdayMap.put(Weekday.FRIDAY, false);
+        weekdayMap.put(Weekday.SATURDAY, false);
+        weekdayMap.put(Weekday.SUNDAY, false);
     }
 
     @Override
     public RepeatType getRepeatType(){
         return RepeatType.WEEKLY;
     }
+
+    @Override
+    public Boolean repeatsAt(Weekday weekday) {
+        return Boolean.TRUE.equals(weekdayMap.get(weekday));
+    }
+
 
     public HashMap<Weekday, Boolean> getWeekdayMap() {
         return this.weekdayMap;
