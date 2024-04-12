@@ -199,6 +199,7 @@ public class GroupControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(groupPutDTO)))
                 .andExpect(status().isOk());
+
     }
 
     @Test //PUT Mapping "/groups/{groupId}" - CODE 404 NotFound (Pass)
