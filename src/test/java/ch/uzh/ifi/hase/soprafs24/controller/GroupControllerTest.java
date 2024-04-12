@@ -249,6 +249,100 @@ public class GroupControllerTest {
     /**
      * ------------------------------ END PUT TESTS ------------------------------ START DELETE TESTS ------------------------------
      */
+    @Test // DELETE Mapping "/groups/{groupId}" - CODE 204 NoContent (Pass)
+    public void DELETE_deleteGroup_ValidInput_Successful() throws Exception {
+        String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
+        String groupId = "1";
+        when(authService.isTokenValid(token)).thenReturn(true);
+        when(authService.getId(token)).thenReturn("userId");
+        when(groupService.isUserAdmin("userId", groupId)).thenReturn(true);
+
+        when(groupService.deleteGroup(groupId)).thenReturn(null);
+
+        mockMvc.perform(delete("/groups/" + groupId)
+                        .header("Authorization", token))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test // DELETE Mapping "/groups/{groupId}" - CODE 404 NotFound (Error)
+    public void DELETE_deleteGroup_GroupNotFound() throws Exception {
+        String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
+        String groupId = "1";
+        when(authService.isTokenValid(token)).thenReturn(true);
+        when(authService.getId(token)).thenReturn("userId");
+        when(groupService.isUserAdmin("userId", groupId)).thenReturn(true);
+
+        // Simulate the scenario where the group does not exist
+        when(groupService.deleteGroup(groupId)).thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "No group with id " + groupId + " found."));
+
+        mockMvc.perform(delete("/groups/" + groupId)
+                        .header("Authorization", token))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test // DELETE Mapping "/groups/{groupId}" - CODE 401 Unauthorized (Error)
+    public void DELETE_deleteGroup_UserNotAdmin() throws Exception {
+        String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
+        String groupId = "1";
+        when(authService.isTokenValid(token)).thenReturn(true);
+        when(authService.getId(token)).thenReturn("userId");
+        when(groupService.isUserAdmin("userId", groupId)).thenReturn(false);
+
+        mockMvc.perform(delete("/groups/" + groupId)
+                        .header("Authorization", token))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test // DELETE Mapping "/groups/{groupId}/users" - CODE 204 NoContent (Pass)
+    public void DELETE_deleteUserFromGroup_ValidInput_Successful() throws Exception {
+        String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
+        String groupId = "1";
+        String userToRemoveID = "77";
+        when(authService.isTokenValid(token)).thenReturn(true);
+        when(authService.getId(token)).thenReturn("userId");
+        when(groupService.isUserAdmin("userId", groupId)).thenReturn(true);
+
+        // Mock the groupService.removeUserFromGroup method to simulate successful removal
+        when(groupService.removeUserFromGroup(groupId, userToRemoveID)).thenReturn(new Group());
+
+        mockMvc.perform(delete("/groups/" + groupId + "/users")
+                        .header("Authorization", token)
+                        .param("userToRemoveID", userToRemoveID))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test // DELETE Mapping "/groups/{groupId}/users" - CODE 404 NotFound (Error)
+    public void DELETE_deleteUserFromGroup_UserToDeleteNotFound() throws Exception {
+        String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
+        String groupId = "1";
+        String userToRemoveID = "77";
+        when(authService.isTokenValid(token)).thenReturn(true);
+        when(authService.getId(token)).thenReturn("userId");
+        when(groupService.isUserAdmin("userId", groupId)).thenReturn(true);
+
+        // Simulate the scenario where the user does not exist in the group
+        when(groupService.removeUserFromGroup(groupId, userToRemoveID)).thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not exist in this group!"));
+
+        mockMvc.perform(delete("/groups/" + groupId + "/users")
+                        .header("Authorization", token)
+                        .param("userToRemoveID", userToRemoveID))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test // DELETE Mapping "/groups/{groupId}/users" - CODE 401 Unauthorized (Error)
+    public void DELETE_deleteUserFromGroup_UserNotAdmin() throws Exception {
+        String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
+        String groupId = "1";
+        String userToRemoveID = "77";
+        when(authService.isTokenValid(token)).thenReturn(true);
+        when(authService.getId(token)).thenReturn("userId");
+        when(groupService.isUserAdmin("userId", groupId)).thenReturn(false);
+
+        mockMvc.perform(delete("/groups/" + groupId + "/users")
+                        .header("Authorization", token)
+                        .param("userToRemoveID", userToRemoveID))
+                .andExpect(status().isUnauthorized());
+    }
 
     /**
      * ------------------------------ END DELETE TESTS ------------------------------------------------------------
