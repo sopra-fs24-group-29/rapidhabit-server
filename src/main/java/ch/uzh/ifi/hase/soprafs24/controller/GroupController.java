@@ -95,16 +95,16 @@ public class GroupController {
         }
         else {
             String msg = "Invalid request token!";
-            return ResponseEntity.badRequest().body(msg);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(msg);
         }
     }
 
-    @PutMapping("/groups/{groupId}") // defines a method to for handling post methods for creating new users
+    @PutMapping("/groups/{groupId}") // defines a method to for updating name and description of an existing group.
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public ResponseEntity<?> updateGroup(@RequestHeader("Authorization") String authHeader, @RequestBody GroupPutDTO groupPutDTO, @PathVariable String groupId) {
         if (authService.isTokenValid(authHeader)) {
-            String userID = authService.getId(authHeader);
+            String userId = authService.getId(authHeader);
             System.out.println("PUT Request received. Convert group to internal representation ...");
             if (groupPutDTO.getName().isEmpty()) {
                 String msg = "Group name must not be empty!";
@@ -119,8 +119,51 @@ public class GroupController {
             return ResponseEntity.status(HttpStatus.OK).body(updateGroup);
         }
         else {
-                String msg = "Invalid request token!";
-                return ResponseEntity.badRequest().body(msg);
+            String msg = "Invalid request token!";
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(msg);
             }
         }
+
+    @DeleteMapping("/groups/{groupId}") // defines a method to for deleting a group.
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseBody
+    public ResponseEntity<?> deleteGroup(@RequestHeader("Authorization") String authHeader, @PathVariable String groupId) {
+        if (authService.isTokenValid(authHeader)) {
+            String userId = authService.getId(authHeader);
+            System.out.println("Delete Request received. Preparing group for deletion.");
+
+            if (!groupService.isUserAdmin(userId, groupId)) {
+                return new ResponseEntity<>("User is not group admin", HttpStatus.UNAUTHORIZED);
+            }
+            Group delete_Group = groupService.deleteGroup(groupId);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+
+        }
+        else {
+            String msg = "Invalid request token!";
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(msg);
+        }
+    }
+
+    @DeleteMapping("/groups/{groupId}/users") // defines a method to for deleting a user from a group.
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseBody
+    public ResponseEntity<?> deleteUserFromGroup(@RequestHeader("Authorization") String authHeader, String userToRemoveID, @PathVariable String groupId) {
+        if (authService.isTokenValid(authHeader)) {
+            String userId = authService.getId(authHeader);
+            System.out.println("Delete Request received. Preparing group for deletion.");
+
+            if (!groupService.isUserAdmin(userId, groupId)) {
+                return new ResponseEntity<>("User is not group admin", HttpStatus.UNAUTHORIZED);
+            }
+            Group delete_Group = groupService.removeUserFromGroup(groupId, userToRemoveID);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+
+        }
+        else {
+            String msg = "Invalid request token!";
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(msg);
+        }
+    }
+
 }

@@ -74,6 +74,10 @@ public class Group {
         this.userIdList.add(userId);
     }
 
+    public void removeUserId(String userId) {
+        this.userIdList.remove(userId);
+    }
+
     public List<String> getHabitIdList() {
         return this.habitIdList;
     }

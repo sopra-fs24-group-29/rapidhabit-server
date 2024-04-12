@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 // import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -113,6 +114,21 @@ public class GroupService {
         groupRepository.save(group);
     }
 
+    public Group removeUserFromGroup(String groupId, String userId) {
+        Group group = groupRepository.findById(groupId).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "No group with id " + groupId + " found."));
+
+        // check if user already exists
+        if (!group.getUserIdList().contains(userId)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User does not exist in this group!");
+        }
+
+        // remove user
+        group.removeUserId(userId);
+        groupRepository.save(group);
+        return group;
+    }
+
     public Group getGroupById(String groupId){
         return groupRepository.findById(groupId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No group with id " + groupId + " found."));
     }
@@ -122,6 +138,12 @@ public class GroupService {
         group.setName(groupInput.getName());
         group.setDescription(groupInput.getDescription());
         return groupRepository.save(group);
+    }
+
+    public Group deleteGroup(String groupId){
+        Group group = groupRepository.findById(groupId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No group with id " + groupId + " found."));
+        groupRepository.delete(group);
+        return null;
     }
 
     public Boolean isUserAdmin(String userId, String groupId){
