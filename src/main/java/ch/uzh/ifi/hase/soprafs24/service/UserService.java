@@ -85,11 +85,11 @@ public class UserService {
 
     public boolean authenticateUser(String email, String password) {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong username or password."));
-        if(passwordEncoder.matches(password, user.getPassword())){
-                user.setStatus(UserStatus.ONLINE);
-                userRepository.save(user);
-                return true;
-            }
+        if (passwordEncoder.matches(password, user.getPassword())) {
+            user.setStatus(UserStatus.ONLINE);
+            userRepository.save(user);
+            return true;
+        }
         return false;
     }
 
@@ -104,18 +104,19 @@ public class UserService {
 
     public void setUserStatusToOffline(String id) {
         User user = userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No user with id " + id + " found."));
-            user.setStatus(UserStatus.OFFLINE); // Assuming you have a setStatus method and UserStatus enum
-            userRepository.save(user); // This persists the updated status to the database
-        }
+        user.setStatus(UserStatus.OFFLINE); // Assuming you have a setStatus method and UserStatus enum
+        userRepository.save(user); // This persists the updated status to the database
+    }
+
     public User updateUser(String tokenId, String userIdToEdit, UserPutDTO userPutDTO) {
         User user = userRepository.findById(userIdToEdit).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No user with id " + userIdToEdit + " found."));
-        if (userPutDTO.getEmail().equals(user.getEmail())){
+        if (userPutDTO.getEmail().equals(user.getEmail())) {
             user.setFirstname(userPutDTO.getFirstname());
             user.setLastname(userPutDTO.getLastname());
             return userRepository.save(user);
         }
         else {
-            if(userRepository.findByEmail(userPutDTO.getEmail()).isPresent()){
+            if (userRepository.findByEmail(userPutDTO.getEmail()).isPresent()) {
                 throw new ResponseStatusException(HttpStatus.CONFLICT, "Email is already used.");
             }
             else {
@@ -129,7 +130,7 @@ public class UserService {
 
     public User updateUserPassword(String userIdToEdit, UserPasswordPutDTO userPasswordPutDTO) {
         User user = userRepository.findById(userIdToEdit).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No user with id " + userIdToEdit + " found."));
-        if (passwordEncoder.matches(userPasswordPutDTO.getCurrentPassword(), user.getPassword())){
+        if (passwordEncoder.matches(userPasswordPutDTO.getCurrentPassword(), user.getPassword())) {
             String hashedPassword = passwordEncoder.encode(userPasswordPutDTO.getNewPassword());
             user.setPassword(hashedPassword);
             return userRepository.save(user);
@@ -143,9 +144,16 @@ public class UserService {
             userRepository.delete(user);
             return null;
         }
-        else{
+        else {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Current Password is false.");
         }
     }
 
+    public String getInitials(String userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No user with id " + userId + " found."));
+        String firstname = user.getFirstname();
+        String lastname = user.getLastname();
+        String initials = firstname.substring(0, 1).toUpperCase() + lastname.substring(0, 1).toUpperCase();
+        return initials;
+    }
 }

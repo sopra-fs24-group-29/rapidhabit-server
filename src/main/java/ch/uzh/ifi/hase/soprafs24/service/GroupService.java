@@ -1,11 +1,14 @@
 package ch.uzh.ifi.hase.soprafs24.service;
 import ch.uzh.ifi.hase.soprafs24.entity.Group;
 import ch.uzh.ifi.hase.soprafs24.entity.HabitStreak;
+import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.entity.UserScore;
 import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
 // import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPostDTO; // wird verwendet um die User Daten aus der intern verwendeten DTO Representation zu lesen
 import ch.uzh.ifi.hase.soprafs24.repository.HabitStreakRepository;
+import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.UserScoreRepository;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupGetDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,14 +40,19 @@ public class GroupService {
     private final GroupRepository groupRepository;
     private final UserScoreRepository userScoreRepository;
     private final HabitStreakRepository habitStreakRepository;
+
+    private final UserRepository userRepository;
+    private final UserService userService;
     private final BCryptPasswordEncoder encoder;
 
     @Autowired
-    public GroupService(GroupRepository groupRepository, BCryptPasswordEncoder encoder, UserScoreRepository userScoreRepository, HabitStreakRepository habitStreakRepository) {
+    public GroupService(GroupRepository groupRepository, BCryptPasswordEncoder encoder, UserScoreRepository userScoreRepository, HabitStreakRepository habitStreakRepository, UserRepository userRepository, UserService userService) {
         this.groupRepository = groupRepository;
         this.encoder = encoder;
         this.userScoreRepository = userScoreRepository;
         this.habitStreakRepository = habitStreakRepository;
+        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     // Deine Methoden hier...
@@ -88,24 +96,6 @@ public class GroupService {
         HabitStreak habitStreak = new HabitStreak(groupId, habitId);
         habitStreak.setStreak(0);
         habitStreakRepository.save(habitStreak);
-    }
-    @Transactional
-    public void removeHabitFromGroup(String groupId, String habitId) {
-        // Fetch the group by groupId
-        Group group = groupRepository.findById(groupId).orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NOT_FOUND, "No group with id " + groupId + " found."));
-
-        // Check if the habit id is present in the list
-        if (!group.getHabitIdList().contains(habitId)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Habit does not exist in this group!");
-        }
-
-        // Remove the habit id from the list
-        group.getHabitIdList().remove(habitId);
-        groupRepository.save(group);
-
-        // Delete the corresponding habit streak entry
-        habitStreakRepository.deleteByGroupIdAndHabitId(groupId, habitId);
     }
     public String generateAccessCode(){
         // here the logic for generating the access code will be implemented
@@ -194,4 +184,38 @@ public class GroupService {
             return false;
         }
     }
+    public List<GroupGetDTO> getGroupMenuDataByUserId(String userId) {
+        List<Group> groupList = groupRepository.findByUserIdsContains(userId);
+        if (groupList.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No groups found for user " + userId);
+        }
+
+        List<GroupGetDTO> groupGetDTOList = new ArrayList<>();
+        for (Group group : groupList) {
+            GroupGetDTO groupGetDTO = new GroupGetDTO();
+            groupGetDTO.setId(group.getId());
+            groupGetDTO.setName(group.getName());
+            groupGetDTO.setStreaks(group.getCurrentStreak());
+
+            UserScore userScore = userScoreRepository.findByUserIdAndGroupId(userId, group.getId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                            "No user score found for user " + userId + " in group " + group.getId()));
+
+            groupGetDTO.setCurrentRank(userScore.getRank());
+
+            List<String> userIds = group.getUserIdList();
+            groupGetDTO.setUserIds(userIds);
+
+            List<String> userInitialsList = new ArrayList<>(); // Initialize the list
+            for (String id : userIds) {
+                String userInitial = userService.getInitials(id); // Ensure userService.getInitials() is implemented properly
+                userInitialsList.add(userInitial);
+            }
+            groupGetDTO.setUserInitials(userInitialsList);
+            groupGetDTOList.add(groupGetDTO);
+        }
+
+        return groupGetDTOList;
+    }
+
 }

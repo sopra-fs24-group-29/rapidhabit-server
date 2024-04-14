@@ -44,9 +44,6 @@ public class GroupControllerTest {
     @MockBean
     private GroupRepository groupRepository;
 
-    @MockBean
-    private GroupStatisticsRepository groupStatisticsRepository;
-
 
     /**
      * ------------------------------ START GET TESTS ------------------------------------------------------------
@@ -119,7 +116,7 @@ public class GroupControllerTest {
 
         // Mock the repository save methods
         when(groupRepository.save(Mockito.any(Group.class))).thenReturn(group);
-        when(groupStatisticsRepository.save(any(GroupStatistics.class))).thenReturn(new GroupStatistics());
+
 
         mockMvc.perform(post("/groups")
                         .header("Authorization", token)

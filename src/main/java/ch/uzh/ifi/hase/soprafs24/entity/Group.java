@@ -17,9 +17,9 @@ public class Group {
 
     private List<String> adminIdList;
     private String accessCode;
-    private List<String> userIdList;
+    private List<String> userIds;
 
-    private List<String> habitIdList;
+    private List<String> habitIds;
 
     private int currentStreak;
 
@@ -68,26 +68,26 @@ public class Group {
     }
 
     public List<String> getUserIdList() {
-        return this.userIdList;
+        return this.userIds;
     }
 
-    public void setUserIdList(List<String> userIdList) {
-        this.userIdList = userIdList;
+    public void setUserIdList(List<String> userIds) {
+        this.userIds = userIds;
     }
     public void addUserId(String userId) {
-        this.userIdList.add(userId);
+        this.userIds.add(userId);
     }
 
     public void removeUserId(String userId) {
-        this.userIdList.remove(userId);
+        this.userIds.remove(userId);
     }
 
     public List<String> getHabitIdList() {
-        return this.habitIdList;
+        return this.habitIds;
     }
 
-    public void setHabitIdList(List<String> habitIdList) {
-        this.habitIdList = habitIdList;
+    public void setHabitIdList(List<String> habitIds) {
+        this.habitIds = habitIds;
     }
 
     public int getCurrentStreak() {

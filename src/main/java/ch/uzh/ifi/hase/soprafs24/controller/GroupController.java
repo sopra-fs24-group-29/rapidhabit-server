@@ -57,18 +57,13 @@ public class GroupController {
     @GetMapping("/groups")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public ResponseEntity<?> getAllGroups(@RequestHeader("Authorization") String authHeader) {
-        boolean isValid = authService.isTokenValid(authHeader);
+    public ResponseEntity<?> getAllGroups(@RequestHeader("Authorization") String authToken) {
+        boolean isValid = authService.isTokenValid(authToken);
         if(isValid){
-            // fetch all users in the internal representation
-            List<Group> group = groupService.getGroups();
-            List<GroupGetDTO> groupGetDTOs = new ArrayList<>();
-
-            // convert each user to the API representation
-            for (Group group_ : group) {
-                groupGetDTOs.add(DTOMapper.INSTANCE.convertEntityToGroupGetDTO(group_));
-            }
-            return ResponseEntity.ok(groupGetDTOs);
+            // fetch userId of the person who did the request
+            String userId = authService.getId(authToken);
+            List<GroupGetDTO> groupGetDTOList = groupService.getGroupMenuDataByUserId(userId);
+            return ResponseEntity.ok(groupGetDTOList);
         }
         else{
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
