@@ -3,11 +3,8 @@ package ch.uzh.ifi.hase.soprafs24.controller;
 import ch.uzh.ifi.hase.soprafs24.constant.RepeatType;
 import ch.uzh.ifi.hase.soprafs24.constant.Weekday;
 import ch.uzh.ifi.hase.soprafs24.entity.*;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupGetDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.group.*;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.user.*;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupPostDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupJoinPostDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupPutDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs24.scheduler.RoutineScheduler;
 import ch.uzh.ifi.hase.soprafs24.service.*;
@@ -41,11 +38,17 @@ public class GroupController {
 
     private final UserStatsEntryService userStatsEntryService;
 
-    GroupController(GroupService groupService, AuthService authService, RoutineScheduler routineScheduler, UserStatsEntryService userStatsEntryService, HabitService habitService) {
+    private final UserScoreService userScoreService;
+
+    private final UserService userService;
+
+    GroupController(GroupService groupService, AuthService authService, UserService userService, UserStatsEntryService userStatsEntryService, HabitService habitService, UserScoreService userScoreService) {
         this.groupService = groupService;
         this.authService = authService;
+        this.userService = userService;
         this.userStatsEntryService = userStatsEntryService;
         this.habitService = habitService;
+        this.userScoreService = userScoreService;
     }
 
     @GetMapping("/groups")
@@ -62,6 +65,35 @@ public class GroupController {
         else{
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+    }
+
+    @GetMapping("/groups/{groupId}/ranking")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public ResponseEntity<?> getRanking(@RequestHeader("Authorization") String authToken, @PathVariable String groupId) {
+        boolean isValid = authService.isTokenValid(authToken);
+        if (!isValid) {
+            return new ResponseEntity<>("Invalid token", HttpStatus.UNAUTHORIZED);
+        }
+        // check who did the request
+        String userId = authService.getId(authToken);
+        Group group = groupService.getGroupById(groupId);
+        //check if user is part of group
+        if (!group.getUserIdList().contains(userId)) {
+            return new ResponseEntity<>("User is not part of this group", HttpStatus.UNAUTHORIZED);
+        }
+        List<GroupRankingGetDTO> groupRankingGetDTOs = new ArrayList<>();
+        for (String groupMemberId : group.getUserIdList()){
+            int userRank = userScoreService.getUserScore(groupMemberId, groupId);
+            String userInitials = userService.getInitials(groupMemberId);
+            // wrap data into DTO
+            GroupRankingGetDTO groupRankingGetDTO = new GroupRankingGetDTO();
+            groupRankingGetDTO.setId(groupMemberId);
+            groupRankingGetDTO.setInitials(userInitials);
+            groupRankingGetDTO.setRank(userRank);
+            groupRankingGetDTOs.add(groupRankingGetDTO);
+        }
+        return ResponseEntity.ok(groupRankingGetDTOs);
     }
 
 
