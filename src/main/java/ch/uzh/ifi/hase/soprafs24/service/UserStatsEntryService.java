@@ -89,20 +89,12 @@ public class UserStatsEntryService {
         return habitStreaks;
     }
 
-    public Map<String, Map<String, String>> getGroupHabitStatus(String groupId) {
-        List<UserStatsEntry> entries = userStatsEntryRepository.findAllByGroupIdAndDueDate(groupId, LocalDate.now());
-        Map<String, Map<String, String>> habitStatusMap = new HashMap<>();
+    public Boolean habitChecked(String userId, String habitId) {
+        Optional<UserStatsEntry> result = userStatsEntryRepository.findByUserIdAndHabitIdAndDueDate(userId, habitId, LocalDate.now());
 
-        entries.forEach(entry -> {
-            String habitId = entry.getHabitId();
-            String userId = entry.getUserId();
-            String status = entry.getStatus().name(); // Gehe davon aus, dass Status ein Enum ist
-
-            habitStatusMap.putIfAbsent(habitId, new HashMap<>());
-            habitStatusMap.get(habitId).put(userId, status);
-        });
-
-        return habitStatusMap;
+        // Check if an entry exists and return based on the status
+        return result.map(entry -> !entry.getStatus().equals(UserStatsStatus.OPEN))
+                .orElse(false);  // Assuming that if no entry is found, the habit is not checked
     }
 
     public Map<String, Integer> computeUserRanks(String groupId) {

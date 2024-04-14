@@ -2,11 +2,8 @@ package ch.uzh.ifi.hase.soprafs24.controller;
 
 import ch.uzh.ifi.hase.soprafs24.constant.RepeatType;
 import ch.uzh.ifi.hase.soprafs24.constant.Weekday;
-import ch.uzh.ifi.hase.soprafs24.entity.Group;
-import ch.uzh.ifi.hase.soprafs24.entity.Habit;
-import ch.uzh.ifi.hase.soprafs24.entity.UserStatsEntry;
+import ch.uzh.ifi.hase.soprafs24.entity.*;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupGetDTO;
-import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.user.*;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupPostDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupJoinPostDTO;
@@ -17,6 +14,7 @@ import ch.uzh.ifi.hase.soprafs24.service.AuthService;
 import ch.uzh.ifi.hase.soprafs24.service.GroupService;
 import ch.uzh.ifi.hase.soprafs24.service.HabitService;
 import ch.uzh.ifi.hase.soprafs24.service.UserStatsEntryService;
+import ch.uzh.ifi.hase.soprafs24.util.WeekdayUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -108,7 +106,13 @@ public class GroupController {
             Group group = groupService.getGroupById(groupId);
             // Iterate through all habit IDs of the group, creating a new User Stats Entry for the corresponding user and the habit
             for (String habitId : group.getHabitIdList()){
-                userStatsEntryService.createUserStatsEntry(userId, groupId, habitId);
+                //
+                Habit habit = habitService.getHabitById(habitId)
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                                "No habit with if " + userId + " was found."));
+                if(habit.getRepeatStrategy().repeatsAt(WeekdayUtil.getCurrentWeekday())){
+                    userStatsEntryService.createUserStatsEntry(userId, groupId, habitId);
+                }
             }
             return ResponseEntity.status(HttpStatus.CREATED).build();
         }

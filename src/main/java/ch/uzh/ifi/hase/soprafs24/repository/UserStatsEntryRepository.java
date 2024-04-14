@@ -1,12 +1,13 @@
 package ch.uzh.ifi.hase.soprafs24.repository;
 
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatsStatus;
-import org.springframework.data.mongodb.repository.MongoRepository;
 import ch.uzh.ifi.hase.soprafs24.entity.UserStatsEntry;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface UserStatsEntryRepository extends MongoRepository<UserStatsEntry, String> {
     List<UserStatsEntry> findByUserId(String userId);
@@ -14,7 +15,12 @@ public interface UserStatsEntryRepository extends MongoRepository<UserStatsEntry
     List<UserStatsEntry> findAllByDueDateLessThanAndStatus(LocalDate date, UserStatsStatus status);
     List<UserStatsEntry> findAllByGroupId(String groupId);
 
-    // MongoDB Query, um Einträge nach Gruppen-ID und fälligem Datum zu finden
+    // Existing custom query
     @Query("{'groupId': ?0, 'dueDate': ?1}")
     List<UserStatsEntry> findAllByGroupIdAndDueDate(String groupId, LocalDate dueDate);
+
+    // New function to find entries by userId, habitId, and specific LocalDate
+    @Query("{'userId': ?0, 'habitId': ?1, 'dueDate': ?2}")
+    Optional<UserStatsEntry> findByUserIdAndHabitIdAndDueDate(String userId, String habitId, LocalDate dueDate);
+
 }

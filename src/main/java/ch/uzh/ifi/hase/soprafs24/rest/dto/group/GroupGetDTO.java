@@ -11,7 +11,6 @@ public class GroupGetDTO {
     private List<String> userIds;
     private List<String> userInitials;
 
-    // Getter and setter for id
     public String getId() {
         return id;
     }
@@ -20,7 +19,6 @@ public class GroupGetDTO {
         this.id = id;
     }
 
-    // Getter and setter for name
     public String getName() {
         return name;
     }
@@ -29,7 +27,6 @@ public class GroupGetDTO {
         this.name = name;
     }
 
-    // Getter and setter for streaks
     public int getStreaks() {
         return streaks;
     }
@@ -38,7 +35,6 @@ public class GroupGetDTO {
         this.streaks = streaks;
     }
 
-    // Getter and setter for currentRank
     public int getCurrentRank() {
         return currentRank;
     }
@@ -47,7 +43,6 @@ public class GroupGetDTO {
         this.currentRank = currentRank;
     }
 
-    // Getter and setter for userIds
     public List<String> getUserIds() {
         return userIds;
     }
@@ -56,7 +51,6 @@ public class GroupGetDTO {
         this.userIds = userIds;
     }
 
-    // Getter and setter for userInitials
     public List<String> getUserInitials() {
         return userInitials;
     }

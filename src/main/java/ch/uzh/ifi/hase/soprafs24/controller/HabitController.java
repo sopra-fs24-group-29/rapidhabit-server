@@ -3,7 +3,10 @@ package ch.uzh.ifi.hase.soprafs24.controller;
 import ch.uzh.ifi.hase.soprafs24.constant.RepeatType;
 import ch.uzh.ifi.hase.soprafs24.constant.Weekday;
 import ch.uzh.ifi.hase.soprafs24.entity.*;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupGetDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.habit.HabitGetDTO;
 import ch.uzh.ifi.hase.soprafs24.service.*;
+import ch.uzh.ifi.hase.soprafs24.util.WeekdayUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.IOException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 public class HabitController {
@@ -34,14 +34,17 @@ public class HabitController {
 
     private final UserStatsEntryService userStatsEntryService;
 
+    private final HabitStreakService habitStreakService;
+
     @Autowired
-    public HabitController(HabitService habitService, GroupService groupService, UserService userService, AuthService authService, ObjectMapper objectMapper, UserStatsEntryService userStatsEntryService) {
+    public HabitController(HabitService habitService, GroupService groupService, UserService userService, AuthService authService, ObjectMapper objectMapper, UserStatsEntryService userStatsEntryService, HabitStreakService habitStreakService) {
         this.habitService = habitService;
         this.objectMapper = objectMapper;
         this.groupService = groupService;
         this.userService = userService;
         this.authService = authService;
         this.userStatsEntryService = userStatsEntryService;
+        this.habitStreakService = habitStreakService;
     }
     @PostMapping("/groups/{groupId}/habits")
     public ResponseEntity<?> createHabit(@RequestHeader("Authorization") String authHeaderToken,
@@ -104,8 +107,55 @@ public class HabitController {
         }
     }
 
+    @GetMapping("/groups/{groupId}/habits")
+    public ResponseEntity<?> createHabit(@RequestHeader("Authorization") String authToken, @PathVariable String groupId) {
+        boolean isValid = authService.isTokenValid(authToken);
+        if (!isValid) {
+            return new ResponseEntity<>("Invalid token", HttpStatus.UNAUTHORIZED);
+        }
+        // check who did the request
+        String userId = authService.getId(authToken);
+        Group group = groupService.getGroupById(groupId);
+        //check if user is part of group
+        if(!group.getUserIdList().contains(userId)){
+            return new ResponseEntity<>("User is not part of this group", HttpStatus.UNAUTHORIZED);
+        }
+
+        List<HabitGetDTO> habitDTOs = new ArrayList<>();
+        // Go through each habit of the group
+        List<String> habitIds = group.getHabitIdList();
+        for (String habitId : habitIds) {
+            Habit habit = habitService.getHabitById(habitId).orElseThrow(() ->
+                    new ResponseStatusException(HttpStatus.NOT_FOUND, "No habit found for habit ID " + habitId));
+
+            HabitGetDTO habitGetDTO = new HabitGetDTO();
+            habitGetDTO.setId(habitId);
+            habitGetDTO.setName(habit.getName());
+            habitGetDTO.setStreaks(habitStreakService.getStreak(habitId, groupId));
+
+            // Setting up user check status for all users in the group
+            Map<String, Boolean> userCheckStatus = new HashMap<>();
+            for (String memberUserId : group.getUserIdList()) {
+                Boolean habitChecked = userStatsEntryService.habitChecked(userId, groupId);
+                String userInitials = userService.getInitials(memberUserId);
+                userCheckStatus.put(userInitials, habitChecked);
+                if(memberUserId.equals(userId)){
+                    habitGetDTO.setChecked(habitChecked);
+                }
+            }
+            habitGetDTO.setUserCheckStatus(userCheckStatus);
+            // if habit is scheduled for the current weekday, add data transfer object to list
+            if(habit.getRepeatStrategy().repeatsAt(WeekdayUtil.getCurrentWeekday())){
+                habitDTOs.add(habitGetDTO);
+            }
+        }
+        // finally, send out list
+        return ResponseEntity.ok(habitDTOs);
+    }
+
+
     public void scheduleHabitRoutines(Group group, Habit habit) {
-        Weekday currentWeekday = getCurrentWeekday();
+        Weekday currentWeekday = WeekdayUtil.getCurrentWeekday();
         System.out.println("Today, it is: " +currentWeekday +".");
         LocalDate today = LocalDate.now();
         System.out.println(today);
@@ -134,27 +184,4 @@ public class HabitController {
                 }
             }
         }
-
-    public static Weekday getCurrentWeekday() {
-        DayOfWeek currentDayOfWeek = LocalDate.now().getDayOfWeek();
-        switch (currentDayOfWeek) {
-            case MONDAY:
-                return Weekday.MONDAY;
-            case TUESDAY:
-                return Weekday.TUESDAY;
-            case WEDNESDAY:
-                return Weekday.WEDNESDAY;
-            case THURSDAY:
-                return Weekday.THURSDAY;
-            case FRIDAY:
-                return Weekday.FRIDAY;
-            case SATURDAY:
-                return Weekday.SATURDAY;
-            case SUNDAY:
-                return Weekday.SUNDAY;
-            default:
-                throw new IllegalStateException("Unknown Weekday: " + currentDayOfWeek);
-        }
-    }
-
 }

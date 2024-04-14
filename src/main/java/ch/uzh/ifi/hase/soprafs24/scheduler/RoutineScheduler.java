@@ -8,6 +8,7 @@ import ch.uzh.ifi.hase.soprafs24.entity.UserStatsEntry;
 import ch.uzh.ifi.hase.soprafs24.service.GroupService;
 import ch.uzh.ifi.hase.soprafs24.service.HabitService;
 import ch.uzh.ifi.hase.soprafs24.service.UserStatsEntryService;
+import ch.uzh.ifi.hase.soprafs24.util.WeekdayUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -40,7 +41,7 @@ public class RoutineScheduler {
     @Scheduled(cron = "0 45 13 * * ?") // Executes every day at 17:30
     public void checkAndScheduleHabitRoutines() {
         System.out.println("Systemzeitzone: " + ZoneId.systemDefault());
-        Weekday currentWeekday = getCurrentWeekday();
+        Weekday currentWeekday = WeekdayUtil.getCurrentWeekday();
         System.out.println(currentWeekday);
         System.out.println("Today, it is: " +currentWeekday +".");
         LocalDate today = LocalDate.now();
@@ -77,28 +78,6 @@ public class RoutineScheduler {
                     }
                 }
             }
-        }
-    }
-
-    public static Weekday getCurrentWeekday() {
-        DayOfWeek currentDayOfWeek = LocalDate.now().getDayOfWeek();
-        switch (currentDayOfWeek) {
-            case MONDAY:
-                return Weekday.MONDAY;
-            case TUESDAY:
-                return Weekday.TUESDAY;
-            case WEDNESDAY:
-                return Weekday.WEDNESDAY;
-            case THURSDAY:
-                return Weekday.THURSDAY;
-            case FRIDAY:
-                return Weekday.FRIDAY;
-            case SATURDAY:
-                return Weekday.SATURDAY;
-            case SUNDAY:
-                return Weekday.SUNDAY;
-            default:
-                throw new IllegalStateException("Unknown Weekday: " + currentDayOfWeek);
         }
     }
 
