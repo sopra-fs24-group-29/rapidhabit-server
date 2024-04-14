@@ -4,7 +4,9 @@ import ch.uzh.ifi.hase.soprafs24.constant.UserStatsStatus;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Document(collection = "Groups")
 public class Group {
@@ -18,6 +20,8 @@ public class Group {
     private List<String> userIdList;
 
     private List<String> habitIdList;
+
+    private int currentStreak;
 
     public String getId() {
         return this.id;
@@ -84,5 +88,13 @@ public class Group {
 
     public void setHabitIdList(List<String> habitIdList) {
         this.habitIdList = habitIdList;
+    }
+
+    public int getCurrentStreak() {
+        return this.currentStreak;
+    }
+
+    public void setCurrentStreak(int currentStreak) {
+        this.currentStreak = currentStreak;
     }
 }

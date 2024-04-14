@@ -1,13 +1,11 @@
 package ch.uzh.ifi.hase.soprafs24.scheduler;
 
 import ch.uzh.ifi.hase.soprafs24.constant.RepeatType;
-import ch.uzh.ifi.hase.soprafs24.constant.UserStatsStatus;
 import ch.uzh.ifi.hase.soprafs24.constant.Weekday;
 import ch.uzh.ifi.hase.soprafs24.entity.Group;
 import ch.uzh.ifi.hase.soprafs24.entity.Habit;
 import ch.uzh.ifi.hase.soprafs24.entity.UserStatsEntry;
 import ch.uzh.ifi.hase.soprafs24.service.GroupService;
-import ch.uzh.ifi.hase.soprafs24.service.GroupStatisticsService;
 import ch.uzh.ifi.hase.soprafs24.service.HabitService;
 import ch.uzh.ifi.hase.soprafs24.service.UserStatsEntryService;
 import org.springframework.http.HttpStatus;
@@ -18,21 +16,18 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDate;
 import java.time.DayOfWeek;
 
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 
 @Component
 public class RoutineScheduler {
     private final GroupService groupService;
-    private final GroupStatisticsService groupStatisticsService;
     private final HabitService habitService;
 
     private final UserStatsEntryService userStatsEntryService;
 
-    RoutineScheduler(GroupService groupService, GroupStatisticsService groupStatisticsService, HabitService habitService, UserStatsEntryService userStatsEntryService){
+    RoutineScheduler(GroupService groupService, HabitService habitService, UserStatsEntryService userStatsEntryService){
         this.groupService = groupService;
-        this.groupStatisticsService = groupStatisticsService;
         this.habitService = habitService;
         this.userStatsEntryService = userStatsEntryService;
     }
@@ -42,7 +37,7 @@ public class RoutineScheduler {
         // System.out.println("A new notification was sent.");
     }
 
-    @Scheduled(cron = "0 0 0 * * ?") // Executes every day at 17:30
+    @Scheduled(cron = "0 45 13 * * ?") // Executes every day at 17:30
     public void checkAndScheduleHabitRoutines() {
         System.out.println("Systemzeitzone: " + ZoneId.systemDefault());
         Weekday currentWeekday = getCurrentWeekday();

@@ -1,16 +1,16 @@
 package ch.uzh.ifi.hase.soprafs24.service;
 import ch.uzh.ifi.hase.soprafs24.entity.Group;
-import ch.uzh.ifi.hase.soprafs24.entity.GroupStatistics;
-import ch.uzh.ifi.hase.soprafs24.entity.User;
+import ch.uzh.ifi.hase.soprafs24.entity.HabitStreak;
+import ch.uzh.ifi.hase.soprafs24.entity.UserScore;
 import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
 // import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPostDTO; // wird verwendet um die User Daten aus der intern verwendeten DTO Representation zu lesen
-import ch.uzh.ifi.hase.soprafs24.repository.GroupStatisticsRepository;
+import ch.uzh.ifi.hase.soprafs24.repository.HabitStreakRepository;
+import ch.uzh.ifi.hase.soprafs24.repository.UserScoreRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 // import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +19,6 @@ import org.springframework.web.server.ResponseStatusException;
 // import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 
 /**
@@ -36,14 +35,16 @@ public class GroupService {
     private final Logger log = LoggerFactory.getLogger(GroupService.class);
 
     private final GroupRepository groupRepository;
-    private final GroupStatisticsRepository groupStatisticsRepository;
+    private final UserScoreRepository userScoreRepository;
+    private final HabitStreakRepository habitStreakRepository;
     private final BCryptPasswordEncoder encoder;
 
     @Autowired
-    public GroupService(GroupRepository groupRepository, BCryptPasswordEncoder encoder, GroupStatisticsRepository groupStatisticsRepository) {
+    public GroupService(GroupRepository groupRepository, BCryptPasswordEncoder encoder, UserScoreRepository userScoreRepository, HabitStreakRepository habitStreakRepository) {
         this.groupRepository = groupRepository;
         this.encoder = encoder;
-        this.groupStatisticsRepository = groupStatisticsRepository;
+        this.userScoreRepository = userScoreRepository;
+        this.habitStreakRepository = habitStreakRepository;
     }
 
     // Deine Methoden hier...
@@ -55,14 +56,18 @@ public class GroupService {
         newGroup.setHabitIdList(new ArrayList<>());
         newGroup.addAdminId(creatorId);
         newGroup.addUserId(creatorId);
+        newGroup.setCurrentStreak(0);
         newGroup = groupRepository.save(newGroup);
         log.debug("Created Group: {}", newGroup);
 
-        // Initialisiere GroupStatistics für die neue Gruppe
-        GroupStatistics newGroupStatistics = new GroupStatistics();
-        newGroupStatistics.setGroupId(newGroup.getId());
-        groupStatisticsRepository.save(newGroupStatistics);
-
+        // Initialize UserScore Entry for creator of the group
+        UserScore newUserScore = new UserScore();
+        newUserScore.setUserId(newGroup.getUserIdList().get(0));
+        newUserScore.setGroupId(newGroup.getId());
+        newUserScore.setPoints(0);
+        newUserScore.setRank(1);
+        newUserScore = userScoreRepository.save(newUserScore);
+        // Finally, return group object
         return newGroup;
     }
 
@@ -70,7 +75,7 @@ public class GroupService {
         return this.groupRepository.findAll();
     }
 
-    public void addHabitToGroup(String groupId, String habitId) {
+    public void addHabitIdToGroup(String groupId, String habitId) {
         Group group = groupRepository.findById(groupId).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "No group with id " + groupId + " found."));
         // Check if habit id is already present in the list
@@ -78,6 +83,29 @@ public class GroupService {
             group.getHabitIdList().add(habitId);
             groupRepository.save(group);
         }
+
+        // Create new group streak entry for the corresponding habit
+        HabitStreak habitStreak = new HabitStreak(groupId, habitId);
+        habitStreak.setStreak(0);
+        habitStreakRepository.save(habitStreak);
+    }
+    @Transactional
+    public void removeHabitFromGroup(String groupId, String habitId) {
+        // Fetch the group by groupId
+        Group group = groupRepository.findById(groupId).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "No group with id " + groupId + " found."));
+
+        // Check if the habit id is present in the list
+        if (!group.getHabitIdList().contains(habitId)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Habit does not exist in this group!");
+        }
+
+        // Remove the habit id from the list
+        group.getHabitIdList().remove(habitId);
+        groupRepository.save(group);
+
+        // Delete the corresponding habit streak entry
+        habitStreakRepository.deleteByGroupIdAndHabitId(groupId, habitId);
     }
     public String generateAccessCode(){
         // here the logic for generating the access code will be implemented
@@ -112,8 +140,16 @@ public class GroupService {
         // add user
         group.addUserId(userId);
         groupRepository.save(group);
-    }
 
+        // Create UserScore Object ob the coresponding user
+        UserScore newUserScore = new UserScore();
+        newUserScore.setUserId(userId);
+        newUserScore.setGroupId(groupId);
+        newUserScore.setPoints(0);
+        newUserScore.setRank(1);
+        newUserScore = userScoreRepository.save(newUserScore);
+    }
+    @Transactional
     public Group removeUserFromGroup(String groupId, String userId) {
         Group group = groupRepository.findById(groupId).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "No group with id " + groupId + " found."));
@@ -122,10 +158,13 @@ public class GroupService {
         if (!group.getUserIdList().contains(userId)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User does not exist in this group!");
         }
-
         // remove user
         group.removeUserId(userId);
         groupRepository.save(group);
+
+        // remove user from user scores
+        userScoreRepository.deleteByUserIdAndGroupId(userId, groupId);
+
         return group;
     }
 

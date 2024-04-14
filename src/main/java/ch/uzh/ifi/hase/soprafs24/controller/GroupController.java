@@ -1,6 +1,10 @@
 package ch.uzh.ifi.hase.soprafs24.controller;
 
+import ch.uzh.ifi.hase.soprafs24.constant.RepeatType;
+import ch.uzh.ifi.hase.soprafs24.constant.Weekday;
 import ch.uzh.ifi.hase.soprafs24.entity.Group;
+import ch.uzh.ifi.hase.soprafs24.entity.Habit;
+import ch.uzh.ifi.hase.soprafs24.entity.UserStatsEntry;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupGetDTO;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.user.*;
@@ -8,12 +12,19 @@ import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupPostDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupJoinPostDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupPutDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
+import ch.uzh.ifi.hase.soprafs24.scheduler.RoutineScheduler;
 import ch.uzh.ifi.hase.soprafs24.service.AuthService;
 import ch.uzh.ifi.hase.soprafs24.service.GroupService;
+import ch.uzh.ifi.hase.soprafs24.service.HabitService;
+import ch.uzh.ifi.hase.soprafs24.service.UserStatsEntryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,9 +42,16 @@ public class GroupController {
 
     private final AuthService authService;
 
-    GroupController(GroupService groupService, AuthService authService) {
+
+    private final HabitService habitService;
+
+    private final UserStatsEntryService userStatsEntryService;
+
+    GroupController(GroupService groupService, AuthService authService, RoutineScheduler routineScheduler, UserStatsEntryService userStatsEntryService, HabitService habitService) {
         this.groupService = groupService;
         this.authService = authService;
+        this.userStatsEntryService = userStatsEntryService;
+        this.habitService = habitService;
     }
 
     @GetMapping("/groups")
@@ -91,6 +109,12 @@ public class GroupController {
             String userId = authService.getId(authHeader);
             System.out.println("POST Request received. Convert group to internal representation ...");
             groupService.addUserByAccessCode(groupId, userId, groupJoinPostDTO.getAccessKey());
+            // ...
+            Group group = groupService.getGroupById(groupId);
+            // Iterate through all habit IDs of the group, creating a new User Stats Entry for the corresponding user and the habit
+            for (String habitId : group.getHabitIdList()){
+                userStatsEntryService.createUserStatsEntry(userId, groupId, habitId);
+            }
             return ResponseEntity.status(HttpStatus.CREATED).build();
         }
         else {
