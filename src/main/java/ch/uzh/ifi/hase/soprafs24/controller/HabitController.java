@@ -117,7 +117,7 @@ public class HabitController {
         String userId = authService.getId(authToken);
         Group group = groupService.getGroupById(groupId);
         //check if user is part of group
-        if(!group.getUserIdList().contains(userId)){
+        if (!group.getUserIdList().contains(userId)) {
             return new ResponseEntity<>("User is not part of this group", HttpStatus.UNAUTHORIZED);
         }
 
@@ -139,16 +139,15 @@ public class HabitController {
                 Boolean habitChecked = userStatsEntryService.habitChecked(userId, groupId);
                 String userInitials = userService.getInitials(memberUserId);
                 userCheckStatus.put(userInitials, habitChecked);
-                if(memberUserId.equals(userId)){
+                if (memberUserId.equals(userId)) {
                     habitGetDTO.setChecked(habitChecked);
                 }
             }
             habitGetDTO.setUserCheckStatus(userCheckStatus);
-            // if habit is scheduled for the current weekday, add data transfer object to list
-            if(habit.getRepeatStrategy().repeatsAt(WeekdayUtil.getCurrentWeekday())){
-                habitDTOs.add(habitGetDTO);
-            }
-        }
+            habitGetDTO.setOnSchedule(habit.getRepeatStrategy().repeatsAt(WeekdayUtil.getCurrentWeekday()));
+            // add data transfer object to list
+            habitDTOs.add(habitGetDTO);
+    }
         // finally, send out list
         return ResponseEntity.ok(habitDTOs);
     }

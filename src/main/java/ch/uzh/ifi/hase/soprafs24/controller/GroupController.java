@@ -10,10 +10,7 @@ import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupJoinPostDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupPutDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs24.scheduler.RoutineScheduler;
-import ch.uzh.ifi.hase.soprafs24.service.AuthService;
-import ch.uzh.ifi.hase.soprafs24.service.GroupService;
-import ch.uzh.ifi.hase.soprafs24.service.HabitService;
-import ch.uzh.ifi.hase.soprafs24.service.UserStatsEntryService;
+import ch.uzh.ifi.hase.soprafs24.service.*;
 import ch.uzh.ifi.hase.soprafs24.util.WeekdayUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +34,6 @@ import java.util.List;
 public class GroupController {
 
     private final GroupService groupService;
-
     private final AuthService authService;
 
 

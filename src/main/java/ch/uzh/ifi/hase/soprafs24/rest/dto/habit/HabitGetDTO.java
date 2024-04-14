@@ -7,6 +7,7 @@ public class HabitGetDTO {
     private String id;
     private String name;
     private int streaks;
+    private Boolean onSchedule;
     private Boolean checked;
     private Map<String, Boolean> userCheckStatus = new HashMap<>();
 
@@ -32,6 +33,14 @@ public class HabitGetDTO {
 
     public void setStreaks(int streaks) {
         this.streaks = streaks;
+    }
+
+    public Boolean getOnSchedule() {
+        return onSchedule;
+    }
+
+    public void setOnSchedule(Boolean onSchedule) {
+        this.onSchedule = onSchedule;
     }
 
     public Boolean getChecked() {

@@ -38,7 +38,7 @@ public class RoutineScheduler {
         // System.out.println("A new notification was sent.");
     }
 
-    @Scheduled(cron = "0 45 13 * * ?") // Executes every day at 17:30
+    @Scheduled(cron = "0 03 01 * * ?") // Executes every day at 17:30
     public void checkAndScheduleHabitRoutines() {
         System.out.println("Systemzeitzone: " + ZoneId.systemDefault());
         Weekday currentWeekday = WeekdayUtil.getCurrentWeekday();
