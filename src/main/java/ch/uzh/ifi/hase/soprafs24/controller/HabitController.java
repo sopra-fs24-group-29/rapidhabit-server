@@ -1,9 +1,13 @@
 package ch.uzh.ifi.hase.soprafs24.controller;
 
 import ch.uzh.ifi.hase.soprafs24.constant.RepeatType;
+import ch.uzh.ifi.hase.soprafs24.constant.UserStatsStatus;
+import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs24.constant.Weekday;
 import ch.uzh.ifi.hase.soprafs24.entity.*;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupGetDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupHabitDataGetDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.habit.HabitDateUserStatusGetDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.habit.HabitGetDTO;
 import ch.uzh.ifi.hase.soprafs24.service.*;
 import ch.uzh.ifi.hase.soprafs24.util.WeekdayUtil;
@@ -151,6 +155,50 @@ public class HabitController {
         // finally, send out list
         return ResponseEntity.ok(habitDTOs);
     }
+
+    @GetMapping("/groups/{groupId}/habits/{habitId}")
+    public ResponseEntity<?> getHabitData(
+            @RequestHeader("Authorization") String authToken,
+            @PathVariable String groupId,
+            @PathVariable String habitId) {
+
+        boolean isValid = authService.isTokenValid(authToken);
+        if (!isValid) {
+            return new ResponseEntity<>("Invalid token", HttpStatus.UNAUTHORIZED);
+        }
+
+        String userId = authService.getId(authToken);
+        Group group = groupService.getGroupById(groupId);
+        if (!group.getUserIdList().contains(userId)) {
+            return new ResponseEntity<>("User is not part of this group", HttpStatus.UNAUTHORIZED);
+        }
+
+        Habit habit = habitService.getHabitById(habitId).orElseThrow(()->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Habit was not found."));
+        String name = habit.getName();
+
+        int currentStreak = habitStreakService.getStreak(habitId, groupId);
+
+        Map<LocalDate, Map<String, UserStatsStatus>> statusMap = new TreeMap<>();
+        for (String memberId : group.getUserIdList()) {
+            List<UserStatsEntry> memberEntries = userStatsEntryService.getEntriesByUserIdAndHabitId(memberId, habitId);
+            for (UserStatsEntry entry : memberEntries) {
+                LocalDate date = entry.getDueDate();
+                UserStatsStatus userStatus = entry.getStatus();
+                statusMap.computeIfAbsent(date, k -> new HashMap<>())
+                        .put(memberId, entry.getStatus());
+            }
+        }
+
+        // Construct DTO
+        GroupHabitDataGetDTO groupHabitDataDTO = new GroupHabitDataGetDTO();
+        groupHabitDataDTO.setCurrentTeamStreak(currentStreak);
+        groupHabitDataDTO.setStatusMap(statusMap);
+        groupHabitDataDTO.setName(name);
+
+        return ResponseEntity.ok(groupHabitDataDTO);
+    }
+
 
 
     public void scheduleHabitRoutines(Group group, Habit habit) {

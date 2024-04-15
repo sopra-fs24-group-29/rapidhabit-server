@@ -23,4 +23,8 @@ public interface UserStatsEntryRepository extends MongoRepository<UserStatsEntry
     @Query("{'userId': ?0, 'habitId': ?1, 'dueDate': ?2}")
     Optional<UserStatsEntry> findByUserIdAndHabitIdAndDueDate(String userId, String habitId, LocalDate dueDate);
 
+    List<UserStatsEntry> findByHabitIdAndGroupId(String habitId, String groupId);
+
+    List<UserStatsEntry> findByUserIdAndHabitId(String userId, String habitId);
+
 }

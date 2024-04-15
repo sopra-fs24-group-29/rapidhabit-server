@@ -5,6 +5,7 @@ import ch.uzh.ifi.hase.soprafs24.entity.Habit;
 import ch.uzh.ifi.hase.soprafs24.entity.UserStatsEntry;
 import ch.uzh.ifi.hase.soprafs24.repository.HabitRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.UserStatsEntryRepository;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.habit.HabitDateUserStatusGetDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -117,20 +118,16 @@ public class UserStatsEntryService {
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "No habit with id " + habitId + " found."));
         return habit.getRewardPoints();
     }
+    public List<HabitDateUserStatusGetDTO> getHabitData(String habitId, String groupId) {
+        List<UserStatsEntry> entries = userStatsEntryRepository.findByHabitIdAndGroupId(habitId, groupId);
 
-    public Map<LocalDate, Boolean> getActivityData() {
-        List<UserStatsEntry> entries = userStatsEntryRepository.findAll();
-        Map<LocalDate, Boolean> activityMap = new HashMap<>();
-
-        Map<LocalDate, List<UserStatsEntry>> entriesByDate = entries.stream()
-                .collect(Collectors.groupingBy(UserStatsEntry::getDueDate));
-
-        entriesByDate.forEach((date, entriesList) -> {
-            boolean allSuccess = entriesList.stream()
-                    .allMatch(entry -> entry.getStatus() == UserStatsStatus.SUCCESS);
-            activityMap.put(date, allSuccess);
-        });
-
-        return activityMap;
+        return entries.stream()
+                .map(entry -> new HabitDateUserStatusGetDTO(entry.getDueDate(), entry.getUserId(), entry.getStatus()))
+                .collect(Collectors.toList());
     }
+    public List<UserStatsEntry> getEntriesByUserIdAndHabitId(String userId, String habitId) {
+        // Fetches all entries that match the given userId and habitId
+        return userStatsEntryRepository.findByUserIdAndHabitId(userId, habitId);
+    }
+
 }
