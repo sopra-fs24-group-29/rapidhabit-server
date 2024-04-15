@@ -137,7 +137,7 @@ public class GroupController {
                 //
                 Habit habit = habitService.getHabitById(habitId)
                         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                                "No habit with if " + userId + " was found."));
+                                "No habit with id " + userId + " was found."));
                 if(habit.getRepeatStrategy().repeatsAt(WeekdayUtil.getCurrentWeekday())){
                     userStatsEntryService.createUserStatsEntry(userId, groupId, habitId);
                 }
