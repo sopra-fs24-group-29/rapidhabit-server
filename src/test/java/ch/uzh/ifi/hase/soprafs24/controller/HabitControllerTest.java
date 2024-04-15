@@ -3,33 +3,14 @@ package ch.uzh.ifi.hase.soprafs24.controller;
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatsStatus;
 import ch.uzh.ifi.hase.soprafs24.entity.*;
 import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
-import ch.uzh.ifi.hase.soprafs24.repository.UserStatsEntryRepository;
 import ch.uzh.ifi.hase.soprafs24.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-
-
-import ch.uzh.ifi.hase.soprafs24.constant.Weekday;
-import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupGetDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupJoinPostDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupPostDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupPutDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
-import ch.uzh.ifi.hase.soprafs24.service.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.server.ResponseStatusException;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -154,7 +135,7 @@ public class HabitControllerTest {
      * ------------------------------ END GET TESTS ------------------------------ START POST TESTS ------------------------------
      */
     @Test //POST Mapping "/groups/{groupId}/habits" - CODE 201 CREATED (Pass)
-    public void POST_GroupHabits_validInput_ReturnsCreated() throws Exception {
+    public void POST_Create_GroupHabits_validInput_ReturnsCreated() throws Exception {
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
         String groupId = "group1";
         String userId = "user1";
