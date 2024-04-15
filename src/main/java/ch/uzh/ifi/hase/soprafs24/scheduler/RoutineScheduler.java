@@ -88,7 +88,7 @@ public class RoutineScheduler {
     }
 
     // Cron-Ausdruck für tägliche Ausführung um 03:00 Uhr
-    @Scheduled(cron = "0 5 15 * * ?")
+    @Scheduled(cron = "0 15 15 * * ?")
     public void schedulerTest() {
         System.out.println("Test triggered");
         User user = new User();
