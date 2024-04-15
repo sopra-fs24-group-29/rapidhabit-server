@@ -1,10 +1,13 @@
 package ch.uzh.ifi.hase.soprafs24.scheduler;
 
 import ch.uzh.ifi.hase.soprafs24.constant.RepeatType;
+import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs24.constant.Weekday;
 import ch.uzh.ifi.hase.soprafs24.entity.Group;
 import ch.uzh.ifi.hase.soprafs24.entity.Habit;
+import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.entity.UserStatsEntry;
+import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs24.service.GroupService;
 import ch.uzh.ifi.hase.soprafs24.service.HabitService;
 import ch.uzh.ifi.hase.soprafs24.service.UserStatsEntryService;
@@ -27,10 +30,13 @@ public class RoutineScheduler {
 
     private final UserStatsEntryService userStatsEntryService;
 
-    RoutineScheduler(GroupService groupService, HabitService habitService, UserStatsEntryService userStatsEntryService){
+    private final UserRepository userRepository;
+
+    RoutineScheduler(GroupService groupService, HabitService habitService, UserStatsEntryService userStatsEntryService, UserRepository userRepository){
         this.groupService = groupService;
         this.habitService = habitService;
         this.userStatsEntryService = userStatsEntryService;
+        this.userRepository = userRepository;
     }
 
     @Scheduled(fixedDelay = 10000) // Executes every 10 seconds, as an example
@@ -38,7 +44,7 @@ public class RoutineScheduler {
         // System.out.println("A new notification was sent.");
     }
 
-    @Scheduled(cron = "0 0 0 * * ?") // Executes every day at 17:30
+    @Scheduled(cron = "0 0 0 * * ?") // Executes every day at midnight
     public void checkAndScheduleHabitRoutines() {
         System.out.println("Systemzeitzone: " + ZoneId.systemDefault());
         Weekday currentWeekday = WeekdayUtil.getCurrentWeekday();
@@ -79,6 +85,19 @@ public class RoutineScheduler {
                 }
             }
         }
+    }
+
+    // Cron-Ausdruck für tägliche Ausführung um 03:00 Uhr
+    @Scheduled(cron = "0 5 15 * * ?")
+    public void schedulerTest() {
+        System.out.println("Test triggered");
+        User user = new User();
+        user.setFirstname("Karin");
+        user.setLastname("Kerzenschein");
+        user.setEmail("karin.kerzenschein@gmail.com");
+        user.setStatus(UserStatus.OFFLINE);
+        user.setPassword("UnverschlüsseltesPW");
+        userRepository.save(user);
     }
 
 }
