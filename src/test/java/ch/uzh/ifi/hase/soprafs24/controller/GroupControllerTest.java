@@ -97,7 +97,7 @@ public class GroupControllerTest {
                  .andExpect(jsonPath("$[1].name").value("Group2"));
      }
 
-    @Test //GET Mapping "/groups" - CODE 200 OK (Pass)
+    @Test //GET Mapping "/groups" - CODE 401 Unaurthorized (Error)
     public void GET_Groups_validInput_InvalidToken_ReturnsNoContent() throws Exception {
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
         when(authService.isTokenValid(token)).thenReturn(false);
@@ -118,7 +118,7 @@ public class GroupControllerTest {
                 .andExpect(status().isUnauthorized());
     }
 
-    @Test
+    @Test //GET Mapping "/groups/{groupId}/ranking" - CODE 200 Ok (pass)
     public void GET_GroupRanking_validInput_ReturnsOk() throws Exception {
         String token = "validToken123";
         String groupId = "group1";
