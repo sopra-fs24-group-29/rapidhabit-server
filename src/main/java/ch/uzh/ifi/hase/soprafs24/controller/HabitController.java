@@ -112,7 +112,7 @@ public class HabitController {
     }
 
     @GetMapping("/groups/{groupId}/habits")
-    public ResponseEntity<?> createHabit(@RequestHeader("Authorization") String authToken, @PathVariable String groupId) {
+    public ResponseEntity<?> getHabits(@RequestHeader("Authorization") String authToken, @PathVariable String groupId) {
         boolean isValid = authService.isTokenValid(authToken);
         if (!isValid) {
             return new ResponseEntity<>("Invalid token", HttpStatus.UNAUTHORIZED);
@@ -140,7 +140,8 @@ public class HabitController {
             // Setting up user check status for all users in the group
             Map<String, Boolean> userCheckStatus = new HashMap<>();
             for (String memberUserId : group.getUserIdList()) {
-                Boolean habitChecked = userStatsEntryService.habitChecked(userId, groupId);
+                // returns bool if memberUser has checked the habit at the current day
+                Boolean habitChecked = userStatsEntryService.habitChecked(memberUserId, habitId);
                 String userInitials = userService.getInitials(memberUserId);
                 userCheckStatus.put(userInitials, habitChecked);
                 if (memberUserId.equals(userId)) {
@@ -198,6 +199,35 @@ public class HabitController {
 
         return ResponseEntity.ok(groupHabitDataDTO);
     }
+
+    @PutMapping("/groups/{groupId}/habits/{habitId}/check")
+    public ResponseEntity<?> checkHabit(
+            @RequestHeader("Authorization") String authToken,
+            @PathVariable String groupId,
+            @PathVariable String habitId) {
+
+        boolean isValid = authService.isTokenValid(authToken);
+        if (!isValid) {
+            return new ResponseEntity<>("Invalid token", HttpStatus.UNAUTHORIZED);
+        }
+
+        String userId = authService.getId(authToken);
+        Group group = groupService.getGroupById(groupId);
+        if (!group.getUserIdList().contains(userId)) {
+            return new ResponseEntity<>("User is not part of this group", HttpStatus.UNAUTHORIZED);
+        }
+
+        Habit habit = habitService.getHabitById(habitId).orElseThrow(()->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Habit was not found."));
+
+
+        UserStatsStatus statsStatus = userStatsEntryService.checkHabitByUser(habitId,userId);
+        String msg = "Habit status changed to " +statsStatus;
+
+        // finally return the updated list presenting all group habits
+        return getHabits(authToken,groupId);
+    }
+
 
 
 

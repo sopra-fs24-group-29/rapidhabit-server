@@ -82,15 +82,4 @@ public class RoutineScheduler {
         }
     }
     // TEST:
-    @Scheduled(cron = "0 0 21 * * ?")
-    public void schedulerTest() {
-        System.out.println("Test triggered");
-        User user = new User();
-        user.setFirstname("Selena");
-        user.setLastname("Sellerie");
-        user.setEmail("selena.sellerie@gmail.com");
-        user.setStatus(UserStatus.OFFLINE);
-        user.setPassword("UnverschlüsseltesPW");
-        userRepository.save(user);
-    }
 }

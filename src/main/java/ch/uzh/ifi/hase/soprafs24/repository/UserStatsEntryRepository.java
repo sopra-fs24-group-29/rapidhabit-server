@@ -5,6 +5,7 @@ import ch.uzh.ifi.hase.soprafs24.entity.UserStatsEntry;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +23,12 @@ public interface UserStatsEntryRepository extends MongoRepository<UserStatsEntry
     // New function to find entries by userId, habitId, and specific LocalDate
     @Query("{'userId': ?0, 'habitId': ?1, 'dueDate': ?2}")
     Optional<UserStatsEntry> findByUserIdAndHabitIdAndDueDate(String userId, String habitId, LocalDate dueDate);
+
+    @Query("{'userId': ?0, 'habitId': ?1, 'dueDate': {$gte: ?2, $lt: ?3}}")
+    Optional<UserStatsEntry> findByUserIdAndHabitIdAndDueDateBetween(String userId, String habitId, Instant startOfDay, Instant endOfDay);
+
+    @Query(value = "{'userId': ?0, 'habitId': ?1}", sort = "{'dueDate': -1}")
+    Optional<UserStatsEntry> findLatestByUserIdAndHabitId(String userId, String habitId);
 
     List<UserStatsEntry> findByHabitIdAndGroupId(String habitId, String groupId);
 
