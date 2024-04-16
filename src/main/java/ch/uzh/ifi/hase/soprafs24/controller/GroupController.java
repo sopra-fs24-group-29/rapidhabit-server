@@ -66,6 +66,21 @@ public class GroupController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
+    @GetMapping("/test")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public ResponseEntity<?> getAllGroups(@RequestHeader("Authorization") String authToken) {
+        boolean isValid = authService.isTokenValid(authToken);
+        if(isValid){
+            // fetch userId of the person who did the request
+            String userId = authService.getId(authToken);
+            List<GroupGetDTO> groupGetDTOList = groupService.getGroupMenuDataByUserId(userId);
+            return ResponseEntity.ok(groupGetDTOList);
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
 
     @GetMapping("/groups/{groupId}/ranking")
     @ResponseStatus(HttpStatus.OK)

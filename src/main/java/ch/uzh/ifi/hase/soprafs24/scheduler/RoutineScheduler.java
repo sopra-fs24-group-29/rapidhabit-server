@@ -39,18 +39,10 @@ public class RoutineScheduler {
         this.userRepository = userRepository;
     }
 
-    @Scheduled(fixedDelay = 10000) // Executes every 10 seconds, as an example
-    public void sendNotifications() {
+    //@Scheduled(fixedDelay = 10000) // Executes every 10 seconds, as an example
+    //public void sendNotifications() {
         // System.out.println("A new notification was sent.");
-        System.out.println("Test triggered");
-        User user = new User();
-        user.setFirstname("Merlin");
-        user.setLastname("Meckerer");
-        user.setEmail("merlin.meckerer@gmail.com");
-        user.setStatus(UserStatus.OFFLINE);
-        user.setPassword("UnverschlüsseltesPW");
-        userRepository.save(user);
-    }
+    //}
 
     @Scheduled(cron = "0 0 0 * * ?") // Executes every day at midnight
     public void checkAndScheduleHabitRoutines() {
@@ -94,15 +86,14 @@ public class RoutineScheduler {
             }
         }
     }
-
-    // Cron-Ausdruck für tägliche Ausführung um 03:00 Uhr
-    @Scheduled(cron = "0 26 16 * * ?")
+    // TEST:
+    @Scheduled(cron = "0 15 20 * * ?")
     public void schedulerTest() {
         System.out.println("Test triggered");
         User user = new User();
-        user.setFirstname("Merlin");
-        user.setLastname("Meckerer");
-        user.setEmail("merlin.meckerer@gmail.com");
+        user.setFirstname("Selena");
+        user.setLastname("Sellerie");
+        user.setEmail("selena.sellerie@gmail.com");
         user.setStatus(UserStatus.OFFLINE);
         user.setPassword("UnverschlüsseltesPW");
         userRepository.save(user);
