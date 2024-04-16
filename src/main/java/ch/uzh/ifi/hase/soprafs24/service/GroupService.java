@@ -187,7 +187,8 @@ public class GroupService {
     public List<GroupGetDTO> getGroupMenuDataByUserId(String userId) {
         List<Group> groupList = groupRepository.findByUserIdsContains(userId);
         if (groupList.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No groups found for user " + userId);
+            List<GroupGetDTO> groupGetDTOList = new ArrayList<>();
+            return groupGetDTOList;
         }
 
         List<GroupGetDTO> groupGetDTOList = new ArrayList<>();
