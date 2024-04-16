@@ -86,10 +86,11 @@ public class UserController {
         }
     }
 
-    @GetMapping("/users/{id}")
-    public ResponseEntity<?> getDetailedUser(@RequestHeader("Authorization") String authHeader, @PathVariable String id) {
+    @GetMapping("/users/profile")
+    public ResponseEntity<?> getDetailedUser(@RequestHeader("Authorization") String authHeader) {
         boolean isValid = authService.isTokenValid(authHeader);
         if (isValid) {
+            String id = authService.getId(authHeader);
             User user = userService.getUserDetails(id);
             if (user != null) {
                 return ResponseEntity.ok(DTOMapper.INSTANCE.convertEntityToUserGetDTO(user));
