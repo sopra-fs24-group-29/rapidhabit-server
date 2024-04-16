@@ -71,4 +71,5 @@ public class Habit {
     public void setRewardPoints(int rewardPoints) {
         this.rewardPoints = rewardPoints;
     }
+
 }

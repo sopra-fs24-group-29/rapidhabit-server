@@ -10,5 +10,7 @@ import java.util.Optional;
 @Repository("groupRepository")
 public interface GroupRepository extends MongoRepository<Group, String> {
     Optional<Group> findById(String id);
+    Optional<Group> findByAccessCode(String accessCode);
+
     List<Group> findByUserIdsContains(String userId);
 }

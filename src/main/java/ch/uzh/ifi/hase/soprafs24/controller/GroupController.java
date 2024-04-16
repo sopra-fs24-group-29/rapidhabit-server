@@ -122,16 +122,16 @@ public class GroupController {
         }
     }
 
-    @PostMapping("/groups/{groupId}/users") // defines a method to for handling post methods for creating new users
+    @PostMapping("/groups/join") // defines a method to for handling post methods for creating new users
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public ResponseEntity<?> createUser(@RequestHeader("Authorization") String authHeader, @RequestBody GroupJoinPostDTO groupJoinPostDTO, @PathVariable String groupId) {
+    public ResponseEntity<?> createUser(@RequestHeader("Authorization") String authHeader, @RequestBody GroupJoinPostDTO groupJoinPostDTO) {
         if(authService.isTokenValid(authHeader)){
             String userId = authService.getId(authHeader);
             System.out.println("POST Request received. Convert group to internal representation ...");
-            groupService.addUserByAccessCode(groupId, userId, groupJoinPostDTO.getAccessKey());
-            // ...
-            Group group = groupService.getGroupById(groupId);
+            groupService.addUserByAccessCode(userId, groupJoinPostDTO.getAccessKey());
+            Group group = groupService.getGroupByAccessCode(groupJoinPostDTO.getAccessKey());
+            String groupId = group.getId();
             // Iterate through all habit IDs of the group, creating a new User Stats Entry for the corresponding user and the habit
             for (String habitId : group.getHabitIdList()){
                 //
