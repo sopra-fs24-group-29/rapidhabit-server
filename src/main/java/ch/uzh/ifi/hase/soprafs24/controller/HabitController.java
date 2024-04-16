@@ -186,7 +186,7 @@ public class HabitController {
                 LocalDate date = entry.getDueDate();
                 UserStatsStatus userStatus = entry.getStatus();
                 statusMap.computeIfAbsent(date, k -> new HashMap<>())
-                        .put(memberId, entry.getStatus());
+                        .put(userService.getInitials(memberId), entry.getStatus());
             }
         }
 

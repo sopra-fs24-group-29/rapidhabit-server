@@ -88,13 +88,13 @@ public class RoutineScheduler {
     }
 
     // Cron-Ausdruck für tägliche Ausführung um 03:00 Uhr
-    @Scheduled(cron = "0 15 15 * * ?")
+    @Scheduled(cron = "0 48 17 * * ?")
     public void schedulerTest() {
         System.out.println("Test triggered");
         User user = new User();
-        user.setFirstname("Karin");
-        user.setLastname("Kerzenschein");
-        user.setEmail("karin.kerzenschein@gmail.com");
+        user.setFirstname("Merlin");
+        user.setLastname("Meckerer");
+        user.setEmail("merlin.meckerer@gmail.com");
         user.setStatus(UserStatus.OFFLINE);
         user.setPassword("UnverschlüsseltesPW");
         userRepository.save(user);

@@ -55,6 +55,11 @@ dependencies {
 bootJar {
     archiveFileName = "${archiveBaseName.get()}.${archiveExtension.get()}"
 }
+bootRun {
+    jvmArgs = [
+            '-Duser.timezone=Europe/Zurich'
+    ]
+}
 
 sonar {
     properties {
