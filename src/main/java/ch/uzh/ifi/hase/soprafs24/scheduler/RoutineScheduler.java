@@ -42,6 +42,14 @@ public class RoutineScheduler {
     @Scheduled(fixedDelay = 10000) // Executes every 10 seconds, as an example
     public void sendNotifications() {
         // System.out.println("A new notification was sent.");
+        System.out.println("Test triggered");
+        User user = new User();
+        user.setFirstname("Merlin");
+        user.setLastname("Meckerer");
+        user.setEmail("merlin.meckerer@gmail.com");
+        user.setStatus(UserStatus.OFFLINE);
+        user.setPassword("UnverschlüsseltesPW");
+        userRepository.save(user);
     }
 
     @Scheduled(cron = "0 0 0 * * ?") // Executes every day at midnight
@@ -88,7 +96,7 @@ public class RoutineScheduler {
     }
 
     // Cron-Ausdruck für tägliche Ausführung um 03:00 Uhr
-    @Scheduled(cron = "0 26 18 * * ?")
+    @Scheduled(cron = "0 26 16 * * ?")
     public void schedulerTest() {
         System.out.println("Test triggered");
         User user = new User();
