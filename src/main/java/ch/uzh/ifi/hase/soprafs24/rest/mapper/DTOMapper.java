@@ -51,6 +51,4 @@ public interface DTOMapper {
 
     GroupGetDTO convertEntityToGroupGetDTO(Group group);
 
-
-
 }

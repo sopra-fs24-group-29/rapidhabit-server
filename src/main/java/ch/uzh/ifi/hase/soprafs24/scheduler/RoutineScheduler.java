@@ -82,7 +82,7 @@ public class RoutineScheduler {
         }
     }
     // TEST:
-    @Scheduled(cron = "0 30 20 * * ?")
+    @Scheduled(cron = "0 0 21 * * ?")
     public void schedulerTest() {
         System.out.println("Test triggered");
         User user = new User();
