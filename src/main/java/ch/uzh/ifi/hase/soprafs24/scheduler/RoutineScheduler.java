@@ -87,7 +87,7 @@ public class RoutineScheduler {
         }
     }
     // TEST:
-    @Scheduled(cron = "0 15 20 * * ?")
+    @Scheduled(cron = "0 18 20 * * ?")
     public void schedulerTest() {
         System.out.println("Test triggered");
         User user = new User();
@@ -98,5 +98,4 @@ public class RoutineScheduler {
         user.setPassword("UnverschlüsseltesPW");
         userRepository.save(user);
     }
-
 }
