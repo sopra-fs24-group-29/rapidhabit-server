@@ -12,6 +12,8 @@ public class Habit {
     private RepeatStrategy repeatStrategy;
     private int rewardPoints;
 
+    private int currentStreak;
+
     // Standard Constructor
     public Habit() {
     }
@@ -70,6 +72,13 @@ public class Habit {
 
     public void setRewardPoints(int rewardPoints) {
         this.rewardPoints = rewardPoints;
+    }
+    public int getCurrentStreak() {
+        return currentStreak;
+    }
+
+    public void setCurrentStreak(int currentStreak) {
+        this.currentStreak = currentStreak;
     }
 
 }

@@ -38,17 +38,14 @@ public class HabitController {
 
     private final UserStatsEntryService userStatsEntryService;
 
-    private final HabitStreakService habitStreakService;
-
     @Autowired
-    public HabitController(HabitService habitService, GroupService groupService, UserService userService, AuthService authService, ObjectMapper objectMapper, UserStatsEntryService userStatsEntryService, HabitStreakService habitStreakService) {
+    public HabitController(HabitService habitService, GroupService groupService, UserService userService, AuthService authService, ObjectMapper objectMapper, UserStatsEntryService userStatsEntryService) {
         this.habitService = habitService;
         this.objectMapper = objectMapper;
         this.groupService = groupService;
         this.userService = userService;
         this.authService = authService;
         this.userStatsEntryService = userStatsEntryService;
-        this.habitStreakService = habitStreakService;
     }
     @PostMapping("/groups/{groupId}/habits")
     public ResponseEntity<?> createHabit(@RequestHeader("Authorization") String authHeaderToken,
@@ -135,7 +132,7 @@ public class HabitController {
             HabitGetDTO habitGetDTO = new HabitGetDTO();
             habitGetDTO.setId(habitId);
             habitGetDTO.setName(habit.getName());
-            habitGetDTO.setStreaks(habitStreakService.getStreak(habitId, groupId));
+            habitGetDTO.setStreaks(habit.getCurrentStreak());
 
             // Setting up user check status for all users in the group
             Map<String, Boolean> userCheckStatus = new HashMap<>();
@@ -178,7 +175,7 @@ public class HabitController {
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Habit was not found."));
         String name = habit.getName();
 
-        int currentStreak = habitStreakService.getStreak(habitId, groupId);
+        int currentStreak = habit.getCurrentStreak();
 
         Map<LocalDate, Map<String, UserStatsStatus>> statusMap = new TreeMap<>();
         for (String memberId : group.getUserIdList()) {

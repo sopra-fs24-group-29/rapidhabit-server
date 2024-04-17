@@ -34,4 +34,12 @@ public interface UserStatsEntryRepository extends MongoRepository<UserStatsEntry
 
     List<UserStatsEntry> findByUserIdAndHabitId(String userId, String habitId);
 
+    @Query("{'groupId': ?0, 'habitId': ?1, 'dueDate': ?2}")
+    List<UserStatsEntry> findByGroupIdAndHabitIdAndDueDate(String groupId, String habitId, LocalDate dueDate);
+
+    @Query("{'habitId': ?0, 'dueDate': ?1, 'status': {$ne: ?2}}")
+    long countByHabitIdAndDueDateAndStatusNot(String habitId, LocalDate dueDate, UserStatsStatus statusNot);
+
+    boolean existsByHabitIdAndDueDate(String habitId, LocalDate dueDate);
+
 }

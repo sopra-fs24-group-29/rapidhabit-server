@@ -1,11 +1,9 @@
 package ch.uzh.ifi.hase.soprafs24.service;
 import ch.uzh.ifi.hase.soprafs24.entity.Group;
-import ch.uzh.ifi.hase.soprafs24.entity.HabitStreak;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.entity.UserScore;
 import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
 // import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPostDTO; // wird verwendet um die User Daten aus der intern verwendeten DTO Representation zu lesen
-import ch.uzh.ifi.hase.soprafs24.repository.HabitStreakRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.UserScoreRepository;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupGetDTO;
@@ -40,18 +38,15 @@ public class GroupService {
 
     private final GroupRepository groupRepository;
     private final UserScoreRepository userScoreRepository;
-    private final HabitStreakRepository habitStreakRepository;
-
     private final UserRepository userRepository;
     private final UserService userService;
     private final BCryptPasswordEncoder encoder;
 
     @Autowired
-    public GroupService(GroupRepository groupRepository, BCryptPasswordEncoder encoder, UserScoreRepository userScoreRepository, HabitStreakRepository habitStreakRepository, UserRepository userRepository, UserService userService) {
+    public GroupService(GroupRepository groupRepository, BCryptPasswordEncoder encoder, UserScoreRepository userScoreRepository, UserRepository userRepository, UserService userService) {
         this.groupRepository = groupRepository;
         this.encoder = encoder;
         this.userScoreRepository = userScoreRepository;
-        this.habitStreakRepository = habitStreakRepository;
         this.userRepository = userRepository;
         this.userService = userService;
     }
@@ -92,11 +87,6 @@ public class GroupService {
             group.getHabitIdList().add(habitId);
             groupRepository.save(group);
         }
-
-        // Create new group streak entry for the corresponding habit
-        HabitStreak habitStreak = new HabitStreak(groupId, habitId);
-        habitStreak.setStreak(0);
-        habitStreakRepository.save(habitStreak);
     }
     public String generateAccessCode() {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -218,6 +208,13 @@ public class GroupService {
         }
 
         return groupGetDTOList;
+    }
+    public void incrementCurrentStreak(String groupId) {
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new IllegalArgumentException("Group not found with id: " + groupId));
+
+        group.setCurrentStreak(group.getCurrentStreak() + 1);  // Increment the current streak
+        groupRepository.save(group);  // Save the updated group
     }
 
 }

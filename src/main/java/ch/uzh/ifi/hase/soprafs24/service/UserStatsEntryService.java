@@ -76,21 +76,6 @@ public class UserStatsEntryService {
         userStatsEntryRepository.saveAll(entries);
     }
 
-    public Map<String, Integer> computeTeamStreak(String groupId) {
-        List<UserStatsEntry> entries = userStatsEntryRepository.findAllByGroupId(groupId);
-        Map<String, Integer> habitStreaks = new HashMap<>();
-
-        entries.stream()
-                .filter(entry -> entry.getStatus() == UserStatsStatus.SUCCESS)
-                .forEach(entry -> {
-                    String habitId = entry.getHabitId();
-                    habitStreaks.putIfAbsent(habitId, 0);
-                    habitStreaks.computeIfPresent(habitId, (key, val) -> val + 1);
-                });
-
-        return habitStreaks;
-    }
-
     public Boolean habitChecked(String userId, String habitId) {
         Optional<UserStatsEntry> result = userStatsEntryRepository.findByUserIdAndHabitIdAndDueDate(userId, habitId, LocalDate.now());
         if (!result.isPresent()) {
@@ -152,5 +137,17 @@ public class UserStatsEntryService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "The status of the entry is neither OPEN nor SUCCESS.");
         }
     }
+
+    public boolean allEntriesSuccess(String habitId, LocalDate dueDate) {
+        long count = userStatsEntryRepository.countByHabitIdAndDueDateAndStatusNot(habitId, dueDate, UserStatsStatus.SUCCESS);
+        return count == 0; // if there are 0 entries which no different from the status SUCCESS, then the group has passed all habits for the current date
+    }
+
+    public boolean entriesExist(String habitId, LocalDate dueDate){
+        return userStatsEntryRepository.existsByHabitIdAndDueDate(habitId, dueDate);
+    }
+
+
+
 
 }
