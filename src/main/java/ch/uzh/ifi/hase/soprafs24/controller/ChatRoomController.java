@@ -36,12 +36,10 @@ public class ChatRoomController {
 
     private final UserStatsEntryService userStatsEntryService;
 
-    private final HabitStreakService habitStreakService;
-
     private final ChatRoomService chatRoomService;
 
     @Autowired
-    public ChatRoomController(ChatRoomService chatRoomService, HabitService habitService, GroupService groupService, UserService userService, AuthService authService, ObjectMapper objectMapper, UserStatsEntryService userStatsEntryService, HabitStreakService habitStreakService) {
+    public ChatRoomController(ChatRoomService chatRoomService, HabitService habitService, GroupService groupService, UserService userService, AuthService authService, ObjectMapper objectMapper, UserStatsEntryService userStatsEntryService ) {
         this.chatRoomService = chatRoomService;
         this.habitService = habitService;
         this.objectMapper = objectMapper;
@@ -49,7 +47,6 @@ public class ChatRoomController {
         this.userService = userService;
         this.authService = authService;
         this.userStatsEntryService = userStatsEntryService;
-        this.habitStreakService = habitStreakService;
     }
 
     @PostMapping("/{chatRoomId}/messages")

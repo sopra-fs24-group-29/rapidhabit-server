@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Optional;
 
 import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
-import ch.uzh.ifi.hase.soprafs24.repository.HabitStreakRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.UserScoreRepository;
 import org.springframework.http.HttpStatus;
@@ -32,7 +31,6 @@ public class ChatRoomService {
 
     private final GroupRepository groupRepository;
     private final UserScoreRepository userScoreRepository;
-    private final HabitStreakRepository habitStreakRepository;
 
     private final UserRepository userRepository;
     private final UserService userService;
@@ -41,12 +39,11 @@ public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
 
     @Autowired
-    public ChatRoomService(ChatRoomRepository chatRoomRepository,GroupRepository groupRepository, BCryptPasswordEncoder encoder, UserScoreRepository userScoreRepository, HabitStreakRepository habitStreakRepository, UserRepository userRepository, UserService userService) {
+    public ChatRoomService(ChatRoomRepository chatRoomRepository,GroupRepository groupRepository, BCryptPasswordEncoder encoder, UserScoreRepository userScoreRepository, UserRepository userRepository, UserService userService) {
         this.chatRoomRepository = chatRoomRepository;
         this.groupRepository = groupRepository;
         this.encoder = encoder;
         this.userScoreRepository = userScoreRepository;
-        this.habitStreakRepository = habitStreakRepository;
         this.userRepository = userRepository;
         this.userService = userService;
     }
