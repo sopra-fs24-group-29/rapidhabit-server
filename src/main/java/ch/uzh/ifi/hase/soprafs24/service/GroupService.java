@@ -152,6 +152,8 @@ public class GroupService {
         group.removeUserId(userId);
         groupRepository.save(group);
 
+        // remove user from chat -- WIP
+
         // remove user from user scores
         userScoreRepository.deleteByUserIdAndGroupId(userId, groupId);
 

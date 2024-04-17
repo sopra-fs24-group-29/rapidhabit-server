@@ -39,10 +39,10 @@ public class RoutineScheduler {
         this.userRepository = userRepository;
     }
 
-    @Scheduled(fixedDelay = 10000) // Executes every 10 seconds, as an example
-    public void sendNotifications() {
+   // @Scheduled(fixedDelay = 10000) // Executes every 10 seconds, as an example
+   // public void sendNotifications() {
         // System.out.println("A new notification was sent.");
-    }
+    //}
 
     @Scheduled(cron = "0 0 0 * * ?") // Executes every day at midnight
     public void checkAndScheduleHabitRoutines() {
