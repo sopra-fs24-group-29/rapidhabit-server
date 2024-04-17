@@ -50,4 +50,9 @@ public class HabitService {
         habitRepository.save(habit);  // Save the updated habit
     }
 
+    public int getStreak(String habitId){
+        Habit habit = habitRepository.findById(habitId)
+                .orElseThrow(() -> new IllegalArgumentException("Habit not found with id: " + habitId));
+        return habit.getCurrentStreak();
+    }
 }

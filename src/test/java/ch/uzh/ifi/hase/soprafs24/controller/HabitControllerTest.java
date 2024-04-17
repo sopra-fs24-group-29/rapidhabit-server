@@ -42,9 +42,6 @@ public class HabitControllerTest {
     private HabitService habitService;
 
     @MockBean
-    private HabitStreakService habitStreakService;
-
-    @MockBean
     private UserScoreService userScoreService;
 
     @MockBean
@@ -75,7 +72,8 @@ public class HabitControllerTest {
         habit.setRepeatStrategy(new DailyRepeat());
         when(habitService.getHabitById(anyString())).thenReturn(Optional.of(habit));
 
-        when(habitStreakService.getStreak(anyString(), anyString())).thenReturn(1);
+        //when(habit.getCurrentStreak(anyString(), anyString())).thenReturn(1);
+        //when(habitStreakService.getStreak(anyString(), anyString())).thenReturn(1);
         when(userStatsEntryService.habitChecked(anyString(), anyString())).thenReturn(true);
         when(userService.getInitials(anyString())).thenReturn("UI");
 
@@ -107,7 +105,7 @@ public class HabitControllerTest {
         habit.setName("Habit1");
         when(habitService.getHabitById(habitId)).thenReturn(Optional.of(habit));
 
-        when(habitStreakService.getStreak(habitId, groupId)).thenReturn(1);
+        // when(habitStreakService.getStreak(habitId, groupId)).thenReturn(1);
 
         Map<LocalDate, Map<String, UserStatsStatus>> statusMap = new TreeMap<>();
         LocalDate date = LocalDate.now();
@@ -151,7 +149,7 @@ public class HabitControllerTest {
         habit.setName("Habit1");
         when(habitService.getHabitById(habitId)).thenReturn(Optional.of(habit));
 
-        when(habitStreakService.getStreak(habitId, groupId)).thenReturn(1);
+        // when(habitStreakService.getStreak(habitId, groupId)).thenReturn(1);
 
         Map<LocalDate, Map<String, UserStatsStatus>> statusMap = new TreeMap<>();
         LocalDate date = LocalDate.now();
