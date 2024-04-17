@@ -1,11 +1,9 @@
 package ch.uzh.ifi.hase.soprafs24.service;
 import ch.uzh.ifi.hase.soprafs24.entity.Group;
-import ch.uzh.ifi.hase.soprafs24.entity.HabitStreak;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.entity.UserScore;
 import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
 // import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPostDTO; // wird verwendet um die User Daten aus der intern verwendeten DTO Representation zu lesen
-import ch.uzh.ifi.hase.soprafs24.repository.HabitStreakRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.UserScoreRepository;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupGetDTO;
@@ -22,6 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 // import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 
 /**
@@ -39,18 +38,15 @@ public class GroupService {
 
     private final GroupRepository groupRepository;
     private final UserScoreRepository userScoreRepository;
-    private final HabitStreakRepository habitStreakRepository;
-
     private final UserRepository userRepository;
     private final UserService userService;
     private final BCryptPasswordEncoder encoder;
 
     @Autowired
-    public GroupService(GroupRepository groupRepository, BCryptPasswordEncoder encoder, UserScoreRepository userScoreRepository, HabitStreakRepository habitStreakRepository, UserRepository userRepository, UserService userService) {
+    public GroupService(GroupRepository groupRepository, BCryptPasswordEncoder encoder, UserScoreRepository userScoreRepository, UserRepository userRepository, UserService userService) {
         this.groupRepository = groupRepository;
         this.encoder = encoder;
         this.userScoreRepository = userScoreRepository;
-        this.habitStreakRepository = habitStreakRepository;
         this.userRepository = userRepository;
         this.userService = userService;
     }
@@ -91,17 +87,16 @@ public class GroupService {
             group.getHabitIdList().add(habitId);
             groupRepository.save(group);
         }
-
-        // Create new group streak entry for the corresponding habit
-        HabitStreak habitStreak = new HabitStreak(groupId, habitId);
-        habitStreak.setStreak(0);
-        habitStreakRepository.save(habitStreak);
     }
-    public String generateAccessCode(){
-        // here the logic for generating the access code will be implemented
-        // think about encoding the access code
-        String accessCode = "AccessKey123";
-        return accessCode;
+    public String generateAccessCode() {
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        StringBuilder accessCode = new StringBuilder();
+        Random random = new Random();
+        for (int i = 0; i < 8; i++) {
+            int index = random.nextInt(characters.length());
+            accessCode.append(characters.charAt(index));
+        }
+        return accessCode.toString();
     }
     public Boolean accessCodeValid(String accessCode, String groupId){
         Group group = groupRepository.findById(groupId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No group with id " + groupId + " found."));
@@ -111,20 +106,13 @@ public class GroupService {
         else {return false;}
     }
 
-    public void addUserByAccessCode(String groupId, String userId, String accessCode) {
-        Group group = groupRepository.findById(groupId).orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NOT_FOUND, "No group with id " + groupId + " found."));
+    public void addUserByAccessCode(String userId, String accessCode) {
+        Group group = groupRepository.findByAccessCode(accessCode).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "No group with access " + accessCode + " found."));
 
         // check if user already exists
         if(group.getUserIdList().contains(userId)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already exists in this group!");
-        }
-
-        // check if accesskey is valid
-        // System.out.println(accessCode);
-        // System.out.println(group.getAccessCode());
-        if (!accessCodeValid(accessCode, groupId)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid access code for group " + groupId);
         }
 
         // add user
@@ -134,7 +122,7 @@ public class GroupService {
         // Create UserScore Object ob the coresponding user
         UserScore newUserScore = new UserScore();
         newUserScore.setUserId(userId);
-        newUserScore.setGroupId(groupId);
+        newUserScore.setGroupId(group.getId());
         newUserScore.setPoints(0);
         newUserScore.setRank(1);
         newUserScore = userScoreRepository.save(newUserScore);
@@ -163,6 +151,9 @@ public class GroupService {
     public Group getGroupById(String groupId){
         return groupRepository.findById(groupId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No group with id " + groupId + " found."));
     }
+    public Group getGroupByAccessCode(String accessKey){
+        return groupRepository.findByAccessCode(accessKey).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No group with access key " + accessKey + " found."));
+    }
 
     public Group updateGroup(Group groupInput, String groupId) {
         Group group = groupRepository.findById(groupId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No group with id " + groupId + " found."));
@@ -189,7 +180,8 @@ public class GroupService {
     public List<GroupGetDTO> getGroupMenuDataByUserId(String userId) {
         List<Group> groupList = groupRepository.findByUserIdsContains(userId);
         if (groupList.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No groups found for user " + userId);
+            List<GroupGetDTO> groupGetDTOList = new ArrayList<>();
+            return groupGetDTOList;
         }
 
         List<GroupGetDTO> groupGetDTOList = new ArrayList<>();
@@ -218,6 +210,13 @@ public class GroupService {
         }
 
         return groupGetDTOList;
+    }
+    public void incrementCurrentStreak(String groupId) {
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new IllegalArgumentException("Group not found with id: " + groupId));
+
+        group.setCurrentStreak(group.getCurrentStreak() + 1);  // Increment the current streak
+        groupRepository.save(group);  // Save the updated group
     }
 
 }

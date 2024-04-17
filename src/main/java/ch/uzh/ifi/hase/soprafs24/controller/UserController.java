@@ -86,10 +86,11 @@ public class UserController {
         }
     }
 
-    @GetMapping("/users/{id}")
-    public ResponseEntity<?> getDetailedUser(@RequestHeader("Authorization") String authHeader, @PathVariable String id) {
+    @GetMapping("/users/profile")
+    public ResponseEntity<?> getDetailedUser(@RequestHeader("Authorization") String authHeader) {
         boolean isValid = authService.isTokenValid(authHeader);
         if (isValid) {
+            String id = authService.getId(authHeader);
             User user = userService.getUserDetails(id);
             if (user != null) {
                 return ResponseEntity.ok(DTOMapper.INSTANCE.convertEntityToUserGetDTO(user));
@@ -126,10 +127,11 @@ public class UserController {
         }
         return ResponseEntity.notFound().build();
     }
-    @PutMapping("/users/{id}")
-    public ResponseEntity<?> updateUser(@RequestHeader("Authorization") String authHeaderToken, @RequestBody UserPutDTO userPutDTO, @PathVariable String id) {
+    @PutMapping("/users/update")
+    public ResponseEntity<?> updateUser(@RequestHeader("Authorization") String authHeaderToken, @RequestBody UserPutDTO userPutDTO) {
         boolean isValid = authService.isTokenValid(authHeaderToken);
         if (isValid) {
+            String id = authService.getId(authHeaderToken);
             if (userPutDTO.getEmail().isEmpty() || userPutDTO.getFirstname().isEmpty() || userPutDTO.getLastname().isEmpty()){
                 String msg = "None of the fields must be empty!";
                 return ResponseEntity.badRequest().body(msg);
@@ -147,10 +149,11 @@ public class UserController {
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
-    @PutMapping("/users/{id}/password")
-    public ResponseEntity<?> updateUserPassword(@RequestHeader("Authorization") String authHeaderToken, @RequestBody UserPasswordPutDTO userPasswordPutDTO, @PathVariable String id) {
+    @PutMapping("/users/password")
+    public ResponseEntity<?> updateUserPassword(@RequestHeader("Authorization") String authHeaderToken, @RequestBody UserPasswordPutDTO userPasswordPutDTO) {
         boolean isValid = authService.isTokenValid(authHeaderToken);
         if (isValid) {
+            String id = authService.getId(authHeaderToken);
             if (userPasswordPutDTO.getCurrentPassword().isEmpty() || userPasswordPutDTO.getNewPassword().isEmpty()){
                 String msg = "None of the fields must be empty!";
                 return ResponseEntity.badRequest().body(msg);
@@ -169,10 +172,11 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-    @DeleteMapping("/users/{id}")
-    public ResponseEntity<?> deleteUser(@RequestHeader("Authorization") String authHeaderToken, @RequestBody UserPasswordPutDTO userPasswordPutDTO, @PathVariable String id) {
+    @DeleteMapping("/users")
+    public ResponseEntity<?> deleteUser(@RequestHeader("Authorization") String authHeaderToken, @RequestBody UserPasswordPutDTO userPasswordPutDTO) {
         boolean isValid = authService.isTokenValid(authHeaderToken);
         if (isValid) {
+            String id = authService.getId(authHeaderToken);
             if (userPasswordPutDTO.getCurrentPassword().isEmpty()){
                 String msg = "Current password must not be empty!";
                 return ResponseEntity.badRequest().body(msg);

@@ -42,5 +42,12 @@ public class HabitService {
     public void deleteHabit(String id) {
         habitRepository.deleteById(id);
     }
+    public void incrementCurrentStreak(String habitId) {
+        Habit habit = habitRepository.findById(habitId)
+                .orElseThrow(() -> new IllegalArgumentException("Habit not found with id: " + habitId));
+
+        habit.setCurrentStreak(habit.getCurrentStreak() + 1);  // Increment the current streak
+        habitRepository.save(habit);  // Save the updated habit
+    }
 
 }

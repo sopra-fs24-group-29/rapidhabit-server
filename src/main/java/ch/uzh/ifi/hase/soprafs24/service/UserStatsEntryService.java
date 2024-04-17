@@ -13,6 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,28 +76,18 @@ public class UserStatsEntryService {
         userStatsEntryRepository.saveAll(entries);
     }
 
-    public Map<String, Integer> computeTeamStreak(String groupId) {
-        List<UserStatsEntry> entries = userStatsEntryRepository.findAllByGroupId(groupId);
-        Map<String, Integer> habitStreaks = new HashMap<>();
-
-        entries.stream()
-                .filter(entry -> entry.getStatus() == UserStatsStatus.SUCCESS)
-                .forEach(entry -> {
-                    String habitId = entry.getHabitId();
-                    habitStreaks.putIfAbsent(habitId, 0);
-                    habitStreaks.computeIfPresent(habitId, (key, val) -> val + 1);
-                });
-
-        return habitStreaks;
-    }
-
     public Boolean habitChecked(String userId, String habitId) {
         Optional<UserStatsEntry> result = userStatsEntryRepository.findByUserIdAndHabitIdAndDueDate(userId, habitId, LocalDate.now());
-
-        // Check if an entry exists and return based on the status
-        return result.map(entry -> !entry.getStatus().equals(UserStatsStatus.OPEN))
-                .orElse(false);  // Assuming that if no entry is found, the habit is not checked
+        if (!result.isPresent()) {
+            System.out.println("No entry found for User: " + userId + ", Habit: " + habitId);
+        } else {
+            System.out.println("Latest entry found: " + result.get());
+        }
+        return result.map(entry -> entry.getStatus().equals(UserStatsStatus.SUCCESS))
+                .orElse(false);
     }
+
+
 
     public Map<String, Integer> computeUserRanks(String groupId) {
         List<UserStatsEntry> entries = userStatsEntryRepository.findAllByGroupId(groupId);
@@ -129,5 +120,34 @@ public class UserStatsEntryService {
         // Fetches all entries that match the given userId and habitId
         return userStatsEntryRepository.findByUserIdAndHabitId(userId, habitId);
     }
+
+    public UserStatsStatus checkHabitByUser(String habitId, String userId) {
+        UserStatsEntry userStatsEntry = userStatsEntryRepository.findByUserIdAndHabitIdAndDueDate(userId, habitId, LocalDate.now()).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "No data entry found."));
+
+        if (userStatsEntry.getStatus().equals(UserStatsStatus.OPEN)) {
+            userStatsEntry.setStatus(UserStatsStatus.SUCCESS);
+            userStatsEntryRepository.save(userStatsEntry);
+            return UserStatsStatus.SUCCESS;
+        } else if (userStatsEntry.getStatus().equals(UserStatsStatus.SUCCESS)) {
+            userStatsEntry.setStatus(UserStatsStatus.OPEN);
+            userStatsEntryRepository.save(userStatsEntry);
+            return UserStatsStatus.OPEN;
+        } else {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "The status of the entry is neither OPEN nor SUCCESS.");
+        }
+    }
+
+    public boolean allEntriesSuccess(String habitId, LocalDate dueDate) {
+        long count = userStatsEntryRepository.countByHabitIdAndDueDateAndStatusNot(habitId, dueDate, UserStatsStatus.SUCCESS);
+        return count == 0; // if there are 0 entries which no different from the status SUCCESS, then the group has passed all habits for the current date
+    }
+
+    public boolean entriesExist(String habitId, LocalDate dueDate){
+        return userStatsEntryRepository.existsByHabitIdAndDueDate(habitId, dueDate);
+    }
+
+
+
 
 }

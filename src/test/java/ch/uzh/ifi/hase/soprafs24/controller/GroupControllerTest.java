@@ -188,7 +188,7 @@ public class GroupControllerTest {
         GroupJoinPostDTO groupJoinPostDTO = new GroupJoinPostDTO();
         groupJoinPostDTO.setAccessKey("accessKey123");
 
-        doNothing().when(groupService).addUserByAccessCode(eq(groupId), eq(String.valueOf(userId)), eq(groupJoinPostDTO.getAccessKey()));
+        doNothing().when(groupService).addUserByAccessCode(eq(String.valueOf(userId)), eq(groupJoinPostDTO.getAccessKey()));
 
         Habit mockHabit = new Habit();
         mockHabit.setRepeatStrategy(new DailyRepeat());
@@ -216,7 +216,7 @@ public class GroupControllerTest {
         GroupJoinPostDTO groupJoinPostDTO = new GroupJoinPostDTO();
         groupJoinPostDTO.setAccessKey("accessKey123");
 
-        doNothing().when(groupService).addUserByAccessCode(eq(groupId), eq(String.valueOf(userId)), eq(groupJoinPostDTO.getAccessKey()));
+        doNothing().when(groupService).addUserByAccessCode(eq(String.valueOf(userId)), eq(groupJoinPostDTO.getAccessKey()));
 
         mockMvc.perform(post("/groups/" + groupId + "/users")
                         .header("Authorization", token)
