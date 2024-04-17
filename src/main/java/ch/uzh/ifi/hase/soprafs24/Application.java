@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+// Test without automatic analysis being enabled on sonarcloud
 @RestController
 @SpringBootApplication
 @EnableScheduling // Enabling scheduling functionality
