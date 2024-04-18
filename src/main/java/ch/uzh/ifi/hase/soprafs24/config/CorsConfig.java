@@ -16,7 +16,6 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://93.184.22.94")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS");
             }
         };
