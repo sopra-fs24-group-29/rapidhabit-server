@@ -60,6 +60,27 @@ public class GroupController {
         }
     }
 
+    @GetMapping("/groups/{groupId}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public ResponseEntity<?> getSpecificGroup(@RequestHeader("Authorization") String authToken, @PathVariable String groupId) {
+        boolean isValid = authService.isTokenValid(authToken);
+        if(isValid){
+            String userId = authService.getId(authToken);
+            boolean isAdmin = groupService.isUserAdmin(userId, groupId);
+            if (isAdmin) {
+                Group group = groupService.getGroupById(groupId);
+                return ResponseEntity.ok(group);
+            }
+            else{
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
+
     @GetMapping("/groups/{groupId}/ranking")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
