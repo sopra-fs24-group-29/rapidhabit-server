@@ -12,9 +12,4 @@ public class UserScoreController {
 
     @Autowired
     private UserScoreService service;
-
-    @PostMapping
-    public ResponseEntity<UserScore> createUserGroupStat(@RequestBody UserScore userScore) {
-        return ResponseEntity.ok(service.addUserScore(userScore));
-    }
 }
