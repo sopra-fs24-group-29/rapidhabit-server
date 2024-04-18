@@ -15,14 +15,12 @@ import java.util.Map;
 public class AuthService {
 
     private final UserService userService;
-    private final BCryptPasswordEncoder passwordEncoder;
     private final Map<String, String> tokenCache = new HashMap<>();
     private final int tokenLength = 20;
 
     @Autowired
-    public AuthService(UserService userService, BCryptPasswordEncoder passwordEncoder) {
-        this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
+    public AuthService(UserService userService) {
+        this.userService = userService;;
     }
 
     public String userLogin(String email, String password) {

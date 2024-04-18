@@ -198,8 +198,14 @@ public class GroupService {
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new IllegalArgumentException("Group not found with id: " + groupId));
 
-        group.setCurrentStreak(group.getCurrentStreak() + 1);  // Increment the current streak
-        groupRepository.save(group);  // Save the updated group
+        group.setCurrentStreak(group.getCurrentStreak() + 1);
+        groupRepository.save(group);
+    }
+    public void resetCurrentStreak(String groupId){
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new IllegalArgumentException("Group not found with id: " + groupId));
+        group.setCurrentStreak(0);
+        groupRepository.save(group);
     }
 
 }

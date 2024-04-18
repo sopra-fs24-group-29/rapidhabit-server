@@ -1,4 +1,5 @@
 package ch.uzh.ifi.hase.soprafs24.service;
+import ch.uzh.ifi.hase.soprafs24.entity.Group;
 import ch.uzh.ifi.hase.soprafs24.entity.Habit;
 import ch.uzh.ifi.hase.soprafs24.repository.HabitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,12 @@ public class HabitService {
 
         habit.setCurrentStreak(habit.getCurrentStreak() + 1);  // Increment the current streak
         habitRepository.save(habit);  // Save the updated habit
+    }
+    public void resetCurrentStreak(String habitId){
+        Habit habit = habitRepository.findById(habitId)
+                .orElseThrow(() -> new IllegalArgumentException("Habit not found with id: " + habitId));
+        habit.setCurrentStreak(0);
+        habitRepository.save(habit);
     }
 
     public int getStreak(String habitId){

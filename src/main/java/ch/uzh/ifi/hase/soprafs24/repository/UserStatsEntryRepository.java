@@ -40,5 +40,10 @@ public interface UserStatsEntryRepository extends MongoRepository<UserStatsEntry
     long countByHabitIdAndDueDateAndStatusNot(String habitId, LocalDate dueDate, UserStatsStatus statusNot);
 
     boolean existsByHabitIdAndDueDate(String habitId, LocalDate dueDate);
+    List<UserStatsEntry> findByHabitIdAndDueDateAndStatus(String habitId, LocalDate dueDate, UserStatsStatus status);
+
+    @Query("SELECT COUNT(DISTINCT use.habitId) FROM UserStatsEntry use WHERE use.dueDate = ?1")
+    Integer countDistinctHabitIdsByDueDate(LocalDate dueDate);
+
 
 }

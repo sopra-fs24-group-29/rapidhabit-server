@@ -146,7 +146,13 @@ public class UserStatsEntryService {
         return userStatsEntryRepository.existsByHabitIdAndDueDate(habitId, dueDate);
     }
 
-
+    @Transactional
+    public List<UserStatsEntry> getAllSuccessfulUsers(String habitId, LocalDate date) {
+        return userStatsEntryRepository.findByHabitIdAndDueDateAndStatus(habitId, date, UserStatsStatus.SUCCESS);
+    }
+    public Integer countUniqueHabitsByDate(LocalDate date) {
+        return userStatsEntryRepository.countDistinctHabitIdsByDueDate(date);
+    }
 
 
 }
