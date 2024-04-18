@@ -241,7 +241,7 @@ public class HabitController {
                 // create an user stats entry for each user of this group refered to the current habitId
                 for (String userId : groupUserIds){
                     UserStatsEntry userStatsEntry = userStatsEntryService.createUserStatsEntry(userId, groupId,habitId);
-                    System.out.println(userStatsEntry.getDueDate());
+                   // System.out.println(userStatsEntry.getDueDate());
                 }
             }
             else if (repeatType.equals(RepeatType.WEEKLY)) {
