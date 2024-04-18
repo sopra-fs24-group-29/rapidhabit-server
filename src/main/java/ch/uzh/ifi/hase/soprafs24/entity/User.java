@@ -76,6 +76,9 @@ public class User {
         this.password = password;
     }
 
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;}
+
     public LocalDateTime getCreationDate() {
         return creationDate;
     }
