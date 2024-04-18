@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserStatsEntryRepository extends MongoRepository<UserStatsEntry, String> {
-    List<UserStatsEntry> findByUserId(String userId);
     List<UserStatsEntry> findAllByDueDateLessThan(LocalDate date);
     List<UserStatsEntry> findAllByDueDateLessThanAndStatus(LocalDate date, UserStatsStatus status);
     List<UserStatsEntry> findAllByGroupId(String groupId);

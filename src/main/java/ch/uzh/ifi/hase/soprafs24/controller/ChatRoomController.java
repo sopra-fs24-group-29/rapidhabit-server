@@ -5,19 +5,13 @@ import ch.uzh.ifi.hase.soprafs24.entity.Group;
 import ch.uzh.ifi.hase.soprafs24.service.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.messaging.Message;
 import org.springframework.http.HttpStatus;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.chat.MessageDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -25,28 +19,17 @@ import java.util.List;
 @RequestMapping("/chatRooms")
 public class ChatRoomController {
 
-    private final HabitService habitService;
-
     private final GroupService groupService;
 
-    private final UserService userService;
-    private final ObjectMapper objectMapper;
-
     private final AuthService authService;
-
-    private final UserStatsEntryService userStatsEntryService;
 
     private final ChatRoomService chatRoomService;
 
     @Autowired
     public ChatRoomController(ChatRoomService chatRoomService, HabitService habitService, GroupService groupService, UserService userService, AuthService authService, ObjectMapper objectMapper, UserStatsEntryService userStatsEntryService ) {
         this.chatRoomService = chatRoomService;
-        this.habitService = habitService;
-        this.objectMapper = objectMapper;
         this.groupService = groupService;
-        this.userService = userService;
         this.authService = authService;
-        this.userStatsEntryService = userStatsEntryService;
     }
 
     @PostMapping("/{chatRoomId}/messages")
