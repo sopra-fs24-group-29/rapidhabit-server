@@ -33,27 +33,6 @@ public class UserController {
         this.authService = authService;
     }
 
-    @GetMapping("/users")
-    @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
-    public ResponseEntity<?> getAllUsers(@RequestHeader("Authorization") String authHeader) {
-        boolean isValid = authService.isTokenValid(authHeader);
-        if(isValid){
-            // fetch all users in the internal representation
-            List<User> users = userService.getUsers();
-            List<UserGetDTO> userGetDTOs = new ArrayList<>();
-
-            // convert each user to the API representation
-            for (User user : users) {
-                userGetDTOs.add(DTOMapper.INSTANCE.convertEntityToUserGetDTO(user));
-            }
-            return ResponseEntity.ok(userGetDTOs);
-        }
-        else{
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-    }
-
     @PostMapping("/users") // defines a method to for handling post methods for creating new users
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
@@ -116,6 +95,7 @@ public class UserController {
             return ResponseEntity.ok(allowEdit);
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();}
+
     @PutMapping ("/users/logout")
     public ResponseEntity<?> logout(@RequestHeader("Authorization") String authHeaderToken){
         boolean isValid = authService.isTokenValid(authHeaderToken);
