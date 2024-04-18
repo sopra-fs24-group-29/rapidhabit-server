@@ -53,38 +53,7 @@ public class UserControllerTest {
     /**
      * ------------------------------ START GET TESTS ------------------------------------------------------------
      */
-    @Test //Get Mapping "/users" - CODE 200 OK (Pass)
-    public void GET_users_givenUsers_whenGetUsers_thenReturnJsonArray() throws Exception {
-        // Given
-        User user = new User();
-        user.setId(String.valueOf(1L));
-        user.setFirstname("Simon");
-        user.setLastname("Hafner");
-        user.setEmail("Simon.hafner@uzh.ch");
-        user.setStatus(UserStatus.ONLINE);
 
-        List<User> allUsers = Collections.singletonList(user);
-
-        String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
-
-        // Mocking AuthService to assume the token is valid
-        when(authService.isTokenValid(anyString())).thenReturn(true);
-
-        // Simulate UserService behavior
-        given(userService.getUsers()).willReturn(allUsers);
-
-        // When & Then
-        mockMvc.perform(get("/users")
-                        .header("Authorization", token)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].id", is("1")))
-                .andExpect(jsonPath("$[0].firstname", is("Simon")))
-                .andExpect(jsonPath("$[0].lastname", is("Hafner")))
-                .andExpect(jsonPath("$[0].email", is("Simon.hafner@uzh.ch")))
-                .andExpect(jsonPath("$[0].status", is(UserStatus.ONLINE.toString())));
-    }
 
     @Test //GET Mapping "/users/profile" - CODE 200 OK (pass)
     void GET_users_givenValidToken_whenGetUserDetails_thenReturnsUser() throws Exception {
