@@ -34,20 +34,14 @@ public class GroupService {
 
     private final GroupRepository groupRepository;
     private final UserScoreRepository userScoreRepository;
-    private final UserRepository userRepository;
     private final UserService userService;
-    private final BCryptPasswordEncoder encoder;
 
     @Autowired
-    public GroupService(GroupRepository groupRepository, BCryptPasswordEncoder encoder, UserScoreRepository userScoreRepository, UserRepository userRepository, UserService userService) {
+    public GroupService(GroupRepository groupRepository, BCryptPasswordEncoder encoder, UserScoreRepository userScoreRepository, UserService userService) {
         this.groupRepository = groupRepository;
-        this.encoder = encoder;
         this.userScoreRepository = userScoreRepository;
-        this.userRepository = userRepository;
         this.userService = userService;
     }
-
-    // Deine Methoden hier...
 
     public Group createGroup(Group newGroup, String creatorId) {
         newGroup.setAccessCode(this.generateAccessCode());
@@ -93,13 +87,6 @@ public class GroupService {
             accessCode.append(characters.charAt(index));
         }
         return accessCode.toString();
-    }
-    public Boolean accessCodeValid(String accessCode, String groupId){
-        Group group = groupRepository.findById(groupId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No group with id " + groupId + " found."));
-        if(group.getAccessCode().equals(accessCode)){
-            return true;
-        }
-        else {return false;}
     }
 
     public void addUserByAccessCode(String userId, String accessCode) {

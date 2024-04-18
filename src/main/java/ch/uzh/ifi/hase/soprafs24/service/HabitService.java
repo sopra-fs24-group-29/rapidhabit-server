@@ -11,12 +11,10 @@ import java.util.Optional;
 public class HabitService {
 
     private final HabitRepository habitRepository;
-    private final GroupService groupService;
 
     @Autowired
-    public HabitService(HabitRepository habitRepository, GroupService groupService) {
+    public HabitService(HabitRepository habitRepository) {
         this.habitRepository = habitRepository;
-        this.groupService = groupService;
     }
 
     public Habit createHabit(Habit habit) {
