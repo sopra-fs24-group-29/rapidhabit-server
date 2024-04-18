@@ -1,12 +1,9 @@
 package ch.uzh.ifi.hase.soprafs24.entity;
 
-import ch.uzh.ifi.hase.soprafs24.constant.UserStatsStatus;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Document(collection = "Groups")
 public class Group {

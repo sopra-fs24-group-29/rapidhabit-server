@@ -1,5 +1,4 @@
 package ch.uzh.ifi.hase.soprafs24.entity;
-import ch.uzh.ifi.hase.soprafs24.constant.Daytime;
 import ch.uzh.ifi.hase.soprafs24.constant.RepeatType;
 import ch.uzh.ifi.hase.soprafs24.constant.Weekday;
 
