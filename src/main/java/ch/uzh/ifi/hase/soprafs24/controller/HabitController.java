@@ -193,6 +193,28 @@ public class HabitController {
         return ResponseEntity.ok(groupHabitDataDTO);
     }
 
+    @GetMapping("/groups/{groupId}/habits/{habitId}/edit")
+    public ResponseEntity<?> getHabitDetails(
+            @RequestHeader("Authorization") String authToken,
+            @PathVariable String groupId,
+            @PathVariable String habitId) {
+
+        boolean isValid = authService.isTokenValid(authToken);
+        if (!isValid) {
+            return new ResponseEntity<>("Invalid token", HttpStatus.UNAUTHORIZED);
+        }
+
+        String userId = authService.getId(authToken);
+        Group group = groupService.getGroupById(groupId);
+        if (!group.getAdminIdList().contains(userId)) {
+            return new ResponseEntity<>("User is not part of this group", HttpStatus.UNAUTHORIZED);
+        }
+
+        Habit habit = habitService.getHabitById(habitId).orElseThrow(()->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Habit was not found."));
+        return ResponseEntity.ok(habit);
+    }
+
     @PutMapping("/groups/{groupId}/habits/{habitId}/check")
     public ResponseEntity<?> checkHabit(
             @RequestHeader("Authorization") String authToken,

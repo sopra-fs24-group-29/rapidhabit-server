@@ -60,7 +60,7 @@ public class GroupController {
         }
     }
 
-    @GetMapping("/groups/{groupId}")
+    @GetMapping("/groups/{groupId}/edit")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public ResponseEntity<?> getSpecificGroup(@RequestHeader("Authorization") String authToken, @PathVariable String groupId) {

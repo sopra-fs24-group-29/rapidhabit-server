@@ -24,8 +24,6 @@ public class RoutineScheduler {
     private final GroupService groupService;
     private final HabitService habitService;
 
-    private final UserService userService;
-
     private final UserStatsEntryService userStatsEntryService;
 
     private final UserScoreService userScoreService;
@@ -34,7 +32,6 @@ public class RoutineScheduler {
         this.groupService = groupService;
         this.habitService = habitService;
         this.userStatsEntryService = userStatsEntryService;
-        this.userService = userService;
         this.userScoreService = userScoreService;
     }
 
