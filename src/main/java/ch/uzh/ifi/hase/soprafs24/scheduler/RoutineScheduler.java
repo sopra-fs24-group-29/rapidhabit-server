@@ -35,7 +35,7 @@ public class RoutineScheduler {
         this.userScoreService = userScoreService;
     }
 
-    @Scheduled(cron = "0 0 0 * * ?") // Executes every day before midnight
+    @Scheduled(cron = "0 10 1 * * ?") // Executes every day at 01:10 AM
     public void checkAndScheduleHabitRoutines() {
         System.out.println("Systemzeitzone: " + ZoneId.systemDefault());
         Weekday currentWeekday = WeekdayUtil.getCurrentWeekday();
