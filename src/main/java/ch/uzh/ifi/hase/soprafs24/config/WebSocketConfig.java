@@ -24,6 +24,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         registry.enableSimpleBroker("/groups/{groupId}/chat");
         registry.setApplicationDestinationPrefixes("/app");
+    //  registry.setUserDestinationPrefix("/XXX")
+
     //            .setHeartbeatValue(new long[] {1000, 1000})
     //            .setTaskScheduler(heartBeatScheduler())
     //            .setHeartbeatValue(new long[] {60000, 120000});
@@ -40,19 +42,5 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 .setAllowedOrigins(ORIGIN_LOCALHOST, ORIGIN_PROD, ORIGIN_TEST)
                 .setHandshakeHandler(new DefaultHandshakeHandler())
                 .addInterceptors(new HttpSessionHandshakeInterceptor());
-    }
-
-    @Bean
-    public ServletServerContainerFactoryBean createWebSocketContainer() {
-        ServletServerContainerFactoryBean container = new ServletServerContainerFactoryBean();
-        container.setMaxSessionIdleTimeout(-1L);
-        return container;
-    }
-
-    @Bean
-    public TaskScheduler heartBeatScheduler() {
-        ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
-        taskScheduler.setPoolSize(1);
-        return taskScheduler;
     }
 }
