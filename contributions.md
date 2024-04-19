@@ -44,13 +44,12 @@
 - general: Wrote Test for all the new REST Mappings for example for Issue #35
 - As well as the following issues:
 
-| IssueNr | Issue description                                                   | Assigned Test |
-|:--------|---------------------------------------------------------------------|---------------|
-| #21     | Group administrators can update a group name and group description. |               |
-| #30     | Implement API Endpoints for Editing and Deleting Group Habits       |               |
-| #89     | Implement API for Account Deletion                                  |               |
-| #91     | Users can change their profiledata (eg. Email, first-/lastname)     |               |
-| #62     | Implement API Endpoint for Group Deletion                           |               |
+| IssueNr | Issue description                                                   | Assigned Test                                                                                                                                                                                                      |
+|:--------|---------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| #21     | Group administrators can update a group name and group description. | - PUT Mapping "/groups/{groupId}" - CODE 200 OK (Pass)  <br> - PUT Mapping "/groups/{groupId}" - CODE 404 NotFound (Pass)  <br> - PUT Mapping "/groups/{groupId}" - CODE 401 Unauthorized (Error)                  |
+| #89     | Implement API for Account Deletion                                  | - DELETE Mapping "/users/ID" - CODE 204 No Content (pass)  <br> - DELETE Mapping "/users/ID" - CODE 404 NotFound (error)  <br> - DELETE Mapping "/users/ID" - CODE 401 Unauthorized (error)                        |
+| #91     | Users can change their profiledata (eg. Email, first-/lastname)     | - PUT Mapping "/users/update" - CODE 204 No Content (pass)  <br>  - PUT Mapping "/users/update" - CODE 404 Not Found (error)  <br>  - PUT Mapping "/users/update" - CODE 401 Unauthorized (error)                                                                                        |
+| #62     | Implement API Endpoint for Group Deletion                           | - DELETE Mapping "/groups/{groupId}" - CODE 204 NoContent (Pass)  <br> - DELETE Mapping "/groups/{groupId}" - CODE 404 NotFound (Error)  <br> - DELETE Mapping "/groups/{groupId}" - CODE 401 Unauthorized (Error) |
 
 ### Simon (SimonHafner):
 
@@ -84,11 +83,11 @@
 - general: Wrote Test for all the new REST Mappings
 - As well as the following issues:
 
-| IssueNr | Issue description                      | Assigned Test |
-|:--------|----------------------------------------|---------------|
-| #51     | Add API to delete users from the group |               |
-| #93     | Created Test for this issue            |               |
-| #94     | Created Test for this issue            |               |
+| IssueNr | Issue description                      | Assigned Test                                                                                                                                                                                                                 |
+|:--------|----------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| #51     | Add API to delete users from the group | - DELETE Mapping "/groups/{groupId}/users" - CODE 204 NoContent  <br> - DELETE Mapping "/groups/{groupId}/users" - CODE 404 NotFound (Error)  <br> - DELETE Mapping "/groups/{groupId}/users" - CODE 401 Unauthorized (Error) |
+| #93     | Created Test for this issue            | - GET Mapping "/groups/{groupId}/habits" - CODE 200 Ok (pass)                                                                                                                                                                 |
+| #94     | Created Test for this issue            | - GET Mapping "/groups/{groupId}/habits/{habitId}" - CODE 200 Ok (pass)  <br> - GET Mapping "/groups/{groupId}/habits/{habitId}" - CODE 404 Not Found (Error)                                                                 |
 
 ### Simon (SimonHafner):
 
