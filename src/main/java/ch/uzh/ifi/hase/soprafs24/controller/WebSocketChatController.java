@@ -51,8 +51,4 @@ public class WebSocketChatController {
         chatRoomService.sendMessage(groupId, chatMessage.getSenderId(), chatMessage.getContent());
         return chatMessage;
     }
-    @MessageMapping("/echo")
-    public void echoMessage(@Payload String message) {
-        messagingTemplate.convertAndSend("/topic/echo", message);
-    }
 }

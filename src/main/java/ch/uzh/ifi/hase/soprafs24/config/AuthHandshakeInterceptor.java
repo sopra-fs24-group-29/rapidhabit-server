@@ -24,8 +24,10 @@ public class AuthHandshakeInterceptor implements HandshakeInterceptor {
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
         String authToken = request.getHeaders().getFirst("Authorization");
         if (authService.isTokenValid(authToken)) {
-                return true;
+            System.out.println("Handshake accepted!");
+            return true;
         }
+        System.out.println("Handshake rejected!");
         response.setStatusCode(HttpStatus.UNAUTHORIZED);
         return false;
     }

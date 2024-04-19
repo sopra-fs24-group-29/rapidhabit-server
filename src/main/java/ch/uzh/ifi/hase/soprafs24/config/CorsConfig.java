@@ -8,7 +8,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class CorsConfig {
-
     @Profile("dev")
     @Bean
     public WebMvcConfigurer corsConfigurerDev() {
@@ -17,20 +16,31 @@ public class CorsConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedOrigins("*")
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS");
+                        .allowedHeaders("*");
             }
         };
     }
 
-    @Profile("prod")
     @Bean
     public WebMvcConfigurer corsConfigurerProd() {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("https://sopra-fs24-group29-client.oa.r.appspot.com")
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS");
+                        .allowedOrigins("*")
+                        .allowedHeaders("*");
+            }
+        };
+    }
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedOrigins("*")
+                        .allowedHeaders("*")
+                        .allowedMethods("*");
             }
         };
     }
