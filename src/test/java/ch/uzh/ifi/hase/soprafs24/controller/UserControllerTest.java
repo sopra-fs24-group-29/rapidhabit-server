@@ -373,7 +373,7 @@ public class UserControllerTest {
                 .andExpect(status().isNotFound());
     }
 
-    @Test //PUT Mapping "/users/ID/password" - CODE 401 Unauthorized (error)
+    @Test //PUT Mapping "/users/password" - CODE 401 Unauthorized (error)
     public void PUT_usersPasswordChange_Invalid_ReturnsUnauthorized() throws Exception {
         String current_password = "currentPassword";
         String new_password = "newPassword";
