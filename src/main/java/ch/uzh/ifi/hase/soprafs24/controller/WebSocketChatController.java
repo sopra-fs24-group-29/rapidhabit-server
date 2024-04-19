@@ -29,6 +29,14 @@ public class WebSocketChatController {
 
     @Autowired
     private GroupService groupService;
+    private final SimpMessagingTemplate messagingTemplate;
+
+    @Autowired
+    public WebSocketChatController(SimpMessagingTemplate messagingTemplate) {
+        this.messagingTemplate = messagingTemplate;
+    }
+
+
 
     @MessageMapping("/groups/{groupId}/chat")
     @SendTo("/groups/{groupId}/chat")
@@ -39,8 +47,11 @@ public class WebSocketChatController {
         if (!group.getUserIdList().contains(userId)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not part of this group");
         }
-
         chatRoomService.sendMessage(groupId, chatMessage.getSenderId(), chatMessage.getContent());
         return chatMessage;
+    }
+    @MessageMapping("/echo")
+    public void echoMessage(@Payload String message) {
+        messagingTemplate.convertAndSend("/topic/echo", message);
     }
 }

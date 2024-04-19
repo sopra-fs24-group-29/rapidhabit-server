@@ -1,14 +1,11 @@
 package ch.uzh.ifi.hase.soprafs24.config;
 
-import org.springframework.context.annotation.Bean;
+import ch.uzh.ifi.hase.soprafs24.service.AuthService;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.TaskScheduler;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
-import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;
 import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
 import org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor;
 
@@ -20,27 +17,22 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     private static final String ORIGIN_PROD = "ZIEL-URL-CLIENT-GOOGLE";
     private static final String ORIGIN_TEST = "*";
 
+    private final AuthService authService;
+
+    WebSocketConfig(AuthService authService){
+        this.authService = authService;
+    }
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker("/groups/{groupId}/chat");
-        registry.setApplicationDestinationPrefixes("/app");
-    //  registry.setUserDestinationPrefix("/XXX")
-
-    //            .setHeartbeatValue(new long[] {1000, 1000})
-    //            .setTaskScheduler(heartBeatScheduler())
-    //            .setHeartbeatValue(new long[] {60000, 120000});
+        registry.enableSimpleBroker("/topic"); // enables the broker to send messages to all clients subscribed to "/topics"
+        registry.setApplicationDestinationPrefixes("/app"); // implies that user must send messages to "/app/topics"
     }
 
     @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry) {
+    public void registerStompEndpoints(StompEndpointRegistry registry){
         registry.addEndpoint("/ws")
-                .setAllowedOrigins(ORIGIN_LOCALHOST, ORIGIN_PROD, ORIGIN_TEST)
+                .setAllowedOrigins(ORIGIN_TEST)
                 .setHandshakeHandler(new DefaultHandshakeHandler())
-                .addInterceptors(new HttpSessionHandshakeInterceptor());
-
-        registry.addEndpoint("/wss")
-                .setAllowedOrigins(ORIGIN_LOCALHOST, ORIGIN_PROD, ORIGIN_TEST)
-                .setHandshakeHandler(new DefaultHandshakeHandler())
-                .addInterceptors(new HttpSessionHandshakeInterceptor());
+                .addInterceptors(new AuthHandshakeInterceptor(authService));
     }
 }
