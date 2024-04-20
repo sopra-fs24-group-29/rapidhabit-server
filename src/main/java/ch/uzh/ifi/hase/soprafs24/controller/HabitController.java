@@ -6,6 +6,7 @@ import ch.uzh.ifi.hase.soprafs24.constant.Weekday;
 import ch.uzh.ifi.hase.soprafs24.entity.*;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupHabitDataGetDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.habit.HabitGetDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.habit.HabitPutDTO;
 import ch.uzh.ifi.hase.soprafs24.service.*;
 import ch.uzh.ifi.hase.soprafs24.util.WeekdayUtil;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -243,6 +244,55 @@ public class HabitController {
         return getHabits(authToken,groupId);
     }
 
+/**
+    @PutMapping("/groups/{groupId}/habits/{habitId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseBody
+    public ResponseEntity<?> updateHabit(
+            @RequestHeader("Authorization") String authToken,
+            @PathVariable String groupId,
+            @PathVariable String habitId,
+            @RequestBody HabitPutDTO habitPutDTO) {
+
+        boolean isValid = authService.isTokenValid(authToken);
+        if (!isValid) {
+            return new ResponseEntity<>("Invalid token", HttpStatus.UNAUTHORIZED);
+        }
+
+        String userId = authService.getId(authToken);
+        Group group = groupService.getGroupById(groupId);
+        if (!group.getAdminIdList().contains(userId)) {
+            return new ResponseEntity<>("User is not part of this group", HttpStatus.UNAUTHORIZED);
+        }
+        welche funktion verwenden und welche daten können über dieses Mapping bearbeitet werden?
+        Habit habit = habitService.updateHabitData(habitId, habitPutDTO);
+
+        return ResponseEntity.ok(habit);
+    }
+ */
+
+    @DeleteMapping("/groups/{groupId}/habits/{habitId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseBody
+    public ResponseEntity<?> delHabit(
+            @RequestHeader("Authorization") String authToken,
+            @PathVariable String groupId,
+            @PathVariable String habitId) {
+
+        boolean isValid = authService.isTokenValid(authToken);
+        if (!isValid) {
+            return new ResponseEntity<>("Invalid token", HttpStatus.UNAUTHORIZED);
+        }
+
+        String userId = authService.getId(authToken);
+        Group group = groupService.getGroupById(groupId);
+        if (!group.getAdminIdList().contains(userId)) {
+            return new ResponseEntity<>("User is not part of this group", HttpStatus.UNAUTHORIZED);
+        }
+
+        habitService.deleteHabit(habitId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 
 
 

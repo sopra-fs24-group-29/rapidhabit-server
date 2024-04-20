@@ -1,7 +1,7 @@
 package ch.uzh.ifi.hase.soprafs24.service;
-import ch.uzh.ifi.hase.soprafs24.entity.Group;
 import ch.uzh.ifi.hase.soprafs24.entity.Habit;
 import ch.uzh.ifi.hase.soprafs24.repository.HabitRepository;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.habit.HabitPutDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
