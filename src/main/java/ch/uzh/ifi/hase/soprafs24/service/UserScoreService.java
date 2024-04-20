@@ -74,6 +74,4 @@ public class UserScoreService {
             throw new IllegalStateException("UserScore not found for user ID: " + userId + " and group ID: " + groupId);
         }
     }
-
-
 }

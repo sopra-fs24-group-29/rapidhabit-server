@@ -1,39 +1,26 @@
 package ch.uzh.ifi.hase.soprafs24.service;
 
-import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs24.entity.Group;
-import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.entity.UserScore;
 import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
-import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.UserScoreRepository;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupGetDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.user.UserPasswordPutDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.user.UserPutDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import static org.hamcrest.Matchers.any;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class GroupServiceTest {
     @Mock
     private GroupRepository groupRepository;
-    @Mock
-    private UserRepository userRepository;
-    @Mock
-    private BCryptPasswordEncoder passwordEncoder;
     @InjectMocks
     private GroupService groupService;
     @Mock
