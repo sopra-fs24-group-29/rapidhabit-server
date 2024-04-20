@@ -112,6 +112,58 @@ public class GroupControllerTest {
                 .andExpect(status().isUnauthorized());
     }
 
+    @Test //GET Mapping "/groups/{groupId}" - CODE 401 Unaurthorized (User not Admin) (Error)
+    public void GET_Group_InvalidInput_ValidToken() throws Exception {
+        String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
+        when(authService.isTokenValid(token)).thenReturn(true);
+        Long userId = 1L;
+        String groupId = "1";
+        when(authService.getId(token)).thenReturn(String.valueOf(userId));
+        when(groupService.isUserAdmin(String.valueOf(userId), groupId)).thenReturn(false);
+
+        mockMvc.perform(get("/groups/" + groupId)
+                        .header("Authorization", token)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test //GET Mapping "/groups/{groupId}" - CODE 401 Unaurthorized (Invalid Token) (Error)
+    public void GET_Group_validInput_InvalidToken() throws Exception {
+        String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
+        when(authService.isTokenValid(token)).thenReturn(false);
+        String groupId = "1";
+
+        mockMvc.perform(get("/groups/" + groupId)
+                        .header("Authorization", token)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test //GET Mapping "/groups/{groupId}" - CODE 200 OK (Pass)
+    public void GET_Group_validInput_ValidToken_ReturnsNoContent() throws Exception {
+        String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
+        when(authService.isTokenValid(token)).thenReturn(true);
+        Long userId = 1L;
+        String groupId = "1";
+        when(authService.getId(token)).thenReturn(String.valueOf(userId));
+        when(groupService.isUserAdmin(String.valueOf(userId), groupId)).thenReturn(true);
+
+        Group group = new Group();
+        group.setId(groupId);
+        group.setName("Group1");
+        group.setDescription("Description of Group1");
+
+        when(groupService.getGroupById(groupId)).thenReturn(group);
+
+        mockMvc.perform(get("/groups/" + groupId)
+                        .header("Authorization", token)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(groupId))
+                .andExpect(jsonPath("$.name").value("Group1"))
+                .andExpect(jsonPath("$.description").value("Description of Group1"));
+    }
+
     @Test //GET Mapping "/groups/{groupId}/ranking" - CODE 200 Ok (pass)
     public void GET_GroupRanking_validInput_ReturnsOk() throws Exception {
         String token = "validToken123";
@@ -136,6 +188,19 @@ public class GroupControllerTest {
                 .andExpect(jsonPath("$[0].id").value(userId))
                 .andExpect(jsonPath("$[0].initials").value("UI"))
                 .andExpect(jsonPath("$[0].rank").value(1));
+    }
+
+    @Test //GET Mapping "/groups/{groupId}/ranking" - CODE 401 Unaurthorized (Invalid Token) (Error)
+    public void GET_GroupRanking_InvalidInput() throws Exception {
+        String token = "validToken123";
+        String groupId = "group1";
+
+        when(authService.isTokenValid(token)).thenReturn(false);
+
+        mockMvc.perform(get("/groups/{groupId}/ranking", groupId)
+                        .header("Authorization", token)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
     }
 
     /**

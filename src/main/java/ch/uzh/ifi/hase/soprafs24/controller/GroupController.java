@@ -60,7 +60,7 @@ public class GroupController {
         }
     }
 
-    @GetMapping("/groups/{groupId}/edit")
+    @GetMapping("/groups/{groupId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public ResponseEntity<?> getSpecificGroup(@RequestHeader("Authorization") String authToken, @PathVariable String groupId) {
@@ -132,8 +132,7 @@ public class GroupController {
     }
         else {
             String msg = "Invalid request token!";
-            return ResponseEntity.badRequest().body(msg);
-        }
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(msg);      }
     }
 
     @PostMapping("/groups/join") // defines a method to for handling post methods for creating new users

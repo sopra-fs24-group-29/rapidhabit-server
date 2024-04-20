@@ -167,6 +167,29 @@ public class HabitControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
+    @Test //GET Mapping "/groups/{groupId}/habits/{habitId}/edit" - CODE 200 Ok (pass)
+    public void GET_GroupHabitData_ValidInput_Success() throws Exception {
+        String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
+        when(authService.isTokenValid(token)).thenReturn(true);
+        Long userId = 1L;
+        String groupId = "1";
+        String habitId = "habit1";
+        when(authService.getId(token)).thenReturn(String.valueOf(userId));
+        when(groupService.isUserAdmin(String.valueOf(userId), groupId)).thenReturn(true);
+
+        Group group = new Group();
+        group.setAdminIdList(Arrays.asList(String.valueOf(userId)));
+        when(groupService.getGroupById(groupId)).thenReturn(group);
+
+        Habit habit = new Habit();
+        habit.setId(habitId);
+        when(habitService.getHabitById(habitId)).thenReturn(Optional.of(habit));
+
+        mockMvc.perform(get("/groups/{groupId}/habits/{habitId}/edit", groupId, habitId)
+                        .header("Authorization", token)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
 
     /**
      * ------------------------------ END GET TESTS ------------------------------ START POST TESTS ------------------------------
@@ -289,6 +312,27 @@ public class HabitControllerTest {
      * ------------------------------ END PUT TESTS ------------------------------ START DELETE TESTS ------------------------------
      */
 
+    @Test //DELETE Mapping "/groups/{groupId}/habits/{habitId}" - CODE 204 No Content (Success)
+    public void DELETE_GroupHabit_ValidInput_Success() throws Exception {
+        String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
+        when(authService.isTokenValid(token)).thenReturn(true);
+        Long userId = 1L;
+        String groupId = "1";
+        String habitId = "habit1";
+        when(authService.getId(token)).thenReturn(String.valueOf(userId));
+        when(groupService.isUserAdmin(String.valueOf(userId), groupId)).thenReturn(true);
+
+        Group group = new Group();
+        group.setAdminIdList(Arrays.asList(String.valueOf(userId)));
+        when(groupService.getGroupById(groupId)).thenReturn(group);
+
+        doNothing().when(habitService).deleteHabit(habitId);
+
+        mockMvc.perform(delete("/groups/{groupId}/habits/{habitId}", groupId, habitId)
+                        .header("Authorization", token)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+    }
 
 
     /**
