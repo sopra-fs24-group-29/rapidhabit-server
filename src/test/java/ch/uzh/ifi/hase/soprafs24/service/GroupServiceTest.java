@@ -373,6 +373,7 @@ public class GroupServiceTest {
         verify(userScoreRepository, times(1)).findByUserIdAndGroupId(userId, groupId);
         verify(userService, times(1)).getInitials(userId);
     }
+
     @Test
     public void getGroupMenuDataByUserId_emptyList() {
         String userId = "user1";
