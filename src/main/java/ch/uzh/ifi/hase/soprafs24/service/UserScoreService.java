@@ -74,4 +74,11 @@ public class UserScoreService {
             throw new IllegalStateException("UserScore not found for user ID: " + userId + " and group ID: " + groupId);
         }
     }
+
+    public void deleteByUserIdAndGroupId(String userId, String groupId){
+        userScoreRepository.deleteByUserIdAndGroupId(userId, groupId);
+    }
+    public void deleteByGroupId(String groupId){
+        userScoreRepository.deleteByGroupId(groupId);
+    }
 }

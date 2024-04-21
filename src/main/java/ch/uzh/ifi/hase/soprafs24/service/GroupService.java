@@ -1,13 +1,17 @@
 package ch.uzh.ifi.hase.soprafs24.service;
 import ch.uzh.ifi.hase.soprafs24.entity.Group;
 import ch.uzh.ifi.hase.soprafs24.entity.UserScore;
+import ch.uzh.ifi.hase.soprafs24.entity.UserStatsEntry;
 import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.UserScoreRepository;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupGetDTO;
+import org.hibernate.sql.Update;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -32,15 +36,19 @@ public class GroupService {
 
     private final Logger log = LoggerFactory.getLogger(GroupService.class);
 
-    private final GroupRepository groupRepository;
+    @Autowired
+    private GroupRepository groupRepository;
     private final UserScoreRepository userScoreRepository;
     private final UserService userService;
 
+    private final UserStatsEntryService userStatsEntryService;
+
     @Autowired
-    public GroupService(GroupRepository groupRepository, BCryptPasswordEncoder encoder, UserScoreRepository userScoreRepository, UserService userService) {
+    public GroupService(GroupRepository groupRepository, BCryptPasswordEncoder encoder, UserScoreRepository userScoreRepository, UserService userService, UserStatsEntryService userStatsEntryService) {
         this.groupRepository = groupRepository;
         this.userScoreRepository = userScoreRepository;
         this.userService = userService;
+        this.userStatsEntryService = userStatsEntryService;
     }
 
     public Group createGroup(Group newGroup, String creatorId) {
@@ -213,6 +221,32 @@ public class GroupService {
                 .orElseThrow(() -> new IllegalArgumentException("Group not found with id: " + groupId));
         group.removeHabitID(habitId);
         groupRepository.save(group);
+    }
+
+    public void deleteUserIdFromAllGroups(String userId) {
+        // admin check
+        List<Group> groups = groupRepository.findByAdminIdListContains(userId); // find all groups where userId is admin
+        for (Group group : groups){
+            if (group.getUserIdList().size() > 1){ // if group has more than one user -> this will imply that the admin of the group will be exchanged
+                group.removeUserId(userId); // remove userId from userId List
+                group.removeAdminId(userId); // remove userId from adminId List
+                if (group.getAdminIdList().isEmpty()){ // check if AdminList is empty.
+                    group.addAdminId(group.getUserIdList().get(0)); // a new admin will be determined
+                }
+                groupRepository.save(group);
+            }
+            else {
+                userScoreRepository.deleteByGroupId(group.getId());
+                userStatsEntryService.deleteUserStatsEntriesByGroupId(group.getId());
+                groupRepository.delete(group);
+            }
+        }
+
+        groups = groupRepository.findByUserIdsContains(userId); // find all groups where userId is in userIdList
+        for (Group group : groups){
+            group.removeUserId(userId);
+            groupRepository.save(group);
+        }
     }
 
 }

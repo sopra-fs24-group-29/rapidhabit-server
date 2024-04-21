@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -199,7 +200,9 @@ public class GroupController {
             if (!groupService.isUserAdmin(userId, groupId)) {
                 return new ResponseEntity<>("User is not group admin", HttpStatus.UNAUTHORIZED);
             }
-            Group delete_Group = groupService.deleteGroup(groupId);
+            groupService.deleteGroup(groupId);
+            userScoreService.deleteByGroupId(groupId);
+            userStatsEntryService.deleteByGroupId(groupId);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 
         }
@@ -209,20 +212,26 @@ public class GroupController {
         }
     }
 
-    @DeleteMapping("/groups/{groupId}/users") // defines a method to for deleting a user from a group.
+    @DeleteMapping("/groups/{groupId}/users/userId") // defines a method to for deleting a user from a group.
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ResponseBody
-    public ResponseEntity<?> deleteUserFromGroup(@RequestHeader("Authorization") String authHeader, String userToRemoveID, @PathVariable String groupId) {
+    public ResponseEntity<?> deleteUserFromGroup(@RequestHeader("Authorization") String authHeader, @PathVariable String groupId, @PathVariable String userId) {
+        String userToRemoveID = userId;
         if (authService.isTokenValid(authHeader)) {
-            String userId = authService.getId(authHeader);
+            userId = authService.getId(authHeader);
             System.out.println("Delete Request received. Preparing group for deletion.");
+            if(userId.equals(userToRemoveID)){
+                return new ResponseEntity<>("You can only delete other memebers from the group.", HttpStatus.BAD_REQUEST);
+            }
 
             if (!groupService.isUserAdmin(userId, groupId)) {
                 return new ResponseEntity<>("User is not group admin", HttpStatus.UNAUTHORIZED);
             }
-            Group delete_Group = groupService.removeUserFromGroup(groupId, userToRemoveID);
+            Group delete_Group = groupService.removeUserFromGroup(groupId, userToRemoveID); // remove the user from the userIdList within the group
+            userScoreService.deleteByUserIdAndGroupId(userToRemoveID, groupId); // Remove all entries from UserScores associated to the user within the group
+            userScoreService.updateRanksInGroup(groupId); // Update rank of remaining group members
+            userStatsEntryService.deleteByUserIdAndDueDate(userId, LocalDate.now()); // Today's UserStats Entries from this user will be removed, historical data remains.
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-
         }
         else {
             String msg = "Invalid request token!";

@@ -1,10 +1,13 @@
 package ch.uzh.ifi.hase.soprafs24.controller;
 
 import ch.uzh.ifi.hase.soprafs24.entity.User;
+import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.user.*;
 import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs24.service.AuthService;
+import ch.uzh.ifi.hase.soprafs24.service.GroupService;
 import ch.uzh.ifi.hase.soprafs24.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,11 +27,14 @@ public class UserController {
 
     private final UserService userService;
 
+    private final GroupService groupService;
+
     private final AuthService authService;
 
-    UserController(UserService userService, AuthService authService) {
+    UserController(UserService userService, AuthService authService, GroupService groupService) {
         this.userService = userService;
         this.authService = authService;
+        this.groupService = groupService;
     }
 
     @PostMapping("/users") // defines a method to for handling post methods for creating new users
@@ -80,19 +86,6 @@ public class UserController {
         }
         else{ return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); }
     }
-
-    @GetMapping("/allowEdit")
-    public ResponseEntity<?> allowEdit(@RequestHeader("Authorization") String authHeaderToken, @RequestParam String id){
-        boolean isValid = authService.isTokenValid(authHeaderToken);
-        if(isValid){
-            User user = userService.getUserDetails(id);
-            Boolean allowEdit = false;
-            if(authService.getId(authHeaderToken).equals(user.getId())){
-                allowEdit = true;
-            }
-            return ResponseEntity.ok(allowEdit);
-        }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();}
 
     @PutMapping ("/users/logout")
     public ResponseEntity<?> logout(@RequestHeader("Authorization") String authHeaderToken){
@@ -165,6 +158,7 @@ public class UserController {
             String userIdToEdit = userToEdit.getId();
             if (tokenId.equals(userIdToEdit)){
                 User del_User = userService.delUser(userIdToEdit, userPasswordPutDTO);
+                groupService.deleteUserIdFromAllGroups(id);
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
             }
             // Altering the data of other users is prohibited!

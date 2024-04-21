@@ -83,6 +83,10 @@ public class Group {
        this.habitIds.remove(habitId);
     }
 
+    public void removeAdminId(String adminId){
+        this.adminIdList.remove(adminId);
+    }
+
     public List<String> getHabitIdList() {
         return this.habitIds;
     }

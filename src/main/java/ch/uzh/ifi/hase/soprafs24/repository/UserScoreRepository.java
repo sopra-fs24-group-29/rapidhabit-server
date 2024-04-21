@@ -9,6 +9,7 @@ import java.util.Optional;
 
 public interface UserScoreRepository extends MongoRepository<UserScore, String> {
     void deleteByUserIdAndGroupId(String userId, String groupId);
+    void deleteByGroupId(String groupId);
     Optional<UserScore> findByUserIdAndGroupId(String userId, String groupId);
 
     @Query("{'groupId': ?0}")

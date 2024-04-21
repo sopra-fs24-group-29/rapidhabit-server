@@ -50,4 +50,9 @@ public interface UserStatsEntryRepository extends MongoRepository<UserStatsEntry
 
     @Query("{'habitId': ?0, 'dueDate': ?1}")
     List<UserStatsEntry> findByHabitIdAndDueDate(String habitId, LocalDate dueDate);
+
+    void deleteByGroupId(String groupId);
+
+    void deleteByUserIdAndDueDate(String userId, LocalDate dueDate);
+
 }

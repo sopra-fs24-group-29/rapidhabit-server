@@ -6,7 +6,6 @@ import ch.uzh.ifi.hase.soprafs24.constant.Weekday;
 import ch.uzh.ifi.hase.soprafs24.entity.*;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupHabitDataGetDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.habit.HabitGetDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.habit.HabitPutDTO;
 import ch.uzh.ifi.hase.soprafs24.service.*;
 import ch.uzh.ifi.hase.soprafs24.util.WeekdayUtil;
 import com.fasterxml.jackson.databind.JsonNode;

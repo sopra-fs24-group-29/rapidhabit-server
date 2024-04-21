@@ -30,6 +30,7 @@ public class UserStatsEntryService {
         this.userStatsEntryRepository = userStatsEntryRepository;
         this.habitRepository = habitRepository;
     }
+
     public UserStatsEntry createUserStatsEntry(String userId, String groupId, String habitId) {
         UserStatsEntry userStatsEntry = new UserStatsEntry();
         // userStatsEntry.setDueDate(LocalDate.now().minusDays(1)); // Test for yesterday
@@ -79,13 +80,13 @@ public class UserStatsEntryService {
         Optional<UserStatsEntry> result = userStatsEntryRepository.findByUserIdAndHabitIdAndDueDate(userId, habitId, LocalDate.now());
         if (!result.isPresent()) {
             System.out.println("No entry found for User: " + userId + ", Habit: " + habitId);
-        } else {
+        }
+        else {
             System.out.println("Latest entry found: " + result.get());
         }
         return result.map(entry -> entry.getStatus().equals(UserStatsStatus.SUCCESS))
                 .orElse(false);
     }
-
 
 
     public Map<String, Integer> computeUserRanks(String groupId) {
@@ -108,6 +109,7 @@ public class UserStatsEntryService {
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "No habit with id " + habitId + " found."));
         return habit.getRewardPoints();
     }
+
     public List<HabitDateUserStatusGetDTO> getHabitData(String habitId, String groupId) {
         List<UserStatsEntry> entries = userStatsEntryRepository.findByHabitIdAndGroupId(habitId, groupId);
 
@@ -115,6 +117,7 @@ public class UserStatsEntryService {
                 .map(entry -> new HabitDateUserStatusGetDTO(entry.getDueDate(), entry.getUserId(), entry.getStatus()))
                 .collect(Collectors.toList());
     }
+
     public List<UserStatsEntry> getEntriesByUserIdAndHabitId(String userId, String habitId) {
         // Fetches all entries that match the given userId and habitId
         return userStatsEntryRepository.findByUserIdAndHabitId(userId, habitId);
@@ -128,11 +131,13 @@ public class UserStatsEntryService {
             userStatsEntry.setStatus(UserStatsStatus.SUCCESS);
             userStatsEntryRepository.save(userStatsEntry);
             return UserStatsStatus.SUCCESS;
-        } else if (userStatsEntry.getStatus().equals(UserStatsStatus.SUCCESS)) {
+        }
+        else if (userStatsEntry.getStatus().equals(UserStatsStatus.SUCCESS)) {
             userStatsEntry.setStatus(UserStatsStatus.OPEN);
             userStatsEntryRepository.save(userStatsEntry);
             return UserStatsStatus.OPEN;
-        } else {
+        }
+        else {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "The status of the entry is neither OPEN nor SUCCESS.");
         }
     }
@@ -147,7 +152,7 @@ public class UserStatsEntryService {
     }
 
 
-    public boolean entriesExist(String habitId, LocalDate dueDate){
+    public boolean entriesExist(String habitId, LocalDate dueDate) {
         return userStatsEntryRepository.existsByHabitIdAndDueDate(habitId, dueDate);
     }
 
@@ -155,6 +160,7 @@ public class UserStatsEntryService {
     public List<UserStatsEntry> getAllSuccessfulUsers(String habitId, LocalDate date) {
         return userStatsEntryRepository.findByHabitIdAndDueDateAndStatus(habitId, date, UserStatsStatus.SUCCESS);
     }
+
     public Integer countUniqueHabitsByDate(LocalDate date) {
         return userStatsEntryRepository.countDistinctHabitIdsByDueDate(date);
     }
@@ -169,4 +175,13 @@ public class UserStatsEntryService {
         }
     }
 
+    public void deleteUserStatsEntriesByGroupId(String groupId) {
+        userStatsEntryRepository.deleteByGroupId(groupId);
+    }
+    public void deleteByUserIdAndDueDate(String userId, LocalDate dueDate){
+        userStatsEntryRepository.deleteByUserIdAndDueDate(userId, dueDate);
+    }
+    public void deleteByGroupId(String groupId){
+        userStatsEntryRepository.deleteByGroupId(groupId);
+    }
 }
