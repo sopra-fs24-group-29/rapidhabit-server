@@ -2,6 +2,7 @@ package ch.uzh.ifi.hase.soprafs24.repository;
 
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatsStatus;
 import ch.uzh.ifi.hase.soprafs24.entity.UserStatsEntry;
+import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
@@ -15,11 +16,9 @@ public interface UserStatsEntryRepository extends MongoRepository<UserStatsEntry
     List<UserStatsEntry> findAllByDueDateLessThanAndStatus(LocalDate date, UserStatsStatus status);
     List<UserStatsEntry> findAllByGroupId(String groupId);
 
-    // Existing custom query
     @Query("{'groupId': ?0, 'dueDate': ?1}")
     List<UserStatsEntry> findAllByGroupIdAndDueDate(String groupId, LocalDate dueDate);
 
-    // New function to find entries by userId, habitId, and specific LocalDate
     @Query("{'userId': ?0, 'habitId': ?1, 'dueDate': ?2}")
     Optional<UserStatsEntry> findByUserIdAndHabitIdAndDueDate(String userId, String habitId, LocalDate dueDate);
 
@@ -37,13 +36,18 @@ public interface UserStatsEntryRepository extends MongoRepository<UserStatsEntry
     List<UserStatsEntry> findByGroupIdAndHabitIdAndDueDate(String groupId, String habitId, LocalDate dueDate);
 
     @Query("{'habitId': ?0, 'dueDate': ?1, 'status': {$ne: ?2}}")
-    long countByHabitIdAndDueDateAndStatusNot(String habitId, LocalDate dueDate, UserStatsStatus statusNot);
+    Long countByHabitIdAndDueDateAndStatusNot(String habitId, LocalDate dueDate, UserStatsStatus statusNot);
 
     boolean existsByHabitIdAndDueDate(String habitId, LocalDate dueDate);
     List<UserStatsEntry> findByHabitIdAndDueDateAndStatus(String habitId, LocalDate dueDate, UserStatsStatus status);
 
-    @Query("SELECT COUNT(DISTINCT use.habitId) FROM UserStatsEntry use WHERE use.dueDate = ?1")
+    @Aggregation(pipeline = {
+            "{ $match: { 'dueDate': ?0 } }",
+            "{ $group: { _id: '$habitId' } }",
+            "{ $count: 'distinctHabitCount' }"
+    })
     Integer countDistinctHabitIdsByDueDate(LocalDate dueDate);
 
-
+    @Query("{'habitId': ?0, 'dueDate': ?1}")
+    List<UserStatsEntry> findByHabitIdAndDueDate(String habitId, LocalDate dueDate);
 }

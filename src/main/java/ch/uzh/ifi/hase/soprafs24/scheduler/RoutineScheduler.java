@@ -35,17 +35,18 @@ public class RoutineScheduler {
         this.userScoreService = userScoreService;
     }
 
-    @Scheduled(cron = "0 10 1 * * ?") // Executes every day at 01:10 AM
+    @Scheduled(cron = "0 0 0 * * ?") // Executes every day at 00:00 AM
     public void checkAndScheduleHabitRoutines() {
         System.out.println("Systemzeitzone: " + ZoneId.systemDefault());
         Weekday currentWeekday = WeekdayUtil.getCurrentWeekday();
         System.out.println(currentWeekday);
         System.out.println("Today, it is: " +currentWeekday +".");
+        LocalDate today = LocalDate.now();
         LocalDate yesterday = LocalDate.now().minusDays(1);
         System.out.println(yesterday);
 
         // Update yesterday's open entries which are expired to FAIL
-        userStatsEntryService.updateStatusForExpiredEntries(yesterday);
+        userStatsEntryService.updateStatusForExpiredEntries(today);
 
         List<Group> groups = groupService.getGroups();
         for (Group i : groups){
@@ -56,6 +57,7 @@ public class RoutineScheduler {
             List<String> userIds = i.getUserIdList();
             // Set counter for successful habits to zero
             Integer habitTargetNumber = userStatsEntryService.countUniqueHabitsByDate(yesterday);
+            System.out.println("The number of habits to be completed by the past day was: "+habitTargetNumber);
             Integer successfulHabits = 0;
 
             // Iterate through each habit of the current group:
@@ -64,12 +66,14 @@ public class RoutineScheduler {
                 // retrieve the habit object
                 Habit habit = habitService.getHabitById(habitId).orElseThrow(() -> new RuntimeException("No habit with id" +habitId +" was found."));
                 // compute habit streaks
-                if(userStatsEntryService.entriesExist(habitId, yesterday)){ // if the habit was on schedule today
+                if(userStatsEntryService.entriesExist(habitId, yesterday)){ // if the habit was on schedule the past day
                     if(userStatsEntryService.allEntriesSuccess(habitId, yesterday)){ // if all corresponding entries are assigned to success
+                        System.out.println(habit.getName() +" was completed by all users. Habit streak is incremented");
                         habitService.incrementCurrentStreak(habitId); // increase habit streak of group
                         successfulHabits += 1; // increase the number of successfully completed habits
                     }
                     else {
+                        System.out.println(habit.getName() +" was not completed by all users. Habit streak is reset.");
                         habitService.resetCurrentStreak(habitId);
                     }
 
@@ -79,7 +83,7 @@ public class RoutineScheduler {
                         userScoreService.updatePoints(entry.getUserId(), groupId, habit);
                     });
 
-                // at this stage, identify if the habit has to be scheduled at the current weekday
+                // at this stage, identify if the habit has to be scheduled at the new day / current weekday
                 RepeatType repeatType = habit.getRepeatStrategy().getRepeatType();
                 System.out.println(habitId +" has type " +repeatType);
 
@@ -111,5 +115,6 @@ public class RoutineScheduler {
             // now repeat the same process with the next group
         }
     }
+        System.out.println("Tagesabschluss beendet.");
     }
 }

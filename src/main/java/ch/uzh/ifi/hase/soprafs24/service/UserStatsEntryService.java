@@ -137,10 +137,15 @@ public class UserStatsEntryService {
         }
     }
 
-    public boolean allEntriesSuccess(String habitId, LocalDate dueDate) {
-        long count = userStatsEntryRepository.countByHabitIdAndDueDateAndStatusNot(habitId, dueDate, UserStatsStatus.SUCCESS);
-        return count == 0; // if there are 0 entries which no different from the status SUCCESS, then the group has passed all habits for the current date
+    public boolean allEntriesSuccess(String habitId, LocalDate date) {
+        Long count = userStatsEntryRepository.countByHabitIdAndDueDateAndStatusNot(habitId, date, UserStatsStatus.SUCCESS);
+        // Überprüfe, ob count null ist oder gleich 0
+        if (count == null || count == 0) {
+            return false;
+        }
+        return true;
     }
+
 
     public boolean entriesExist(String habitId, LocalDate dueDate){
         return userStatsEntryRepository.existsByHabitIdAndDueDate(habitId, dueDate);
@@ -154,5 +159,14 @@ public class UserStatsEntryService {
         return userStatsEntryRepository.countDistinctHabitIdsByDueDate(date);
     }
 
+    public void deleteUserStatsEntriesOfToday(String habitId) {
+        LocalDate today = LocalDate.now();
+        // Die Methode findByHabitIdAndDueDate muss List<UserStatsEntry> zurückgeben, nicht List<UserStatsStatus>
+        List<UserStatsEntry> list = userStatsEntryRepository.findByHabitIdAndDueDate(habitId, today);
+        // Keine zusätzliche geschweifte Klammer benötigt; for-Schleife sollte direkt nach der Deklaration folgen
+        for (UserStatsEntry entry : list) {
+            userStatsEntryRepository.delete(entry);
+        }
+    }
 
 }

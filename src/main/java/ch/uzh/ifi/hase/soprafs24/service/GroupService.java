@@ -208,4 +208,11 @@ public class GroupService {
         groupRepository.save(group);
     }
 
+    public void removeHabitFromHabitIdList(String groupId, String habitId){
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new IllegalArgumentException("Group not found with id: " + groupId));
+        group.removeHabitID(habitId);
+        groupRepository.save(group);
+    }
+
 }

@@ -244,32 +244,71 @@ public class HabitController {
         return getHabits(authToken,groupId);
     }
 
-/**
-    @PutMapping("/groups/{groupId}/habits/{habitId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @ResponseBody
-    public ResponseEntity<?> updateHabit(
-            @RequestHeader("Authorization") String authToken,
-            @PathVariable String groupId,
-            @PathVariable String habitId,
-            @RequestBody HabitPutDTO habitPutDTO) {
-
-        boolean isValid = authService.isTokenValid(authToken);
+    @PutMapping("/groups/{groupId}/habits/{habitId}/update")
+    public ResponseEntity<?> updateHabit(@RequestHeader("Authorization") String authHeaderToken,
+                                         @PathVariable String groupId,
+                                         @PathVariable String habitId,
+                                         @RequestBody String habitData) {
+        boolean isValid = authService.isTokenValid(authHeaderToken);
         if (!isValid) {
             return new ResponseEntity<>("Invalid token", HttpStatus.UNAUTHORIZED);
         }
 
-        String userId = authService.getId(authToken);
-        Group group = groupService.getGroupById(groupId);
-        if (!group.getAdminIdList().contains(userId)) {
-            return new ResponseEntity<>("User is not part of this group", HttpStatus.UNAUTHORIZED);
+        String userId = authService.getId(authHeaderToken);
+        if (!groupService.isUserAdmin(userId, groupId)) {
+            return new ResponseEntity<>("User is not group admin", HttpStatus.UNAUTHORIZED);
         }
-        welche funktion verwenden und welche daten können über dieses Mapping bearbeitet werden?
-        Habit habit = habitService.updateHabitData(habitId, habitPutDTO);
 
-        return ResponseEntity.ok(habit);
+        try {
+            JsonNode rootNode = objectMapper.readTree(habitData);
+            String name = rootNode.path("name").asText();
+            String description = rootNode.path("description").asText();
+            int rewardPoints = rootNode.path("rewardPoints").asInt();
+            JsonNode repeatStrategyNode = rootNode.path("repeatStrategy");
+            String repeatType = repeatStrategyNode.path("type").asText();
+
+            Habit habit = new Habit(name, description, rewardPoints);
+            if ("DAILY".equals(repeatType)) {
+                habit.setRepeatStrategy(new DailyRepeat());
+            } else if ("WEEKLY".equals(repeatType)) {
+                JsonNode weekdayMapNode = repeatStrategyNode.path("weekdayMap");
+                WeeklyRepeat weeklyRepeat = new WeeklyRepeat();
+                // Iterate through each node of weekdayMapNode
+                Iterator<Map.Entry<String, JsonNode>> fields = weekdayMapNode.fields();
+                while (fields.hasNext()) {
+                    Map.Entry<String, JsonNode> mapEntry = fields.next();
+                    String day = mapEntry.getKey();
+                    Boolean value = mapEntry.getValue().asBoolean();
+                    try {
+                        // Convert weekday strings to Weekday enums
+                        Weekday weekday = Weekday.valueOf(day.toUpperCase());
+                        // If weekday in JSON is true, set weekday in object to true as well
+                        weeklyRepeat.setWeekdayToRepeat(weekday, value);
+                    } catch (IllegalArgumentException e) {
+                        // Log error or handle it accordingly
+                        return new ResponseEntity<>("Invalid weekday name: " + day, HttpStatus.BAD_REQUEST);
+                    }
+                }
+                habit.setRepeatStrategy(weeklyRepeat);
+            }
+
+            // update habit within the db
+            habitService.updateHabit(habitId, habit);
+            if(!habitService.isCurrentWeekdayActive(habit)){ // checks if the updated habit is not scheduled for the current weekday
+                userStatsEntryService.deleteUserStatsEntriesOfToday(habitId);
+            }
+            else {
+                if(!userStatsEntryService.entriesExist(habitId, LocalDate.now())){ // if the habit is scheduled for today but UserStatsEntries exist for today
+                    Group group = groupService.getGroupById(groupId);
+                    scheduleHabitRoutines(group, habit);
+                }
+            }
+            return new ResponseEntity<>(habit, HttpStatus.CREATED);
+
+        } catch (IOException e) {
+            return new ResponseEntity<>("Error parsing JSON", HttpStatus.BAD_REQUEST);
+        }
     }
- */
 
     @DeleteMapping("/groups/{groupId}/habits/{habitId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -287,10 +326,11 @@ public class HabitController {
         String userId = authService.getId(authToken);
         Group group = groupService.getGroupById(groupId);
         if (!group.getAdminIdList().contains(userId)) {
+            groupService.removeHabitFromHabitIdList(groupId, habitId);
+            userStatsEntryService.deleteUserStatsEntriesOfToday(habitId); // delete all user stats entries of today, historical data of the habit remains in the db
+            habitService.deleteHabit(habitId);
             return new ResponseEntity<>("User is not part of this group", HttpStatus.UNAUTHORIZED);
         }
-
-        habitService.deleteHabit(habitId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
