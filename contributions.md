@@ -25,9 +25,9 @@
 
 | IssueNr | Issue description |
 |:--------|-------------------|
-| #4      |                   |
-| #31     |                   |
-| #32     |                   |
+| #4      | Create and configure App routing                 |
+| #31     | Create Not Found screen                  |
+| #32     | Create Welcome Screen                  |
 
 
 ### Raksmey (rocketraksi):
