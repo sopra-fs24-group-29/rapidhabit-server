@@ -22,9 +22,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker("/topic", "/queue"); // setting up the destinations
-        registry.setApplicationDestinationPrefixes("/app");
-        registry.setUserDestinationPrefix("/user");
+        registry.enableSimpleBroker("/topic"); // setting up the destinations
+        registry.setApplicationDestinationPrefixes("/app"); // every message sent to this prefix ends up in controller X
     }
 
     @Override
@@ -34,4 +33,5 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 .setHandshakeHandler(new DefaultHandshakeHandler())
                 .addInterceptors(new AuthHandshakeInterceptor(authService));
     }
+
 }

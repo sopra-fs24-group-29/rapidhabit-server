@@ -1,7 +1,6 @@
 package ch.uzh.ifi.hase.soprafs24.config;
 
 import ch.uzh.ifi.hase.soprafs24.service.AuthService;
-import ch.uzh.ifi.hase.soprafs24.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.ServerHttpRequest;

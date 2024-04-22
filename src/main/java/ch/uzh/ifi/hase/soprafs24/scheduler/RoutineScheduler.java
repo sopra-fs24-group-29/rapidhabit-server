@@ -1,23 +1,22 @@
 
 package ch.uzh.ifi.hase.soprafs24.scheduler;
 
+import ch.uzh.ifi.hase.soprafs24.constant.PulseCheckStatus;
 import ch.uzh.ifi.hase.soprafs24.constant.RepeatType;
-import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs24.constant.Weekday;
 import ch.uzh.ifi.hase.soprafs24.entity.*;
-import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs24.service.*;
+import ch.uzh.ifi.hase.soprafs24.util.FormIdGenerator;
 import ch.uzh.ifi.hase.soprafs24.util.WeekdayUtil;
-import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.web.server.ResponseStatusException;
-
 import java.time.LocalDate;
-import java.time.DayOfWeek;
-
+import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
 
 @Component
 public class RoutineScheduler {
@@ -28,12 +27,67 @@ public class RoutineScheduler {
 
     private final UserScoreService userScoreService;
 
-    RoutineScheduler(GroupService groupService, HabitService habitService, UserStatsEntryService userStatsEntryService, UserService userService, UserScoreService userScoreService){
+    private final PulseCheckEntryService pulseCheckEntryService;
+
+    RoutineScheduler(GroupService groupService, HabitService habitService, UserStatsEntryService userStatsEntryService, UserService userService, UserScoreService userScoreService, PulseCheckEntryService pulseCheckEntryService){
         this.groupService = groupService;
         this.habitService = habitService;
         this.userStatsEntryService = userStatsEntryService;
         this.userScoreService = userScoreService;
+        this.pulseCheckEntryService = pulseCheckEntryService;
     }
+
+    @Scheduled(cron = "0 38 15 * * ?") // Opening Pulse Check entries at 10:15 AM for each group
+    public void openMorningPulseCheck() {
+        LocalDateTime creationTimestamp = LocalDateTime.now();
+        LocalDateTime submissionTimestamp = LocalDateTime.now().plusMinutes(30);
+        // Generate content for pulse check:
+        String content = "Feed Content of Morning Pulse Check";
+        List<Group> groupsList = groupService.getGroups();
+        for(Group group : groupsList){
+            String groupId = group.getId();
+            String formId = FormIdGenerator.generateFormId(); // each group has the same formId
+            List<String> userIdList = group.getUserIdList();
+            for(String userId : userIdList){
+                pulseCheckEntryService.createPulseCheckEntry(formId, groupId, userId, content, creationTimestamp, submissionTimestamp, PulseCheckStatus.OPEN);
+            }
+        }
+    }
+
+    @Scheduled(cron = "0 43 15 * * ?") // Corrected to run at 10:45 AM every day
+    public void closeMorningPulseCheck() {
+        List<Group> groupsList = groupService.getGroups();
+        for (Group group : groupsList) {
+            String groupId = group.getId();
+            System.out.println("PROCESSING PULSE CHECK ENTRIES OF GROUP "+groupId+".");
+            List<PulseCheckEntry> pulseCheckEntries = pulseCheckEntryService.findByGroupIdWithLatestEntryDate(groupId);
+            System.out.println(pulseCheckEntries.size() +" entries were found for the last pulse check");
+            List<Double> formDataList = new ArrayList<>(); // collects values of accepted pulse check entries
+            int numberAcceptedEntries = 0;
+            int numberRejectedEntries = 0;
+
+            for (PulseCheckEntry entry : pulseCheckEntries) {
+                if (entry.getStatus().equals(PulseCheckStatus.ACCEPTED)) {
+                    formDataList.add(entry.getValue());
+                    numberAcceptedEntries++;
+                } else if (entry.getStatus().equals(PulseCheckStatus.OPEN)) {
+                    pulseCheckEntryService.setPulseCheckEntryStatus(entry, PulseCheckStatus.REJECTED); // set pulse check entry to rejected if still open after the deadline
+                    numberRejectedEntries++;
+                }
+            }
+
+            double sum = formDataList.stream().mapToDouble(Double::doubleValue).sum();
+            double average = formDataList.isEmpty() ? 0.0 : sum / formDataList.size();
+
+            // Debugging line
+            System.out.println("The form " + pulseCheckEntries.get(0).getFormId() +
+                    " with content '" + pulseCheckEntries.get(0).getContent() +
+                    "' was answered by " + numberAcceptedEntries +
+                    " of " + group.getUserIdList().size() +
+                    " users. The average rating was " + average + ".");
+        }
+    }
+
 
     @Scheduled(cron = "0 0 0 * * ?") // Executes every day at 00:00 AM
     public void checkAndScheduleHabitRoutines() {

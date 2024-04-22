@@ -16,17 +16,20 @@ public class PulseCheckEntry {
     @Indexed
     private String groupId;
     private String userId;
-    private String formData;
+
+    private String content;
+    private double value;
     private LocalDateTime creationTimestamp;
     private LocalDateTime submissionTimestamp;
     private PulseCheckStatus status;
 
     // Constructor already provided
-    public PulseCheckEntry(String formId, String groupId, String userId, String formData, LocalDateTime creationTimestamp, LocalDateTime submissionTimestamp, PulseCheckStatus status) {
+    public PulseCheckEntry(String formId, String groupId, String userId, String content, LocalDateTime creationTimestamp, LocalDateTime submissionTimestamp, PulseCheckStatus status) {
         this.formId = formId;
         this.groupId = groupId;
         this.userId = userId;
-        this.formData = formData;
+        this.content = content;
+        this.value = 0;
         this.creationTimestamp = creationTimestamp;
         this.submissionTimestamp = submissionTimestamp;
         this.status = status;
@@ -49,8 +52,12 @@ public class PulseCheckEntry {
         return userId;
     }
 
-    public String getFormData() {
-        return formData;
+    public double getValue() {
+        return value;
+    }
+
+    public String getContent() {
+        return content;
     }
 
     public LocalDateTime getCreationTimestamp() {
@@ -82,8 +89,12 @@ public class PulseCheckEntry {
         this.userId = userId;
     }
 
-    public void setFormData(String formData) {
-        this.formData = formData;
+    public void setValue(double value) {
+        this.value = value;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public void setCreationTimestamp(LocalDateTime creationTimestamp) {
