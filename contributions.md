@@ -28,6 +28,9 @@
 | #4      | Create and configure App routing                 |
 | #31     | Create Not Found screen                  |
 | #32     | Create Welcome Screen                  |
+| #33       |   Create login screen                |               |
+| #34       |  Create Register Screen                 |               |
+
 
 
 ### Raksmey (rocketraksi):
