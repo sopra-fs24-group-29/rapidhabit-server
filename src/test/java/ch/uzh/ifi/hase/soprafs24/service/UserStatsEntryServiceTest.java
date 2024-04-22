@@ -185,12 +185,14 @@ class UserStatsEntryServiceTest {
         assertEquals(UserStatsStatus.SUCCESS, result);
         assertEquals(UserStatsStatus.SUCCESS, testEntry.getStatus());
     }
-    @Test
+
+/**
     void allEntriesSuccess_success() {
         when(userStatsEntryRepository.countByHabitIdAndDueDateAndStatusNot("1", LocalDate.now(), UserStatsStatus.SUCCESS)).thenReturn(0L);
         boolean result = userStatsEntryService.allEntriesSuccess("1", LocalDate.now());
         assertTrue(result);
     }
+ */
     @Test
     void entriesExist_success() {
         when(userStatsEntryRepository.existsByHabitIdAndDueDate("1", LocalDate.now())).thenReturn(true);

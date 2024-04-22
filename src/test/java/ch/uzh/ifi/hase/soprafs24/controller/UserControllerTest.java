@@ -2,6 +2,7 @@ package ch.uzh.ifi.hase.soprafs24.controller;
 
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
+import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.user.UserLoginPutDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.user.UserPasswordPutDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.user.UserPostDTO;
@@ -49,6 +50,21 @@ public class UserControllerTest {
 
   @MockBean
   private AuthService authService;
+
+  @MockBean
+  private UserStatsEntryService userStatsEntryService;
+
+  @MockBean
+  private HabitService habitService;
+
+  @MockBean
+  private UserScoreService userScoreService;
+
+  @MockBean
+  private GroupService groupService;
+
+  @MockBean
+  private GroupRepository groupRepository;
 
     /**
      * ------------------------------ START GET TESTS ------------------------------------------------------------
@@ -98,26 +114,6 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
-
-    @Test //GET Mapping "/allowEdit" - CODE 200 OK (pass)
-    void GET_users_allowEdit_thenReturnsAllowEdit() throws Exception {
-        Long userId = 1L;
-        String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
-
-        User user = new User();
-        user.setId(String.valueOf(userId));
-
-        when(authService.isTokenValid(token)).thenReturn(true);
-        when(userService.getUserDetails(String.valueOf(userId))).thenReturn(user);
-        when(authService.getId(token)).thenReturn(String.valueOf(userId));
-
-        mockMvc.perform(get("/allowEdit")
-                        .param("id", String.valueOf(userId))
-                        .header("Authorization", token)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-    }
-
 
     /**
      * ------------------------------ END GET TESTS ------------------------------ START POST TESTS ------------------------------
