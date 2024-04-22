@@ -14,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * User Controller
@@ -71,8 +72,8 @@ public class GroupController {
             String userId = authService.getId(authToken);
             boolean isAdmin = groupService.isUserAdmin(userId, groupId);
             if (isAdmin) {
-                Group group = groupService.getGroupById(groupId);
-                return ResponseEntity.ok(group);
+                Map<String, String> userNamesMap = groupService.getUserNamesByGroupId(groupId);
+                return ResponseEntity.ok(userNamesMap);
             }
             else{
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

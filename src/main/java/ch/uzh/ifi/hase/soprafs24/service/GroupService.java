@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs24.service;
 import ch.uzh.ifi.hase.soprafs24.entity.Group;
+import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.entity.UserScore;
 import ch.uzh.ifi.hase.soprafs24.entity.UserStatsEntry;
 import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
@@ -18,9 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 
 /**
@@ -168,6 +167,22 @@ public class GroupService {
             return false;
         }
     }
+
+    public Map<String, String> getUserNamesByGroupId(String groupId) {
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found with ID: " + groupId));
+
+        Map<String, String> userNamesMap = new HashMap<>();
+
+        for (String userId : group.getUserIdList()) {
+            User user = userService.getUserDetails(userId);
+
+            String fullName = user.getFirstname() + " " + user.getLastname();
+            userNamesMap.put(userId, fullName);
+        }
+        return userNamesMap;
+    }
+
     public List<GroupGetDTO> getGroupMenuDataByUserId(String userId) {
         List<Group> groupList = groupRepository.findByUserIdsContains(userId);
         if (groupList.isEmpty()) {
