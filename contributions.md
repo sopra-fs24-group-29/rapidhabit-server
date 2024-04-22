@@ -65,11 +65,11 @@
 
 ### Yannik (YRiederer):
 
-| IssueNr | Issue description | Assigned Test |
-|:--------|-------------------|---------------|
-| #       |                   |               |
-| #       |                   |               |
-| #       |                   |               |
+| IssueNr | Issue description |
+|:--------|-------------------|
+| #7       | Design and Implement User Profile Page Component and UI                  |
+| #8       | Implement password change and account deletion feature                   |
+| #20       | Design and Implement Join Group Component and UI                  |
 
 
 ### Raksmey (rocketraksi):
