@@ -63,6 +63,27 @@ public class GroupController {
         }
     }
 
+    @GetMapping("/groups/{groupId}/users")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public ResponseEntity<?> getSpecificGroupUsers(@RequestHeader("Authorization") String authToken, @PathVariable String groupId) {
+        boolean isValid = authService.isTokenValid(authToken);
+        if(isValid){
+            String userId = authService.getId(authToken);
+            boolean isAdmin = groupService.isUserAdmin(userId, groupId);
+            if (isAdmin) {
+                Map<String, String> userNamesMap = groupService.getUserNamesByGroupId(groupId);
+                return ResponseEntity.ok(userNamesMap);
+            }
+            else{
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
+
     @GetMapping("/groups/{groupId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -72,8 +93,8 @@ public class GroupController {
             String userId = authService.getId(authToken);
             boolean isAdmin = groupService.isUserAdmin(userId, groupId);
             if (isAdmin) {
-                Map<String, String> userNamesMap = groupService.getUserNamesByGroupId(groupId);
-                return ResponseEntity.ok(userNamesMap);
+                Group group = groupService.getGroupById(groupId);
+                return ResponseEntity.ok(group);
             }
             else{
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
