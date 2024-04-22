@@ -26,9 +26,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 @WebMvcTest(GroupController.class)
@@ -150,18 +148,20 @@ public class GroupControllerTest {
 
         Group group = new Group();
         group.setId(groupId);
-        group.setName("Group1");
-        group.setDescription("Description of Group1");
 
         when(groupService.getGroupById(groupId)).thenReturn(group);
+
+        Map<String, String> userNamesMap = new HashMap<>();
+        userNamesMap.put("1", "John Doe");
+        userNamesMap.put("2", "Jane Smith");
+        when(groupService.getUserNamesByGroupId(groupId)).thenReturn(userNamesMap);
 
         mockMvc.perform(get("/groups/" + groupId)
                         .header("Authorization", token)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(groupId))
-                .andExpect(jsonPath("$.name").value("Group1"))
-                .andExpect(jsonPath("$.description").value("Description of Group1"));
+                .andExpect(jsonPath("$.1").value("John Doe"))
+                .andExpect(jsonPath("$.2").value("Jane Smith"));
     }
 
     @Test //GET Mapping "/groups/{groupId}/ranking" - CODE 200 Ok (pass)
