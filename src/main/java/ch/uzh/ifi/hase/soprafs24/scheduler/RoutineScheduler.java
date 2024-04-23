@@ -1,9 +1,11 @@
 
 package ch.uzh.ifi.hase.soprafs24.scheduler;
 
+import ch.uzh.ifi.hase.soprafs24.constant.FeedType;
 import ch.uzh.ifi.hase.soprafs24.constant.PulseCheckStatus;
 import ch.uzh.ifi.hase.soprafs24.constant.RepeatType;
 import ch.uzh.ifi.hase.soprafs24.constant.Weekday;
+import ch.uzh.ifi.hase.soprafs24.controller.MessageController;
 import ch.uzh.ifi.hase.soprafs24.entity.*;
 import ch.uzh.ifi.hase.soprafs24.service.*;
 import ch.uzh.ifi.hase.soprafs24.util.FormIdGenerator;
@@ -14,7 +16,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -29,15 +30,23 @@ public class RoutineScheduler {
 
     private final PulseCheckEntryService pulseCheckEntryService;
 
-    RoutineScheduler(GroupService groupService, HabitService habitService, UserStatsEntryService userStatsEntryService, UserService userService, UserScoreService userScoreService, PulseCheckEntryService pulseCheckEntryService){
+    private final MessageController messageController;
+
+    private final FeedMessageService feedMessageService;
+
+    int count = 1;
+
+    RoutineScheduler(GroupService groupService, HabitService habitService, UserStatsEntryService userStatsEntryService, UserService userService, UserScoreService userScoreService, PulseCheckEntryService pulseCheckEntryService, MessageController messageController, FeedMessageService feedMessageService){
         this.groupService = groupService;
         this.habitService = habitService;
         this.userStatsEntryService = userStatsEntryService;
         this.userScoreService = userScoreService;
         this.pulseCheckEntryService = pulseCheckEntryService;
+        this.messageController = messageController;
+        this.feedMessageService = feedMessageService;
     }
 
-    @Scheduled(cron = "0 38 15 * * ?") // Opening Pulse Check entries at 10:15 AM for each group
+    @Scheduled(cron = "0 25 0 * * ?") // Opening Pulse Check entries at 10:15 AM for each group
     public void openMorningPulseCheck() {
         LocalDateTime creationTimestamp = LocalDateTime.now();
         LocalDateTime submissionTimestamp = LocalDateTime.now().plusMinutes(30);
@@ -51,10 +60,15 @@ public class RoutineScheduler {
             for(String userId : userIdList){
                 pulseCheckEntryService.createPulseCheckEntry(formId, groupId, userId, content, creationTimestamp, submissionTimestamp, PulseCheckStatus.OPEN);
             }
+            String messageTitle = "Pulse Check";
+            String feedMessageText = "A new day brings new opportunities! How motivated are you today to complete all the habits in the group and boost the group's streak?";
+            FeedMessage feedMessage = new FeedMessage(groupId, groupService.getGroupById(groupId).getName(), messageTitle, feedMessageText, FeedType.PULSECHECK, creationTimestamp); // Create Feed Message
+            messageController.sendFeedToGroup(groupId, feedMessage);
+            feedMessageService.createFeedMessage(feedMessage); // Store Feed Message within database
         }
     }
 
-    @Scheduled(cron = "0 43 15 * * ?") // Corrected to run at 10:45 AM every day
+    @Scheduled(cron = "0 56 15 * * ?") // Corrected to run at 10:45 AM every day
     public void closeMorningPulseCheck() {
         List<Group> groupsList = groupService.getGroups();
         for (Group group : groupsList) {

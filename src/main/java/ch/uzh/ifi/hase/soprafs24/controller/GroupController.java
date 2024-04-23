@@ -94,7 +94,23 @@ public class GroupController {
             boolean isAdmin = groupService.isUserAdmin(userId, groupId);
             if (isAdmin) {
                 Group group = groupService.getGroupById(groupId);
-                return ResponseEntity.ok(group);
+                // Manual mapping
+                GroupGetDetailsDTO groupGetDetailsDTO = new GroupGetDetailsDTO();
+                groupGetDetailsDTO.setId(group.getId());
+                groupGetDetailsDTO.setName(group.getName());
+                groupGetDetailsDTO.setDescription(group.getDescription());
+                groupGetDetailsDTO.setAdminIdList(group.getAdminIdList());
+                groupGetDetailsDTO.setAccessCode(group.getAccessCode());
+                groupGetDetailsDTO.setUserIdList(group.getUserIdList());
+
+                // Create user initials list
+                List<String> userInitials = new ArrayList<>();
+                for (String groupMemberId : group.getUserIdList()) {
+                    userInitials.add(userService.getInitials(groupMemberId));
+                }
+
+                groupGetDetailsDTO.setUserInitials(userInitials);
+                return ResponseEntity.ok(groupGetDetailsDTO);
             }
             else{
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

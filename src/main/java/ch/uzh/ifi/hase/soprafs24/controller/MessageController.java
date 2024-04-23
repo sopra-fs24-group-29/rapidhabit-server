@@ -24,4 +24,9 @@ public class MessageController {
         simpMessagingTemplate.convertAndSend("/topic/groups/" + groupId +"/feed", feedMessage);
         System.out.println("MESSAGE: " +feedMessage +" was successfully passed.");
     }
+
+    public void sendFeedToGroup(String groupId, FeedMessage feedMessage) {
+        simpMessagingTemplate.convertAndSend("/topic/groups/" + groupId + "/feed", feedMessage);
+        System.out.println("Notification sent to group " + groupId + ": " + feedMessage);
+    }
 }
