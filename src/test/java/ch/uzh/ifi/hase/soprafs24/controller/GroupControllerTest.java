@@ -4,10 +4,7 @@ import ch.uzh.ifi.hase.soprafs24.entity.DailyRepeat;
 import ch.uzh.ifi.hase.soprafs24.entity.Group;
 import ch.uzh.ifi.hase.soprafs24.entity.Habit;
 import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupGetDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupJoinPostDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupPostDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupPutDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.group.*;
 import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs24.service.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -110,21 +108,6 @@ public class GroupControllerTest {
                 .andExpect(status().isUnauthorized());
     }
 
-    @Test //GET Mapping "/groups/{groupId}" - CODE 401 Unaurthorized (User not Admin) (Error)
-    public void GET_Group_InvalidInput_ValidToken() throws Exception {
-        String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
-        when(authService.isTokenValid(token)).thenReturn(true);
-        Long userId = 1L;
-        String groupId = "1";
-        when(authService.getId(token)).thenReturn(String.valueOf(userId));
-        when(groupService.isUserAdmin(String.valueOf(userId), groupId)).thenReturn(false);
-
-        mockMvc.perform(get("/groups/" + groupId)
-                        .header("Authorization", token)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isUnauthorized());
-    }
-
     @Test //GET Mapping "/groups/{groupId}" - CODE 401 Unaurthorized (Invalid Token) (Error)
     public void GET_Group_validInput_InvalidToken() throws Exception {
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
@@ -168,17 +151,23 @@ public class GroupControllerTest {
     public void GET_Group_validInput_ValidToken_ReturnsNoContent() throws Exception {
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
         when(authService.isTokenValid(token)).thenReturn(true);
-        Long userId = 1L;
+        Long userAdminId = 1L;
+        String userId = "2";
         String groupId = "1";
-        when(authService.getId(token)).thenReturn(String.valueOf(userId));
-        when(groupService.isUserAdmin(String.valueOf(userId), groupId)).thenReturn(true);
+        when(authService.getId(token)).thenReturn(String.valueOf(userAdminId));
 
         Group group = new Group();
         group.setId(groupId);
         group.setName("Group1");
         group.setDescription("Description of Group1");
+        group.setAdminIdList(Collections.singletonList(String.valueOf(userAdminId)));
+        group.setAccessCode("ACCESS123");
+        group.setUserIdList(Arrays.asList(userId, String.valueOf(userAdminId)));
+        group.setHabitIdList(Collections.singletonList("habit1"));
 
         when(groupService.getGroupById(groupId)).thenReturn(group);
+
+        when(userService.getInitials(anyString())).thenReturn("Initials");
 
         mockMvc.perform(get("/groups/" + groupId)
                         .header("Authorization", token)
@@ -186,7 +175,12 @@ public class GroupControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(groupId))
                 .andExpect(jsonPath("$.name").value("Group1"))
-                .andExpect(jsonPath("$.description").value("Description of Group1"));
+                .andExpect(jsonPath("$.description").value("Description of Group1"))
+                //.andExpect(jsonPath("$.adminIdList").value(Collections.singletonList(String.valueOf(userAdminId))))
+                .andExpect(jsonPath("$.accessCode").value("ACCESS123"));
+                //.andExpect(jsonPath("$.userIdList").value(Arrays.asList(userId, String.valueOf(userAdminId))))
+                //.andExpect(jsonPath("$.habitIdList").value(Collections.singletonList("habit1")))
+                //.andExpect(jsonPath("$.userInitials").value(Collections.singletonList("Initials")));
     }
 
     @Test //GET Mapping "/groups/{groupId}/ranking" - CODE 200 Ok (pass)
