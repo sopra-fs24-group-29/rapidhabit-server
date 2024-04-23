@@ -23,11 +23,14 @@
 
 ### Yannik (YRiederer):
 
-| IssueNr | Issue description | Assigned Test |
-|:--------|-------------------|---------------|
-| #       |                   |               |
-| #       |                   |               |
-| #       |                   |               |
+| IssueNr | Issue description |
+|:--------|-------------------|
+| #4      | Create and configure App routing                 |
+| #31     | Create Not Found screen                  |
+| #32     | Create Welcome Screen                  |
+| #33       |   Create login screen                |               |
+| #34       |  Create Register Screen                 |               |
+
 
 
 ### Raksmey (rocketraksi):
@@ -62,11 +65,11 @@
 
 ### Yannik (YRiederer):
 
-| IssueNr | Issue description | Assigned Test |
-|:--------|-------------------|---------------|
-| #       |                   |               |
-| #       |                   |               |
-| #       |                   |               |
+| IssueNr | Issue description |
+|:--------|-------------------|
+| #7       | Design and Implement User Profile Page Component and UI                  |
+| #8       | Implement password change and account deletion feature                   |
+| #20       | Design and Implement Join Group Component and UI                  |
 
 
 ### Raksmey (rocketraksi):
