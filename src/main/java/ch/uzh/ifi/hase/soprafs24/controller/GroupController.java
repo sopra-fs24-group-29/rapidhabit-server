@@ -91,9 +91,8 @@ public class GroupController {
         boolean isValid = authService.isTokenValid(authToken);
         if(isValid){
             String userId = authService.getId(authToken);
-            boolean isAdmin = groupService.isUserAdmin(userId, groupId);
-            if (isAdmin) {
-                Group group = groupService.getGroupById(groupId);
+            Group group = groupService.getGroupById(groupId);
+            if (group.getUserIdList().contains(userId)) { // check if user is part of the group
                 // Manual mapping
                 GroupGetDetailsDTO groupGetDetailsDTO = new GroupGetDetailsDTO();
                 groupGetDetailsDTO.setId(group.getId());
