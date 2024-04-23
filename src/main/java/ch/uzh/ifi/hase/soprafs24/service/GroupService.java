@@ -183,6 +183,15 @@ public class GroupService {
         return userNamesMap;
     }
 
+    public List<String> getGroupIdsByUserId(String userId){
+        List<Group> groupList = groupRepository.findByUserIdsContains(userId);
+        List<String> groupIds = new ArrayList<>();
+        for (Group group : groupList){
+            groupIds.add(group.getId());
+        }
+        return groupIds;
+    }
+
     public List<GroupGetDTO> getGroupMenuDataByUserId(String userId) {
         List<Group> groupList = groupRepository.findByUserIdsContains(userId);
         if (groupList.isEmpty()) {

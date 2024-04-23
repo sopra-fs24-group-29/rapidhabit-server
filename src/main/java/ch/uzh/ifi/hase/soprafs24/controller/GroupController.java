@@ -149,6 +149,20 @@ public class GroupController {
         return ResponseEntity.ok(groupRankingGetDTOs);
     }
 
+    @GetMapping("/groups/groupIds")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public ResponseEntity<?> getRanking(@RequestHeader("Authorization") String authToken) {
+        boolean isValid = authService.isTokenValid(authToken);
+        if (!isValid) {
+            return new ResponseEntity<>("Invalid token", HttpStatus.UNAUTHORIZED);
+        }
+        // check who did the request
+        String userId = authService.getId(authToken);
+        List<String> groupIdList = groupService.getGroupIdsByUserId(userId);
+        return ResponseEntity.ok(groupIdList);
+    }
+
 
     @PostMapping("/groups") // defines a method to for handling post methods for creating new groups
     @ResponseStatus(HttpStatus.CREATED)
