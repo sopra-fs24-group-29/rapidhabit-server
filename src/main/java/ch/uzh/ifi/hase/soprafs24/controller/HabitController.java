@@ -325,11 +325,11 @@ public class HabitController {
         String userId = authService.getId(authToken);
         Group group = groupService.getGroupById(groupId);
         if (!group.getAdminIdList().contains(userId)) {
-            groupService.removeHabitFromHabitIdList(groupId, habitId);
-            userStatsEntryService.deleteUserStatsEntriesOfToday(habitId); // delete all user stats entries of today, historical data of the habit remains in the db
-            habitService.deleteHabit(habitId);
             return new ResponseEntity<>("User is not part of this group", HttpStatus.UNAUTHORIZED);
         }
+        groupService.removeHabitFromHabitIdList(groupId, habitId);
+        userStatsEntryService.deleteUserStatsEntriesOfToday(habitId);
+        habitService.deleteHabit(habitId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
