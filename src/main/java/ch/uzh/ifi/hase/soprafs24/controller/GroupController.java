@@ -101,6 +101,7 @@ public class GroupController {
                 groupGetDetailsDTO.setAdminIdList(group.getAdminIdList());
                 groupGetDetailsDTO.setAccessCode(group.getAccessCode());
                 groupGetDetailsDTO.setUserIdList(group.getUserIdList());
+                groupGetDetailsDTO.setHabitIdList(group.getHabitIdList());
 
                 // Create user initials list
                 List<String> userInitials = new ArrayList<>();
