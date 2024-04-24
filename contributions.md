@@ -115,7 +115,7 @@ Implemented DTOs for transferring Habit Data
 | IssueNr | Issue description | Assigned Test |
 |:--------|-------------------|---------------|
 | #105     | Implement Pulse Check (Full-Stack) | ? |
-| #106     | Implement Feed (Full-Stack) | ? |
+| #106     | Implement Feed (Full-Stack) | https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/106 |
 
 
 ### Yannik (YRiederer):
