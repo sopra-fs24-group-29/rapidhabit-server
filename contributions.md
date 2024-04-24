@@ -120,11 +120,11 @@ Implemented DTOs for transferring Habit Data
 
 ### Yannik (YRiederer):
 
-| IssueNr | Issue description | Assigned Test |
-|:--------|-------------------|---------------|
-| #       |                   |               |
-| #       |                   |               |
-| #       |                   |               |
+| IssueNr | Issue description |
+|:--------|-------------------|
+| #15       | Design and Implement Invite Users Component and UI                   |
+| #19       | Create an admin page where different data gets displayed, such as the users and the habits of the group                  |
+| #36       | Users can invite other users to join the group by sending a group specific code                  |
 
 
 ### Raksmey (rocketraksi):
@@ -158,11 +158,9 @@ Implemented DTOs for transferring Habit Data
 
 ### Yannik (YRiederer):
 
-| IssueNr | Issue description | Assigned Test |
-|:--------|-------------------|---------------|
-| #       |                   |               |
-| #       |                   |               |
-| #       |                   |               |
+| IssueNr | Issue description |
+|:--------|-------------------|
+| #16       | Design and Implement Update Group Info Component and UI                  |
 
 
 ### Raksmey (rocketraksi):
