@@ -5,12 +5,14 @@
 - general: Wrote Test for all the new REST Mappings
 - As well as the following issues:
 
-| IssueNr | Issue description                                   | Assigned Test                                                                                                                                                                                       |
-|:--------|-----------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/16     | Create User-Objects in Database                     | - POST Mapping "/users" - CODE 204 CREATED (Pass)  <br> - POST Mapping "/users" - CODE 409 CONFLICT (error)                                                                                         |
-| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/17     | Implement API Endpoint for fetching Assigned Groups | - GET Mapping "/groups" - CODE 200 OK (Pass)  <br> - GET Mapping "/groups" - CODE 401 Unaurthorized (Error)                                                                                         |
-| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/19     | Implement API Endpoints for Password Change         | - PUT Mapping "/users/password" - CODE 204 NoContent (pass)  <br> - PUT Mapping "/users/password" - CODE 404 NotFound (error)  <br> - PUT Mapping "/users/password" - CODE 401 Unauthorized (error) |
-| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/56     | Implement logout functionality                      | - PUT Mapping "/users/logout" - CODE 200 OK (pass)   <br> - PUT Mapping "/users/logout" - CODE 404 NotFound (error)                                                                                                                                                                                                |
+| IssueNr                                                                                        | Issue description                              | Assigned Test                                                                                                                                                                                                                   |
+|:-----------------------------------------------------------------------------------------------|:-----------------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [#16](https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/16)                 | Create User-Objects in Database                | - POST Mapping "/users" - CODE 204 CREATED (Pass) <br> - POST Mapping "/users" - CODE 409 CONFLICT (error) <br> – [bb24323c](https://github.com/sopra-fs24-group-29/rapidhabit-server/commit/bb24323c9bf5be7dd886829b79b4ecc1cb41a13f)   |
+| [#17](https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/17)                 | Implement API Endpoint for fetching Assigned Groups | - GET Mapping "/groups" - CODE 200 OK (Pass) <br> - GET Mapping "/groups" - CODE 401 Unauthorized (Error)                                                                                                                      |
+| [#19](https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/19)                 | Implement API Endpoints for Password Change    | - PUT Mapping "/users/password" - CODE 204 NoContent (pass) <br> - PUT Mapping "/users/password" - CODE 404 NotFound (error) <br> - PUT Mapping "/users/password" - CODE 401 Unauthorized (error)                             |
+| [#56](https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/56)                 | Implement logout functionality                 | - PUT Mapping "/users/logout" - CODE 200 OK (pass) <br> - PUT Mapping "/users/logout" - CODE 404 NotFound (error)                                                                                                              |
+
+          
 
 ### Simon (SimonHafner):
 
@@ -21,7 +23,7 @@
 | https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/23     | Implemented API for joining an existing group | #18, #23, #17, #21 |
 | https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/77     | Implemented API for joining an existing group (each user can join only once) | #18, #23, #17, #21 |
 | https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/20     | Users which create a group are automatically the administrator of this group | ? |
-| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/55     | Develop a REST API for User Registration and Authentication working with Spring Boot and MongoDB | ? |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/55     | Develop a REST API for User Registration and Authentication working with Spring Boot and MongoDB |
 
 
 
@@ -29,11 +31,11 @@
 
 | IssueNr | Issue description |
 |:--------|-------------------|
-| #4      | Create and configure App routing                 |
-| #31     | Create Not Found screen                  |
-| #32     | Create Welcome Screen                  |
-| #33       |   Create login screen                |               |
-| #34       |  Create Register Screen                 |               |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/4      | Create and configure App routing                 |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/31     | Create Not Found screen                  |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/32     | Create Welcome Screen                  |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/33       |   Create login screen                |               |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/34       |  Create Register Screen                 |               |
 
 
 
@@ -41,9 +43,11 @@
 
 | IssueNr | Issue description | Assigned Test |
 |:--------|-------------------|---------------|
-| #       |                   |               |
-| #       |                   |               |
-| #       |                   |               |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/41  | Set up and adapt the codebase to full typescript           |               |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/40  | Set up tailwind for the whole application and adapt current design           |               |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/39   | Set up Manifest for PWA       |               |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/42| Set up Vite instead of create-react      |               |
+
 
 
 ## Week 2  10.04 - 16.04
@@ -85,18 +89,23 @@ Implemented DTOs for transferring Habit Data
 
 | IssueNr | Issue description |
 |:--------|-------------------|
-| #7       | Design and Implement User Profile Page Component and UI                  |
-| #8       | Implement password change and account deletion feature                   |
-| #20       | Design and Implement Join Group Component and UI                  |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/7       | Design and Implement User Profile Page Component and UI                  |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/8       | Implement password change and account deletion feature                   |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/20       | Design and Implement Join Group Component and UI                  |
 
 
 ### Raksmey (rocketraksi):
 
 | IssueNr | Issue description | Assigned Test |
 |:--------|-------------------|---------------|
-| #       |                   |               |
-| #       |                   |               |
-| #       |                   |               |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/90    | Create sticky navigation bar|               |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/24  | Group detail overview|               |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/14  | Create Group Compnent |               |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/6  | Group Dashboard |               |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/29 | A lot of fixes that the app works |               |
+
+
+
 
 
 ## Week 3 17.04 - 23.04
@@ -120,20 +129,35 @@ Implemented DTOs for transferring Habit Data
 
 ### Yannik (YRiederer):
 
-| IssueNr | Issue description | Assigned Test |
-|:--------|-------------------|---------------|
-| #       |                   |               |
-| #       |                   |               |
-| #       |                   |               |
+| IssueNr | Issue description |
+|:--------|-------------------|
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/15       | Design and Implement Invite Users Component and UI                   |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/19       | Create an admin page where different data gets displayed, such as the users and the habits of the group                  |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/36       | Users can invite other users to join the group by sending a group specific code                  |
 
 
 ### Raksmey (rocketraksi):
 
 | IssueNr | Issue description | Assigned Test |
 |:--------|-------------------|---------------|
-| #       |                   |               |
-| #       |                   |               |
-| #       |                   |               |
+https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/35
+https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/26
+https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/14
+https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/14
+https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/10
+https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/13
+https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/10
+https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/2
+https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/9
+https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/6
+https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/3
+https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/5
+https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/11
+https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/27
+https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/21
+https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/22
+https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/4
+
 
 
 ## Week 4 24.04 - 30.04
@@ -158,11 +182,9 @@ Implemented DTOs for transferring Habit Data
 
 ### Yannik (YRiederer):
 
-| IssueNr | Issue description | Assigned Test |
-|:--------|-------------------|---------------|
-| #       |                   |               |
-| #       |                   |               |
-| #       |                   |               |
+| IssueNr | Issue description |
+|:--------|-------------------|
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/16       | Design and Implement Update Group Info Component and UI                  |
 
 
 ### Raksmey (rocketraksi):
