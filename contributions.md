@@ -16,7 +16,7 @@
 
 | IssueNr | Issue description | Assigned Test |
 |:--------|-------------------|---------------|
-| #       |                   |               |
+| #52       | Create an API for auth          |               |
 | #       |                   |               |
 | #       |                   |               |
 
