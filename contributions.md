@@ -16,10 +16,13 @@
 
 | IssueNr | Issue description | Assigned Test |
 |:--------|-------------------|---------------|
-| #52     | Create an API for user authorization |               |
-| #18     | Implemented endpoint for group creation |               |
+| #52     | Create an API for user authorization | ? |
+| #18     | Implemented endpoint for group creation | ? |
 | #23     | Implemented API for joining an existing group | #18, #23, #17, #21 |
 | #77     | Implemented API for joining an existing group (each user can join only once) | #18, #23, #17, #21 |
+| #20     | Users which create a group are automatically the administrator of this group | ? |
+| #55     | Develop a REST API for User Registration and Authentication working with Spring Boot and MongoDB | ? |
+
 
 
 ### Yannik (YRiederer):
@@ -59,7 +62,21 @@
 
 | IssueNr | Issue description | Assigned Test |
 |:--------|-------------------|---------------|
-| #       |                   |               |
+| #31     | Implement Database Model for Group Habits | ? |
+| #29     | Implemented DTOs for transferring Habit Data | #93, #94 |
+| #63     | Implement API Endpoint for Generating Group-Specific Code | ? |
+| #95     | Implemented API for creating Group Habits | ? |
+| #96     | Implement Data Model for Group Statistics | ? |
+| #97     | Implemented Data Model for HabitStreaks, UserScores | ? |
+| #98     | Implemented REST API for retrieving GetHabitDTOs | ? |
+| #99     | Implement REST API for retrieving group activity data | ? |
+| #100     | Implement REST API for retrieving group ranking | ? |
+| #101     | Implement REST API for retrieving Detailed Habit Info with Daily Map | ? |
+| #102     | Configure Mongo DB connection in the production environement | ? |
+| #103     | Implement API endpoint for checking habits ✔️ | ? |
+| #104     | Implement auto-computation and updates for streaks, scores, and ranks | ? |
+
+Implemented DTOs for transferring Habit Data
 | #       |                   |               |
 | #       |                   |               |
 
