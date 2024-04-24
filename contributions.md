@@ -29,11 +29,11 @@
 
 | IssueNr | Issue description |
 |:--------|-------------------|
-| #4      | Create and configure App routing                 |
-| #31     | Create Not Found screen                  |
-| #32     | Create Welcome Screen                  |
-| #33       |   Create login screen                |               |
-| #34       |  Create Register Screen                 |               |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/4      | Create and configure App routing                 |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/31     | Create Not Found screen                  |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/32     | Create Welcome Screen                  |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/33       |   Create login screen                |               |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/34       |  Create Register Screen                 |               |
 
 
 
@@ -85,9 +85,9 @@ Implemented DTOs for transferring Habit Data
 
 | IssueNr | Issue description |
 |:--------|-------------------|
-| #7       | Design and Implement User Profile Page Component and UI                  |
-| #8       | Implement password change and account deletion feature                   |
-| #20       | Design and Implement Join Group Component and UI                  |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/7       | Design and Implement User Profile Page Component and UI                  |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/8       | Implement password change and account deletion feature                   |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/20       | Design and Implement Join Group Component and UI                  |
 
 
 ### Raksmey (rocketraksi):
@@ -122,9 +122,9 @@ Implemented DTOs for transferring Habit Data
 
 | IssueNr | Issue description |
 |:--------|-------------------|
-| #15       | Design and Implement Invite Users Component and UI                   |
-| #19       | Create an admin page where different data gets displayed, such as the users and the habits of the group                  |
-| #36       | Users can invite other users to join the group by sending a group specific code                  |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/15       | Design and Implement Invite Users Component and UI                   |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/19       | Create an admin page where different data gets displayed, such as the users and the habits of the group                  |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/36       | Users can invite other users to join the group by sending a group specific code                  |
 
 
 ### Raksmey (rocketraksi):
@@ -160,7 +160,7 @@ Implemented DTOs for transferring Habit Data
 
 | IssueNr | Issue description |
 |:--------|-------------------|
-| #16       | Design and Implement Update Group Info Component and UI                  |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/16       | Design and Implement Update Group Info Component and UI                  |
 
 
 ### Raksmey (rocketraksi):
