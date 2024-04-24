@@ -16,9 +16,10 @@
 
 | IssueNr | Issue description | Assigned Test |
 |:--------|-------------------|---------------|
-| #52       | Create an API for auth          |               |
-| #       |                   |               |
-| #       |                   |               |
+| #52     | Create an API for user authorization |               |
+| #18     | Implemented endpoint for group creation |               |
+| #23     | Implemented API for joining an existing group | #18, #23, #17, #21 |
+| #77     | Implemented API for joining an existing group (each user can join only once) | #18, #23, #17, #21 |
 
 
 ### Yannik (YRiederer):
