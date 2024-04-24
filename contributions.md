@@ -1,6 +1,6 @@
 # Contributions  
 
-## 25.3-07.04 Week 1 & 2 (Including Easter Break)
+## 25.3-09.04 Week 1 (Including Easter Break)
 ### Lukas (lguebeli):
 - general: Wrote Test for all the new REST Mappings
 - As well as the following issues:
@@ -42,7 +42,7 @@
 | #       |                   |               |
 
 
-## Week 3  08.04 - 14.04
+## Week 2  10.04 - 16.04
 ### Lukas (lguebeli):
 - general: Wrote Test for all the new REST Mappings for example for Issue #35
 - As well as the following issues:
@@ -81,7 +81,7 @@
 | #       |                   |               |
 
 
-## Week 4 15.04 - 21.04
+## Week 3 17.04 - 23.04
 ### Lukas (lguebeli):
 - general: Wrote Test for all the new REST Mappings
 - As well as the following issues:
@@ -119,7 +119,155 @@
 | #       |                   |               |
 
 
-## Week 5 22.04 - 28.04
+## Week 4 24.04 - 30.04
+### Lukas (lguebeli):
+- general: Wrote Test for all the new REST Mappings
+- As well as the following issues:
+
+| IssueNr | Issue description                        | Assigned Test |
+|:--------|------------------------------------------|---------------|
+| #107    | implement API for deleting a group Habit |               |
+| #       |                                          |               |
+| #       |                                          |               |
+
+### Simon (SimonHafner):
+
+| IssueNr | Issue description | Assigned Test |
+|:--------|-------------------|---------------|
+| #       |                   |               |
+| #       |                   |               |
+| #       |                   |               |
+
+
+### Yannik (YRiederer):
+
+| IssueNr | Issue description | Assigned Test |
+|:--------|-------------------|---------------|
+| #       |                   |               |
+| #       |                   |               |
+| #       |                   |               |
+
+
+### Raksmey (rocketraksi):
+
+| IssueNr | Issue description | Assigned Test |
+|:--------|-------------------|---------------|
+| #       |                   |               |
+| #       |                   |               |
+| #       |                   |               |
+
+## Week 5 01.05 - 07.05
+### Lukas (lguebeli):
+- general: Wrote Test for all the new REST Mappings
+- As well as the following issues:
+
+| IssueNr | Issue description | Assigned Test |
+|:--------|-------------------|---------------|
+| #       |                   |               |
+| #       |                   |               |
+| #       |                   |               |
+
+### Simon (SimonHafner):
+
+| IssueNr | Issue description | Assigned Test |
+|:--------|-------------------|---------------|
+| #       |                   |               |
+| #       |                   |               |
+| #       |                   |               |
+
+
+### Yannik (YRiederer):
+
+| IssueNr | Issue description | Assigned Test |
+|:--------|-------------------|---------------|
+| #       |                   |               |
+| #       |                   |               |
+| #       |                   |               |
+
+
+### Raksmey (rocketraksi):
+
+| IssueNr | Issue description | Assigned Test |
+|:--------|-------------------|---------------|
+| #       |                   |               |
+| #       |                   |               |
+| #       |                   |               |
+
+## Week 6 08.05 - 14.05
+### Lukas (lguebeli):
+- general: Wrote Test for all the new REST Mappings
+- As well as the following issues:
+
+| IssueNr | Issue description | Assigned Test |
+|:--------|-------------------|---------------|
+| #       |                   |               |
+| #       |                   |               |
+| #       |                   |               |
+
+### Simon (SimonHafner):
+
+| IssueNr | Issue description | Assigned Test |
+|:--------|-------------------|---------------|
+| #       |                   |               |
+| #       |                   |               |
+| #       |                   |               |
+
+
+### Yannik (YRiederer):
+
+| IssueNr | Issue description | Assigned Test |
+|:--------|-------------------|---------------|
+| #       |                   |               |
+| #       |                   |               |
+| #       |                   |               |
+
+
+### Raksmey (rocketraksi):
+
+| IssueNr | Issue description | Assigned Test |
+|:--------|-------------------|---------------|
+| #       |                   |               |
+| #       |                   |               |
+| #       |                   |               |
+
+## Week 7 15.05 - 21.05
+### Lukas (lguebeli):
+- general: Wrote Test for all the new REST Mappings
+- As well as the following issues:
+
+| IssueNr | Issue description | Assigned Test |
+|:--------|-------------------|---------------|
+| #       |                   |               |
+| #       |                   |               |
+| #       |                   |               |
+
+### Simon (SimonHafner):
+
+| IssueNr | Issue description | Assigned Test |
+|:--------|-------------------|---------------|
+| #       |                   |               |
+| #       |                   |               |
+| #       |                   |               |
+
+
+### Yannik (YRiederer):
+
+| IssueNr | Issue description | Assigned Test |
+|:--------|-------------------|---------------|
+| #       |                   |               |
+| #       |                   |               |
+| #       |                   |               |
+
+
+### Raksmey (rocketraksi):
+
+| IssueNr | Issue description | Assigned Test |
+|:--------|-------------------|---------------|
+| #       |                   |               |
+| #       |                   |               |
+| #       |                   |               |
+
+## Week 8 22.05 - 28.05
 ### Lukas (lguebeli):
 - general: Wrote Test for all the new REST Mappings
 - As well as the following issues:
