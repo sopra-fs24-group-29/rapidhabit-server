@@ -7,21 +7,21 @@
 
 | IssueNr | Issue description                                   | Assigned Test                                                                                                                                                                                       |
 |:--------|-----------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| #16     | Create User-Objects in Database                     | - POST Mapping "/users" - CODE 204 CREATED (Pass)  <br> - POST Mapping "/users" - CODE 409 CONFLICT (error)                                                                                         |
-| #17     | Implement API Endpoint for fetching Assigned Groups | - GET Mapping "/groups" - CODE 200 OK (Pass)  <br> - GET Mapping "/groups" - CODE 401 Unaurthorized (Error)                                                                                         |
-| #19     | Implement API Endpoints for Password Change         | - PUT Mapping "/users/password" - CODE 204 NoContent (pass)  <br> - PUT Mapping "/users/password" - CODE 404 NotFound (error)  <br> - PUT Mapping "/users/password" - CODE 401 Unauthorized (error) |
-| #56     | Implement logout functionality                      | - PUT Mapping "/users/logout" - CODE 200 OK (pass)   <br> - PUT Mapping "/users/logout" - CODE 404 NotFound (error)                                                                                                                                                                                                |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/16     | Create User-Objects in Database                     | - POST Mapping "/users" - CODE 204 CREATED (Pass)  <br> - POST Mapping "/users" - CODE 409 CONFLICT (error)                                                                                         |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/17     | Implement API Endpoint for fetching Assigned Groups | - GET Mapping "/groups" - CODE 200 OK (Pass)  <br> - GET Mapping "/groups" - CODE 401 Unaurthorized (Error)                                                                                         |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/19     | Implement API Endpoints for Password Change         | - PUT Mapping "/users/password" - CODE 204 NoContent (pass)  <br> - PUT Mapping "/users/password" - CODE 404 NotFound (error)  <br> - PUT Mapping "/users/password" - CODE 401 Unauthorized (error) |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/56     | Implement logout functionality                      | - PUT Mapping "/users/logout" - CODE 200 OK (pass)   <br> - PUT Mapping "/users/logout" - CODE 404 NotFound (error)                                                                                                                                                                                                |
 
 ### Simon (SimonHafner):
 
 | IssueNr | Issue description | Assigned Test |
 |:--------|-------------------|---------------|
-| #52     | Create an API for user authorization | ? |
-| #18     | Implemented endpoint for group creation | ? |
-| #23     | Implemented API for joining an existing group | #18, #23, #17, #21 |
-| #77     | Implemented API for joining an existing group (each user can join only once) | #18, #23, #17, #21 |
-| #20     | Users which create a group are automatically the administrator of this group | ? |
-| #55     | Develop a REST API for User Registration and Authentication working with Spring Boot and MongoDB | ? |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/52     | Create an API for user authorization | ? |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/18     | Implemented endpoint for group creation | ? |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/23     | Implemented API for joining an existing group | #18, #23, #17, #21 |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/77     | Implemented API for joining an existing group (each user can join only once) | #18, #23, #17, #21 |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/20     | Users which create a group are automatically the administrator of this group | ? |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/55     | Develop a REST API for User Registration and Authentication working with Spring Boot and MongoDB | ? |
 
 
 
@@ -53,28 +53,28 @@
 
 | IssueNr | Issue description                                                   | Assigned Test                                                                                                                                                                                                      |
 |:--------|---------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| #21     | Group administrators can update a group name and group description. | - PUT Mapping "/groups/{groupId}" - CODE 200 OK (Pass)  <br> - PUT Mapping "/groups/{groupId}" - CODE 404 NotFound (Pass)  <br> - PUT Mapping "/groups/{groupId}" - CODE 401 Unauthorized (Error)                  |
-| #89     | Implement API for Account Deletion                                  | - DELETE Mapping "/users/ID" - CODE 204 No Content (pass)  <br> - DELETE Mapping "/users/ID" - CODE 404 NotFound (error)  <br> - DELETE Mapping "/users/ID" - CODE 401 Unauthorized (error)                        |
-| #91     | Users can change their profiledata (eg. Email, first-/lastname)     | - PUT Mapping "/users/update" - CODE 204 No Content (pass)  <br>  - PUT Mapping "/users/update" - CODE 404 Not Found (error)  <br>  - PUT Mapping "/users/update" - CODE 401 Unauthorized (error)                                                                                        |
-| #62     | Implement API Endpoint for Group Deletion                           | - DELETE Mapping "/groups/{groupId}" - CODE 204 NoContent (Pass)  <br> - DELETE Mapping "/groups/{groupId}" - CODE 404 NotFound (Error)  <br> - DELETE Mapping "/groups/{groupId}" - CODE 401 Unauthorized (Error) |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/21     | Group administrators can update a group name and group description. | - PUT Mapping "/groups/{groupId}" - CODE 200 OK (Pass)  <br> - PUT Mapping "/groups/{groupId}" - CODE 404 NotFound (Pass)  <br> - PUT Mapping "/groups/{groupId}" - CODE 401 Unauthorized (Error)                  |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/89     | Implement API for Account Deletion                                  | - DELETE Mapping "/users/ID" - CODE 204 No Content (pass)  <br> - DELETE Mapping "/users/ID" - CODE 404 NotFound (error)  <br> - DELETE Mapping "/users/ID" - CODE 401 Unauthorized (error)                        |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/91     | Users can change their profiledata (eg. Email, first-/lastname)     | - PUT Mapping "/users/update" - CODE 204 No Content (pass)  <br>  - PUT Mapping "/users/update" - CODE 404 Not Found (error)  <br>  - PUT Mapping "/users/update" - CODE 401 Unauthorized (error)                                                                                        |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/62     | Implement API Endpoint for Group Deletion                           | - DELETE Mapping "/groups/{groupId}" - CODE 204 NoContent (Pass)  <br> - DELETE Mapping "/groups/{groupId}" - CODE 404 NotFound (Error)  <br> - DELETE Mapping "/groups/{groupId}" - CODE 401 Unauthorized (Error) |
 
 ### Simon (SimonHafner):
 
 | IssueNr | Issue description | Assigned Test |
 |:--------|-------------------|---------------|
-| #31     | Implement Database Model for Group Habits | ? |
-| #29     | Implemented DTOs for transferring Habit Data | #93, #94 |
-| #63     | Implement API Endpoint for Generating Group-Specific Code | ? |
-| #95     | Implemented API for creating Group Habits | ? |
-| #96     | Implement Data Model for Group Statistics | ? |
-| #97     | Implemented Data Model for HabitStreaks, UserScores | ? |
-| #98     | Implemented REST API for retrieving GetHabitDTOs | ? |
-| #99     | Implement REST API for retrieving group activity data | ? |
-| #100     | Implement REST API for retrieving group ranking | ? |
-| #101     | Implement REST API for retrieving Detailed Habit Info with Daily Map | ? |
-| #102     | Configure Mongo DB connection in the production environement | ? |
-| #103     | Implement API endpoint for checking habits ✔️ | ? |
-| #104     | Implement auto-computation and updates for streaks, scores, and ranks | ? |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/31     | Implement Database Model for Group Habits | ? |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/29     | Implemented DTOs for transferring Habit Data | #93, #94 |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/63     | Implement API Endpoint for Generating Group-Specific Code | ? |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/95     | Implemented API for creating Group Habits | ? |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/96     | Implement Data Model for Group Statistics | ? |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/97     | Implemented Data Model for HabitStreaks, UserScores | ? |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/98     | Implemented REST API for retrieving GetHabitDTOs | ? |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/99     | Implement REST API for retrieving group activity data | ? |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/100     | Implement REST API for retrieving group ranking | ? |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/101     | Implement REST API for retrieving Detailed Habit Info with Daily Map | ? |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/102     | Configure Mongo DB connection in the production environement | ? |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/103     | Implement API endpoint for checking habits ✔️ | ? |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/104     | Implement auto-computation and updates for streaks, scores, and ranks | ? |
 
 Implemented DTOs for transferring Habit Data
 | #       |                   |               |
@@ -106,16 +106,16 @@ Implemented DTOs for transferring Habit Data
 
 | IssueNr | Issue description                      | Assigned Test                                                                                                                                                                                                                 |
 |:--------|----------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| #51     | Add API to delete users from the group | - DELETE Mapping "/groups/{groupId}/users" - CODE 204 NoContent  <br> - DELETE Mapping "/groups/{groupId}/users" - CODE 404 NotFound (Error)  <br> - DELETE Mapping "/groups/{groupId}/users" - CODE 401 Unauthorized (Error) |
-| #93     | Created Test for this issue            | - GET Mapping "/groups/{groupId}/habits" - CODE 200 Ok (pass)                                                                                                                                                                 |
-| #94     | Created Test for this issue            | - GET Mapping "/groups/{groupId}/habits/{habitId}" - CODE 200 Ok (pass)  <br> - GET Mapping "/groups/{groupId}/habits/{habitId}" - CODE 404 Not Found (Error)                                                                 |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/51     | Add API to delete users from the group | - DELETE Mapping "/groups/{groupId}/users" - CODE 204 NoContent  <br> - DELETE Mapping "/groups/{groupId}/users" - CODE 404 NotFound (Error)  <br> - DELETE Mapping "/groups/{groupId}/users" - CODE 401 Unauthorized (Error) |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/93     | Created Test for this issue            | - GET Mapping "/groups/{groupId}/habits" - CODE 200 Ok (pass)                                                                                                                                                                 |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/94     | Created Test for this issue            | - GET Mapping "/groups/{groupId}/habits/{habitId}" - CODE 200 Ok (pass)  <br> - GET Mapping "/groups/{groupId}/habits/{habitId}" - CODE 404 Not Found (Error)                                                                 |
 
 ### Simon (SimonHafner):
 
 | IssueNr | Issue description | Assigned Test |
 |:--------|-------------------|---------------|
-| #105     | Implement Pulse Check (Full-Stack) | ? |
-| #106     | Implement Feed (Full-Stack) | https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/106 |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/105     | Implement Pulse Check (Full-Stack) | ? |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/106     | Implement Feed (Full-Stack) | ... |
 
 
 ### Yannik (YRiederer):
@@ -143,7 +143,7 @@ Implemented DTOs for transferring Habit Data
 
 | IssueNr | Issue description                        | Assigned Test |
 |:--------|------------------------------------------|---------------|
-| #107    | implement API for deleting a group Habit |               |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/107    | implement API for deleting a group Habit |               |
 | #       |                                          |               |
 | #       |                                          |               |
 
