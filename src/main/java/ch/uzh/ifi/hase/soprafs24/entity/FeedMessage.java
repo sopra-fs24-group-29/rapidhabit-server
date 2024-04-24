@@ -6,6 +6,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 @Document(collection = "FeedMessages")
 public class FeedMessage implements Serializable {
@@ -14,10 +17,13 @@ public class FeedMessage implements Serializable {
     @Id
     private String id;
     private String title;
+
     private String message;
     private String groupId;
     private String groupName;
     private FeedType type;
+
+    private HashMap<String, Double> userSubmits;
     private LocalDateTime dateTime;
 
     public FeedMessage(String groupId, String groupName, String title, String message, FeedType type, LocalDateTime dateTime) {
@@ -26,6 +32,7 @@ public class FeedMessage implements Serializable {
         this.title = title;
         this.message = message;
         this.type = type;
+        this.userSubmits = new HashMap<>();
         this.dateTime = dateTime;
     }
 
@@ -51,6 +58,14 @@ public class FeedMessage implements Serializable {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public HashMap<String,Double> getUserSubmits() {
+        return userSubmits;
+    }
+
+    public void setUserSubmits(HashMap<String,Double> userSubmits) {
+        this.userSubmits = userSubmits;
     }
 
     public String getGroupId() {
@@ -94,7 +109,9 @@ public class FeedMessage implements Serializable {
                 ", groupId='" + groupId + '\'' +
                 ", groupName='" + groupName + '\'' +
                 ", type=" + type +
+                ", userSubmits=" + userSubmits +
                 ", dateTime=" + dateTime +
                 '}';
     }
+
 }

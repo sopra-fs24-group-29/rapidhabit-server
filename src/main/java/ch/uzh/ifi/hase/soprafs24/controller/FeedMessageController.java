@@ -1,7 +1,6 @@
 package ch.uzh.ifi.hase.soprafs24.controller;
 
 import ch.uzh.ifi.hase.soprafs24.entity.FeedMessage;
-import ch.uzh.ifi.hase.soprafs24.entity.Group;
 import ch.uzh.ifi.hase.soprafs24.service.AuthService;
 import ch.uzh.ifi.hase.soprafs24.service.FeedMessageService;
 import ch.uzh.ifi.hase.soprafs24.service.GroupService;
@@ -10,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 public class FeedMessageController {

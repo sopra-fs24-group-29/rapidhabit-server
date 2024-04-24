@@ -46,6 +46,7 @@ public class RoutineScheduler {
         this.feedMessageService = feedMessageService;
     }
 
+
     @Scheduled(cron = "0 25 0 * * ?") // Opening Pulse Check entries at 10:15 AM for each group
     public void openMorningPulseCheck() {
         LocalDateTime creationTimestamp = LocalDateTime.now();
@@ -67,6 +68,9 @@ public class RoutineScheduler {
             feedMessageService.createFeedMessage(feedMessage); // Store Feed Message within database
         }
     }
+
+
+
 
     @Scheduled(cron = "0 56 15 * * ?") // Corrected to run at 10:45 AM every day
     public void closeMorningPulseCheck() {

@@ -87,6 +87,23 @@ public class UserController {
         else{ return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); }
     }
 
+    @GetMapping("/users/id")
+    public ResponseEntity<?> getId(@RequestHeader("Authorization") String authHeader) {
+        boolean isValid = authService.isTokenValid(authHeader);
+        if (isValid) {
+            String id = authService.getId(authHeader);
+            if (id != null) {
+                return ResponseEntity.ok(id);
+            } else {
+                String errorMessage = String.format("User id not found");
+                Map<String, String> errorResponse = new HashMap<>();
+                errorResponse.put("error", errorMessage);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+            }
+        }
+        else{ return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); }
+    }
+
     @PutMapping ("/users/logout")
     public ResponseEntity<?> logout(@RequestHeader("Authorization") String authHeaderToken){
         boolean isValid = authService.isTokenValid(authHeaderToken);
