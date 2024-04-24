@@ -5,14 +5,13 @@
 - general: Wrote Test for all the new REST Mappings
 - As well as the following issues:
 
-| IssueNr | Issue description                                   | Assigned Test                                                                                                                                                                                       |
-|:--------|-----------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/16     | Create User-Objects in Database                     |  - POST Mapping "/users" - CODE 204 CREATED (Pass)  <br> - POST Mapping "/users" - CODE 409 CONFLICT (error)
-                                                                                         |
-| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/17     | Implement API Endpoint for fetching Assigned Groups | - GET Mapping "/groups" - CODE 200 OK (Pass <br> - GET Mapping "/groups" - CODE 401 Unaurthorized (Error)
-                                                                                         |
-| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/19     | Implement API Endpoints for Password Change         | - PUT Mapping "/users/password" - CODE 204 NoContent (pass)  <br> - PUT Mapping "/users/password" - CODE 404 NotFound (error)  <br> - PUT Mapping "/users/password" - CODE 401 Unauthorized (error) |
-| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/56     | Implement logout functionality                      | - PUT Mapping "/users/logout" - CODE 200 OK (pass)   <br> - PUT Mapping "/users/logout" - CODE 404 NotFound (error)                                                                                                                                                                                           
+| IssueNr                                                                                        | Issue description                              | Assigned Test                                                                                                                                                                                                                   |
+|:-----------------------------------------------------------------------------------------------|:-----------------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [#16](https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/16)                 | Create User-Objects in Database                | - POST Mapping "/users" - CODE 204 CREATED (Pass) <br> - POST Mapping "/users" - CODE 409 CONFLICT (error)                                                                                                                      |
+| [#17](https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/17)                 | Implement API Endpoint for fetching Assigned Groups | - GET Mapping "/groups" - CODE 200 OK (Pass) <br> - GET Mapping "/groups" - CODE 401 Unauthorized (Error)                                                                                                                      |
+| [#19](https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/19)                 | Implement API Endpoints for Password Change    | - PUT Mapping "/users/password" - CODE 204 NoContent (pass) <br> - PUT Mapping "/users/password" - CODE 404 NotFound (error) <br> - PUT Mapping "/users/password" - CODE 401 Unauthorized (error)                             |
+| [#56](https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/56)                 | Implement logout functionality                 | - PUT Mapping "/users/logout" - CODE 200 OK (pass) <br> - PUT Mapping "/users/logout" - CODE 404 NotFound (error)                                                                                                              |
+          
 
 ### Simon (SimonHafner):
 
