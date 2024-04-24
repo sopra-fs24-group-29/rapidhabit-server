@@ -114,9 +114,8 @@ Implemented DTOs for transferring Habit Data
 
 | IssueNr | Issue description | Assigned Test |
 |:--------|-------------------|---------------|
-| #       |                   |               |
-| #       |                   |               |
-| #       |                   |               |
+| #105     | Implement Pulse Check (Full-Stack) | ? |
+| #106     | Implement Feed (Full-Stack) | ? |
 
 
 ### Yannik (YRiederer):
