@@ -41,9 +41,11 @@
 
 | IssueNr | Issue description | Assigned Test |
 |:--------|-------------------|---------------|
-| #       |                   |               |
-| #       |                   |               |
-| #       |                   |               |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/41  | Set up and adapt the codebase to full typescript           |               |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/40  | Set up tailwind for the whole application and adapt current design           |               |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/39   | Set up Manifest for PWA       |               |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/42| Set up Vite instead of create-react      |               |
+
 
 
 ## Week 2  10.04 - 16.04
@@ -94,9 +96,14 @@ Implemented DTOs for transferring Habit Data
 
 | IssueNr | Issue description | Assigned Test |
 |:--------|-------------------|---------------|
-| #       |                   |               |
-| #       |                   |               |
-| #       |                   |               |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/90    | Create sticky navigation bar|               |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/24  | Group detail overview|               |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/14  | Create Group Compnent |               |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/6  | Group Dashboard |               |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/29 | A lot of fixes that the app works |               |
+
+
+
 
 
 ## Week 3 17.04 - 23.04
@@ -131,9 +138,24 @@ Implemented DTOs for transferring Habit Data
 
 | IssueNr | Issue description | Assigned Test |
 |:--------|-------------------|---------------|
-| #       |                   |               |
-| #       |                   |               |
-| #       |                   |               |
+https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/35
+https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/26
+https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/14
+https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/14
+https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/10
+https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/13
+https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/10
+https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/2
+https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/9
+https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/6
+https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/3
+https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/5
+https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/11
+https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/27
+https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/21
+https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/22
+https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/4
+
 
 
 ## Week 4 24.04 - 30.04
