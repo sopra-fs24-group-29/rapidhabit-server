@@ -61,9 +61,8 @@ public class RoutineScheduler {
             for(String userId : userIdList){
                 pulseCheckEntryService.createPulseCheckEntry(formId, groupId, userId, content, creationTimestamp, submissionTimestamp, PulseCheckStatus.OPEN);
             }
-            String messageTitle = "Pulse Check";
             String feedMessageText = "A new day brings new opportunities! How motivated are you today to complete all the habits in the group and boost the group's streak?";
-            FeedMessage feedMessage = new FeedMessage(groupId, groupService.getGroupById(groupId).getName(), messageTitle, feedMessageText, FeedType.PULSECHECK, creationTimestamp); // Create Feed Message
+            FeedMessage feedMessage = new FeedMessage(groupId, groupService.getGroupById(groupId).getName(),feedMessageText, FeedType.PULSECHECK, creationTimestamp); // Create Feed Message
             messageController.sendFeedToGroup(groupId, feedMessage);
             feedMessageService.createFeedMessage(feedMessage); // Store Feed Message within database
         }
@@ -84,30 +83,37 @@ public class RoutineScheduler {
             int numberAcceptedEntries = 0;
             int numberRejectedEntries = 0;
 
+            FeedMessage groupFeedMessage = feedMessageService.getLatestPulseCheckMessage(groupId);
             for (PulseCheckEntry entry : pulseCheckEntries) {
                 if (entry.getStatus().equals(PulseCheckStatus.ACCEPTED)) {
                     formDataList.add(entry.getValue());
+                    groupFeedMessage.addUserSubmits(entry.getUserId(),entry.getValue()); // Add value to corresponding FeedMessage for rendering the deactivated slider
                     numberAcceptedEntries++;
                 } else if (entry.getStatus().equals(PulseCheckStatus.OPEN)) {
-                    pulseCheckEntryService.setPulseCheckEntryStatus(entry, PulseCheckStatus.REJECTED); // set pulse check entry to rejected if still open after the deadline
+                    pulseCheckEntryService.setPulseCheckEntryStatus(entry, PulseCheckStatus.REJECTED);// set pulse check entry to rejected if still open after the deadline
+                    Double defaultValue = 0.5;
+                    groupFeedMessage.addUserSubmits(entry.getUserId(),defaultValue); // setting slider props to 0.5 which is the standard config for rendering unanswered pulse check boxes.
                     numberRejectedEntries++;
                 }
             }
 
+            // statistics
             double sum = formDataList.stream().mapToDouble(Double::doubleValue).sum();
             double average = formDataList.isEmpty() ? 0.0 : sum / formDataList.size();
 
-            // Debugging line
-            System.out.println("The form " + pulseCheckEntries.get(0).getFormId() +
-                    " with content '" + pulseCheckEntries.get(0).getContent() +
-                    "' was answered by " + numberAcceptedEntries +
-                    " of " + group.getUserIdList().size() +
-                    " users. The average rating was " + average + ".");
+            String outputStatement = "System.out.println(\"The form \" + pulseCheckEntries.get(0).getFormId() +\n" +
+                    "                    \" with content '\" + pulseCheckEntries.get(0).getContent() +\n" +
+                    "                    \"' was answered by \" + numberAcceptedEntries +\n" +
+                    "                    \" of \" + group.getUserIdList().size() +\n" +
+                    "                    \" users. The average rating was \" + average + \".\");";
+            FeedMessage outputFeedMessage = new FeedMessage(groupId, groupService.getGroupById(groupId).getName(), outputStatement, FeedType.STANDARD, LocalDateTime.now());
+            messageController.sendFeedToGroup(groupId,outputFeedMessage);
+            feedMessageService.createFeedMessage(outputFeedMessage); // Store Output Feed Message within database
         }
     }
 
 
-    @Scheduled(cron = "0 0 0 * * ?") // Executes every day at 00:00 AM
+    @Scheduled(cron = "0 0 0 * * ?") // Triggered every day at midnight
     public void checkAndScheduleHabitRoutines() {
         System.out.println("Systemzeitzone: " + ZoneId.systemDefault());
         Weekday currentWeekday = WeekdayUtil.getCurrentWeekday();

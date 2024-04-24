@@ -34,5 +34,18 @@ public class PulseCheckEntryService {
         entry.setStatus(status);
         pulseCheckEntryRepository.save(entry);
     }
+    public void updateEntryByUserId(String userId, Double value) throws Exception {
+        PulseCheckEntry pulseCheckEntry = pulseCheckEntryRepository.findLatestEntryByUserId(userId, mongoTemplate)
+                .orElseThrow(() -> new RuntimeException("No such entry was found."));
+
+        // Check if the update takes place before the submissionTimestamp
+        if (LocalDateTime.now().isBefore(pulseCheckEntry.getSubmissionTimestamp())) {
+            pulseCheckEntry.setValue(value);
+            pulseCheckEntry.setStatus(PulseCheckStatus.ACCEPTED);
+            pulseCheckEntryRepository.save(pulseCheckEntry);
+        } else {
+            throw new Exception("It is too late to update the entry.");
+        }
+    }
 
 }

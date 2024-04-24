@@ -16,8 +16,6 @@ public class FeedMessage implements Serializable {
 
     @Id
     private String id;
-    private String title;
-
     private String message;
     private String groupId;
     private String groupName;
@@ -26,10 +24,9 @@ public class FeedMessage implements Serializable {
     private HashMap<String, Double> userSubmits;
     private LocalDateTime dateTime;
 
-    public FeedMessage(String groupId, String groupName, String title, String message, FeedType type, LocalDateTime dateTime) {
+    public FeedMessage(String groupId, String groupName, String message, FeedType type, LocalDateTime dateTime) {
         this.groupId = groupId;
         this.groupName = groupName;
-        this.title = title;
         this.message = message;
         this.type = type;
         this.userSubmits = new HashMap<>();
@@ -42,14 +39,6 @@ public class FeedMessage implements Serializable {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getMessage() {
@@ -66,6 +55,10 @@ public class FeedMessage implements Serializable {
 
     public void setUserSubmits(HashMap<String,Double> userSubmits) {
         this.userSubmits = userSubmits;
+    }
+
+    public void addUserSubmits(String userId, Double value){
+        this.userSubmits.put(userId,value);
     }
 
     public String getGroupId() {
@@ -104,7 +97,6 @@ public class FeedMessage implements Serializable {
     public String toString() {
         return "FeedMessage{" +
                 "id='" + id + '\'' +
-                ", title='" + title + '\'' +
                 ", message='" + message + '\'' +
                 ", groupId='" + groupId + '\'' +
                 ", groupName='" + groupName + '\'' +

@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public interface PulseCheckEntryRepository extends MongoRepository<PulseCheckEntry, String> {
     List<PulseCheckEntry> findByFormId(String formId);
@@ -37,8 +38,19 @@ public interface PulseCheckEntryRepository extends MongoRepository<PulseCheckEnt
         AggregationResults<PulseCheckEntry> results = mongoTemplate.aggregate(findAllEntriesAtMaxDateAggregation, "PulseCheckEntries", PulseCheckEntry.class);
         return results.getMappedResults();
     }
+    default Optional<PulseCheckEntry> findLatestEntryByUserId(String userId, MongoTemplate mongoTemplate) {
+        // Schritt 1: Ermittle das neueste Datum für die gegebene userId
+        Aggregation latestEntryAggregation = Aggregation.newAggregation(
+                Aggregation.match(Criteria.where("userId").is(userId)),
+                Aggregation.sort(Sort.Direction.DESC, "creationTimestamp"),
+                Aggregation.limit(1)
+        );
 
-    // Hilfsklasse, um das Ergebnis der Aggregation für das maximale Datum zu speichern
+        AggregationResults<PulseCheckEntry> result = mongoTemplate.aggregate(latestEntryAggregation, PulseCheckEntry.class, PulseCheckEntry.class);
+        List<PulseCheckEntry> entries = result.getMappedResults();
+        return entries.isEmpty() ? Optional.empty() : Optional.of(entries.get(0));
+    }
+
     static class MaxDateResult {
         private LocalDateTime maxDate;
 
