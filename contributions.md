@@ -9,10 +9,10 @@
 |:--------|-----------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/16     | Create User-Objects in Database                     |  - POST Mapping "/users" - CODE 204 CREATED (Pass)  <br> - POST Mapping "/users" - CODE 409 CONFLICT (error)
                                                                                          |
-| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/17     | Implement API Endpoint for fetching Assigned Groups | - GET Mapping "/groups" - CODE 200 OK (Pass)  <br> - GET Mapping "/groups" - CODE 401 Unaurthorized (Error)
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/17     | Implement API Endpoint for fetching Assigned Groups | - GET Mapping "/groups" - CODE 200 OK (Pass <br> - GET Mapping "/groups" - CODE 401 Unaurthorized (Error)
                                                                                          |
 | https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/19     | Implement API Endpoints for Password Change         | - PUT Mapping "/users/password" - CODE 204 NoContent (pass)  <br> - PUT Mapping "/users/password" - CODE 404 NotFound (error)  <br> - PUT Mapping "/users/password" - CODE 401 Unauthorized (error) |
-| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/56     | Implement logout functionality                      | - PUT Mapping "/users/logout" - CODE 200 OK (pass)   <br> - PUT Mapping "/users/logout" - CODE 404 NotFound (error)                                                                                                                                                                                                |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/56     | Implement logout functionality                      | - PUT Mapping "/users/logout" - CODE 200 OK (pass)   <br> - PUT Mapping "/users/logout" - CODE 404 NotFound (error)                                                                                                                                                                                           
 
 ### Simon (SimonHafner):
 
@@ -23,7 +23,7 @@
 | https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/23     | Implemented API for joining an existing group | #18, #23, #17, #21 |
 | https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/77     | Implemented API for joining an existing group (each user can join only once) | #18, #23, #17, #21 |
 | https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/20     | Users which create a group are automatically the administrator of this group | ? |
-| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/55     | Develop a REST API for User Registration and Authentication working with Spring Boot and MongoDB | ? |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/55     | Develop a REST API for User Registration and Authentication working with Spring Boot and MongoDB |
 
 
 
