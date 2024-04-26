@@ -1,5 +1,7 @@
 # Contributions  
 
+## ❗️IMPORTANT: Please note that you can find all commit links within the comment section of the corresponding issues. With our tables, we hope to make your reviewing process as convenient and easy as possible. If you should have any questions, we are always happy to help. 😊
+
 ## 25.3-09.04 Week 1 (Including Easter Break)
 ### Lukas (lguebeli):
 - general: Wrote Test for all the new REST Mappings
