@@ -72,7 +72,6 @@ public class UserStatsEntryService {
         entries.forEach(entry -> {
             entry.setStatus(UserStatsStatus.FAIL);
         });
-
         userStatsEntryRepository.saveAll(entries);
     }
 
