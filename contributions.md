@@ -19,11 +19,11 @@
 | IssueNr | Issue description | Assigned Test |
 |:--------|-------------------|---------------|
 | https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/52     | Create an API for user authorization | [a656cf4](https://github.com/sopra-fs24-group-29/rapidhabit-server/commit/a656cf475c417ecacc7ddd7beae3180a09fbc8ff) |
-| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/18     | Implemented endpoint for group creation | ? |
-| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/23     | Implemented API for joining an existing group | #18, #23, #17, #21 |
-| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/77     | Implemented API for joining an existing group (each user can join only once) | #18, #23, #17, #21 |
-| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/20     | Users which create a group are automatically the administrator of this group | ? |
-| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/55     | Develop a REST API for User Registration and Authentication working with Spring Boot and MongoDB |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/18     | Implemented endpoint for group creation | [c3816dc](https://github.com/sopra-fs24-group-29/rapidhabit-server/commit/c3816dc0f7a6af7b1ff6a821073511499aa25557) |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/23     | Implemented API for joining an existing group | [c3816dc](https://github.com/sopra-fs24-group-29/rapidhabit-server/commit/c3816dc0f7a6af7b1ff6a821073511499aa25557) |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/77     | Implemented API for joining an existing group (each user can join only once) | [c3816dc](https://github.com/sopra-fs24-group-29/rapidhabit-server/commit/c3816dc0f7a6af7b1ff6a821073511499aa25557) |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/20     | Users which create a group are automatically the administrator of this group | [c3816dc](https://github.com/sopra-fs24-group-29/rapidhabit-server/commit/c3816dc0f7a6af7b1ff6a821073511499aa25557) |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/55     | Develop a REST API for User Registration and Authentication working with Spring Boot and MongoDB | No test required |
 
 
 
