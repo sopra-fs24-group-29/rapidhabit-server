@@ -1,6 +1,6 @@
 # Contributions  
 
-## Please note that you can find all commit links within the comment section of the corresponding issues. With our tables, we hope to make your reviewing process as convenient as possible. 😊
+## ❕IMPORTANT: Please note that you can find all commit links within the comment section of the corresponding issues. With our tables, we hope to make your reviewing process as convenient as possible. 😊
 
 ## 25.3-09.04 Week 1 (Including Easter Break)
 ### Lukas (lguebeli):
