@@ -123,5 +123,4 @@ class HabitServiceTest {
 
         assertEquals(5, result);
     }
-
 }
