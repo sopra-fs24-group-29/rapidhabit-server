@@ -173,7 +173,7 @@ https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/4
 | [Issue #104](https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/104) | Implement auto-computation and updates for streaks, scores, and ranks | [ece246c](https://github.com/sopra-fs24-group-29/rapidhabit-server/commit/ece246c31190548454fcb679fa7d25fdf8cfb08a) |
 | https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/105     | Implement Pulse Check (Full-Stack) | Tested via interface |
 | https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/106     | Implement Feed (Full-Stack) | Tested via interface | |
-| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/110     | Implemented Routine Scheduler of daily close-up procesdure | ... | https://github.com/sopra-fs24-group-29/rapidhabit-server/commit/ece246c31190548454fcb679fa7d25fdf8cfb08a |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/110     | Implemented Routine Scheduler of daily close-up procesdure | Tested on MongoDB Compass | https://github.com/sopra-fs24-group-29/rapidhabit-server/commit/ece246c31190548454fcb679fa7d25fdf8cfb08a |
 
 
 ### Yannik (YRiederer):
