@@ -57,8 +57,6 @@ public class UserScoreService {
                 }
                 previousScore = currentScore;
             }
-
-            // Optionally, save the updated ranks if ranks are to be persisted
             userScoreRepository.saveAll(scores);
         }
     }

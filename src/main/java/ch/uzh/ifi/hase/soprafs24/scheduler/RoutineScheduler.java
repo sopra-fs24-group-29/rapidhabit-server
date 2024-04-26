@@ -113,18 +113,18 @@ public class RoutineScheduler {
     }
 
 
-    @Scheduled(cron = "0 0 0 * * ?") // Triggered every day at midnight
+    @Scheduled(cron = "0 33 2 * * ?") // Triggered every day at midnight
     public void checkAndScheduleHabitRoutines() {
         System.out.println("Systemzeitzone: " + ZoneId.systemDefault());
         Weekday currentWeekday = WeekdayUtil.getCurrentWeekday();
-        System.out.println(currentWeekday);
-        System.out.println("Today, it is: " +currentWeekday +".");
         LocalDate today = LocalDate.now();
         LocalDate yesterday = LocalDate.now().minusDays(1);
-        System.out.println(yesterday);
+        System.out.println("Yesteday's date was: " +yesterday +".");
+        System.out.println("Today's date is: " +today +".");
+        System.out.println("Today's weekday is: " +currentWeekday +".");
 
         // Update yesterday's open entries which are expired to FAIL
-        userStatsEntryService.updateStatusForExpiredEntries(today);
+        userStatsEntryService.updateStatusForExpiredEntries(today); // today is correct: -> as the function tests due today
 
         List<Group> groups = groupService.getGroups();
         for (Group i : groups){
@@ -135,6 +135,7 @@ public class RoutineScheduler {
             List<String> userIds = i.getUserIdList();
             // Set counter for successful habits to zero
             Integer habitTargetNumber = userStatsEntryService.countUniqueHabitsByDate(yesterday);
+            Integer userTargetNumber = userIds.size();
             System.out.println("The number of habits to be completed by the past day was: "+habitTargetNumber);
             Integer successfulHabits = 0;
 
@@ -145,13 +146,16 @@ public class RoutineScheduler {
                 Habit habit = habitService.getHabitById(habitId).orElseThrow(() -> new RuntimeException("No habit with id" +habitId +" was found."));
                 // compute habit streaks
                 if(userStatsEntryService.entriesExist(habitId, yesterday)){ // if the habit was on schedule the past day
+                    System.out.println("Habit "+habit.getName() +" was on schedule yesterday.");
+                    System.out.println("Checking if all corresponding userStats are set to SUCCESS...");
                     if(userStatsEntryService.allEntriesSuccess(habitId, yesterday)){ // if all corresponding entries are assigned to success
-                        System.out.println(habit.getName() +" was completed by all users. Habit streak is incremented");
+
+                        System.out.println(habit.getName() +" was completed by all users. Habit streak is incremented. 😄⬆️");
                         habitService.incrementCurrentStreak(habitId); // increase habit streak of group
                         successfulHabits += 1; // increase the number of successfully completed habits
                     }
                     else {
-                        System.out.println(habit.getName() +" was not completed by all users. Habit streak is reset.");
+                        System.out.println(habit.getName() +" was not completed by all users. Habit streak is reset. 🥲⬇️");
                         habitService.resetCurrentStreak(habitId);
                     }
 
@@ -160,38 +164,50 @@ public class RoutineScheduler {
                     successfulUsers.forEach(entry -> {
                         userScoreService.updatePoints(entry.getUserId(), groupId, habit);
                     });
-
+                }
+                else {
+                    System.out.println("Habit "+habit.getName() +" was not on schedule yesterday.");
+                }
                 // at this stage, identify if the habit has to be scheduled at the new day / current weekday
                 RepeatType repeatType = habit.getRepeatStrategy().getRepeatType();
-                System.out.println(habitId +" has type " +repeatType);
+                System.out.println(habit.getName() +" has type " +repeatType);
 
                 if (repeatType.equals(RepeatType.DAILY)){ // If the type of the habit is DAILY ...
                     // create an user stats entry for each user of this group refered to the current habitId
                     for (String userId : groupUserIds){
                         UserStatsEntry userStatsEntry = userStatsEntryService.createUserStatsEntry(userId, groupId,habitId);
-                        System.out.println(userStatsEntry.getDueDate());
+                        System.out.println("Opened new case for "+habit.getName() +" and user "+userId +" for today.");
                     }
                 }
                 else if (repeatType.equals(RepeatType.WEEKLY)) { // If the type of the habit is WEEKLY ...
                     // ... Check if habit takes place at current weekday
                     if(habit.getRepeatStrategy().repeatsAt(currentWeekday)){
-                        // create an user stats entry for each user of this group refered to the current habitId
+                        System.out.println("Today is " +currentWeekday +". So the habit " +habit.getName() +" is scheduled for today.");
+                        // create user stats entry for each user of this group refered to the current habitId
                         for (String userId : groupUserIds){
-                            userStatsEntryService.createUserStatsEntry(userId, groupId, habitId);
+                            UserStatsEntry userStatsEntry = userStatsEntryService.createUserStatsEntry(userId, groupId,habitId);
+                            System.out.println("Opened new case for "+habit.getName() +" and user "+userId +" for today.");
                         }
+                    }
+                    else {
+                        System.out.println("Today is " +currentWeekday +". So the habit " +habit.getName() +" is not scheduled for today.");
                     }
                 }
             }
             // before moving on to the next group compute the group streak
             if (successfulHabits.equals(habitTargetNumber) && habitTargetNumber > 0){ // if the number of successful habits equals the number of all habits in the group and is larger 0.
+                System.out.println("✅ All necessary habits were checked by all members. 👩🏻‍🦰👨🏿👱🏼‍🧔🏽‍️👵🏼");
+                System.out.println("🔥⬆️ Group Streak is incremented ...");
                 groupService.incrementCurrentStreak(groupId); // count up the current group streak
             }
             else {
+                System.out.println("❌ Not all necessary habits were checked by all members. 👩🏻‍🦰👨🏿👱🏼‍🧔🏽‍️👵🏼");
+                System.out.println("💩️🥲 Group Streak is reset ...");
                 groupService.resetCurrentStreak(groupId);
             }
+            System.out.println("🏆 Update group ranks of group "+group.getName() +" ...");
             userScoreService.updateRanksInGroup(groupId); // and update the rank of each user
             // now repeat the same process with the next group
-        }
     }
         System.out.println("Tagesabschluss beendet.");
     }

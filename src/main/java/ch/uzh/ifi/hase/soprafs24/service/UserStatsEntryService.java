@@ -146,9 +146,11 @@ public class UserStatsEntryService {
         Long count = userStatsEntryRepository.countByHabitIdAndDueDateAndStatusNot(habitId, date, UserStatsStatus.SUCCESS);
         // Überprüfe, ob count null ist oder gleich 0
         if (count == null || count == 0) {
+            return true;
+        }
+        else {
             return false;
         }
-        return true;
     }
 
 

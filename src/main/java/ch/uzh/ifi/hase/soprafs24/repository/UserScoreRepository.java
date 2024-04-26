@@ -12,6 +12,7 @@ public interface UserScoreRepository extends MongoRepository<UserScore, String> 
     void deleteByGroupId(String groupId);
     Optional<UserScore> findByUserIdAndGroupId(String userId, String groupId);
 
-    @Query("{'groupId': ?0}")
+    @Query(value = "{'groupId': ?0}", sort = "{'points': -1}")
     List<UserScore> findAllByGroupIdOrderByPointsDesc(String groupId);
+
 }
