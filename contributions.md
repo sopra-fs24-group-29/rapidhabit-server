@@ -68,29 +68,19 @@
 
 | IssueNr | Issue description | Assigned Test |
 |:--------|-------------------|---------------|
-| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/31     | Implement Database Model for Group Habits | [7f4a0cb](https://github.com/sopra-fs24-group-29/rapidhabit-server/commit/7f4a0cb88c4f6605cd25b4aeb5d2a45149e5c1fc)
- |
-| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/29     | Implemented DTOs for transferring Habit Data | [7f4a0cb](https://github.com/sopra-fs24-group-29/rapidhabit-server/commit/7f4a0cb88c4f6605cd25b4aeb5d2a45149e5c1fc)
- |
-| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/63     | Implement API Endpoint for Generating Group-Specific Code | [7f4a0cb](https://github.com/sopra-fs24-group-29/rapidhabit-server/commit/7f4a0cb88c4f6605cd25b4aeb5d2a45149e5c1fc)
- |
-| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/95     | Implemented API for creating Group Habits | [7f4a0cb](https://github.com/sopra-fs24-group-29/rapidhabit-server/commit/7f4a0cb88c4f6605cd25b4aeb5d2a45149e5c1fc)
- |
-| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/96     | Implement Data Model for Group Statistics | ? |
-| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/97     | Implemented Data Model for HabitStreaks, UserScores | ? |
-| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/98     | Implemented REST API for retrieving GetHabitDTOs | ? |
-| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/99     | Implement REST API for retrieving group activity data | ? |
-| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/100     | Implement REST API for retrieving group ranking | [bcb0895d](https://github.com/sopra-fs24-group-29/rapidhabit-server/commit/bcb0895d97fb974df0691ab7a32f889d621c30b2)
- |
-| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/101     | Implement REST API for retrieving Detailed Habit Info with Daily Map | ? |
-| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/102     | Configure Mongo DB connection in the production environement | ? |
-| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/103     | Implement API endpoint for checking habits ✔️ | [1c15a513](https://github.com/sopra-fs24-group-29/rapidhabit-server/commit/1c15a51302dc03dbd72e0601da250f3b4baa2b8c)
- |
-| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/104     | Implement auto-computation and updates for streaks, scores, and ranks | https://github.com/sopra-fs24-group-29/rapidhabit-server/commit/ece246c31190548454fcb679fa7d25fdf8cfb08a |
-
-Implemented DTOs for transferring Habit Data
-| #       |                   |               |
-| #       |                   |               |
+| [Issue #31](https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/31) | Implement Database Model for Group Habits | [7f4a0cb](https://github.com/sopra-fs24-group-29/rapidhabit-server/commit/7f4a0cb88c4f6605cd25b4aeb5d2a45149e5c1fc) |
+| [Issue #29](https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/29) | Implemented DTOs for transferring Habit Data | [7f4a0cb](https://github.com/sopra-fs24-group-29/rapidhabit-server/commit/7f4a0cb88c4f6605cd25b4aeb5d2a45149e5c1fc) |
+| [Issue #63](https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/63) | Implement API Endpoint for Generating Group-Specific Code | [7f4a0cb](https://github.com/sopra-fs24-group-29/rapidhabit-server/commit/7f4a0cb88c4f6605cd25b4aeb5d2a45149e5c1fc) |
+| [Issue #95](https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/95) | Implemented API for creating Group Habits | [7f4a0cb](https://github.com/sopra-fs24-group-29/rapidhabit-server/commit/7f4a0cb88c4f6605cd25b4aeb5d2a45149e5c1fc) |
+| [Issue #96](https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/96) | Implement Data Model for Group Statistics | ? |
+| [Issue #97](https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/97) | Implemented Data Model for HabitStreaks, UserScores | ? |
+| [Issue #98](https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/98) | Implemented REST API for retrieving GetHabitDTOs | ? |
+| [Issue #99](https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/99) | Implement REST API for retrieving group activity data | ? |
+| [Issue #100](https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/100) | Implement REST API for retrieving group ranking | [bcb0895d](https://github.com/sopra-fs24-group-29/rapidhabit-server/commit/bcb0895d97fb974df0691ab7a32f889d621c30b2) |
+| [Issue #101](https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/101) | Implement REST API for retrieving Detailed Habit Info with Daily Map | ? |
+| [Issue #102](https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/102) | Configure Mongo DB connection in the production environment | ? |
+| [Issue #103](https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/103) | Implement API endpoint for checking habits ✔️ | [1c15a513](https://github.com/sopra-fs24-group-29/rapidhabit-server/commit/1c15a51302dc03dbd72e0601da250f3b4baa2b8c) |
+| [Issue #104](https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/104) | Implement auto-computation and updates for streaks, scores, and ranks | [ece246c](https://github.com/sopra-fs24-group-29/rapidhabit-server/commit/ece246c31190548454fcb679fa7d25fdf8cfb08a) |
 
 
 ### Yannik (YRiederer):
