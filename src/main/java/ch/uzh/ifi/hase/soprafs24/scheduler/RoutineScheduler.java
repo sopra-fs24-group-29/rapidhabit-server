@@ -195,15 +195,20 @@ public class RoutineScheduler {
                 }
             }
             // before moving on to the next group compute the group streak
-            if (successfulHabits.equals(habitTargetNumber) && habitTargetNumber > 0){ // if the number of successful habits equals the number of all habits in the group and is larger 0.
-                System.out.println("✅ All necessary habits were checked by all members. 👩🏻‍🦰👨🏿👱🏼‍🧔🏽‍️👵🏼");
-                System.out.println("🔥⬆️ Group Streak is incremented ...");
-                groupService.incrementCurrentStreak(groupId); // count up the current group streak
+            if (habitTargetNumber > 0){ // if at least one habit was targeted due to yesterday
+                if(successfulHabits.equals(habitTargetNumber)){ // if the number of successful habits equals the number of all habits in the group
+                    System.out.println("✅ All necessary habits were checked by all members. 👩🏻‍🦰👨🏿👱🏼‍🧔🏽‍️👵🏼");
+                    System.out.println("🔥⬆️ Group Streak is incremented ...");
+                    groupService.incrementCurrentStreak(groupId); // count up the current group streak
+                }
+                else {
+                    System.out.println("❌ Not all necessary habits were checked by all members. 👩🏻‍🦰👨🏿👱🏼‍🧔🏽‍️👵🏼");
+                    System.out.println("💩️🥲 Group Streak is reset ...");
+                    groupService.resetCurrentStreak(groupId);
+                }
             }
-            else {
-                System.out.println("❌ Not all necessary habits were checked by all members. 👩🏻‍🦰👨🏿👱🏼‍🧔🏽‍️👵🏼");
-                System.out.println("💩️🥲 Group Streak is reset ...");
-                groupService.resetCurrentStreak(groupId);
+            else { // if habitTargetNumber was 0 ...
+                // Don't update streak
             }
             System.out.println("🏆 Update group ranks of group "+group.getName() +" ...");
             userScoreService.updateRanksInGroup(groupId); // and update the rank of each user
