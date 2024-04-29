@@ -22,8 +22,6 @@ import org.springframework.web.server.ResponseStatusException;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Collections;
 import java.util.List;
@@ -32,6 +30,7 @@ import java.util.NoSuchElementException;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * UserControllerTest
@@ -99,7 +98,7 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.email", is("Simon.hafner@uzh.ch")));
     }
 
-    @Test //GET Mapping "/users/profile" - CODE 404 Not Found (error)
+    @Test // GET Mapping "/users/profile" - CODE 404 Not Found (error)
     void GET_users_ValidToken_whenGetUserDetails_thenReturnsNotFound() throws Exception {
         Long userId = 999L;
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
@@ -107,13 +106,73 @@ public class UserControllerTest {
         when(authService.isTokenValid(token)).thenReturn(true);
         when(authService.getId(token)).thenReturn(String.valueOf(userId));
 
+        // Simulate the scenario where the user with the specified ID is not found
         when(userService.getUserDetails(String.valueOf(userId))).thenThrow(new NoSuchElementException("User with id " + userId + " not found"));
 
         mockMvc.perform(get("/users/profile")
                         .header("Authorization", token)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("User with id 999 not found"));
     }
+
+
+
+    @Test // GET Mapping "/users/id" - CODE 401 UNAUTHORIZED (error)
+    void GET_users_givenInvalidToken_whenGetUserDetails_thenReturnsUnauthorized() throws Exception {
+        String invalidToken = "invalidToken";
+
+        when(authService.isTokenValid(invalidToken)).thenReturn(false);
+
+        mockMvc.perform(get("/users/profile")
+                        .header("Authorization", invalidToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test // GET Mapping "/users/id" - CODE 200 OK (pass)
+    void GET_users_id_givenValidToken_whenGetUserId_thenReturnsUserId() throws Exception {
+        Long userId = 1L;
+        String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
+
+        // Mock the authService to return true for isTokenValid and the userId for getId
+        when(authService.isTokenValid(token)).thenReturn(true);
+        when(authService.getId(token)).thenReturn(String.valueOf(userId));
+
+        // Perform the GET request to the /users/id endpoint with the Authorization header
+        mockMvc.perform(get("/users/id")
+                        .header("Authorization", token)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test // GET Mapping "/users/id" - CODE 401 UNAUTHORIZED (error)
+    void GET_users_id_givenInvalidToken_whenGetUserId_thenReturnsUnauthorized() throws Exception {
+        String invalidToken = "invalidToken";
+
+        when(authService.isTokenValid(invalidToken)).thenReturn(false);
+
+        mockMvc.perform(get("/users/id")
+                        .header("Authorization", invalidToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test // GET Mapping "/users/id" - CODE 404 NOT FOUND (error)
+    void GET_users_id_givenValidTokenNoUserId_whenGetUserId_thenReturnsNotFound() throws Exception {
+        String token = "validToken";
+
+        when(authService.isTokenValid(token)).thenReturn(true);
+        when(authService.getId(token)).thenReturn(null);
+
+        mockMvc.perform(get("/users/id")
+                        .header("Authorization", token)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error", is("User id not found")));
+    }
+
+
 
     /**
      * ------------------------------ END GET TESTS ------------------------------ START POST TESTS ------------------------------

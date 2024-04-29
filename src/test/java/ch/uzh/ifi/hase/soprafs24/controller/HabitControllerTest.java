@@ -1,6 +1,7 @@
 package ch.uzh.ifi.hase.soprafs24.controller;
 
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatsStatus;
+import ch.uzh.ifi.hase.soprafs24.constant.Weekday;
 import ch.uzh.ifi.hase.soprafs24.entity.*;
 import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.habit.HabitGetDTO;
@@ -195,7 +196,7 @@ public class HabitControllerTest {
      * ------------------------------ END GET TESTS ------------------------------ START POST TESTS ------------------------------
      */
     @Test //POST Mapping "/groups/{groupId}/habits" - CODE 201 CREATED (Pass)
-    public void POST_Create_GroupHabits_validInput_ReturnsCreated() throws Exception {
+    public void POST_Create_GroupHabits_daily_validInput_ReturnsCreated() throws Exception {
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
         String groupId = "group1";
         String userId = "user1";
@@ -227,6 +228,59 @@ public class HabitControllerTest {
                         .content(habitData))
                 .andExpect(status().isCreated());
     }
+
+    @Test
+    public void POST_Create_GroupHabits_WeeklyRepeat_ValidInput_ReturnsCreated() throws Exception {
+        String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
+        String groupId = "group1";
+        String userId = "user1";
+        // JSON payload with a WEEKLY repeat strategy and a weekdayMap
+        String habitData = "{\n" +
+                "    \"name\": \"Habit1\",\n" +
+                "    \"description\": \"Description1\",\n" +
+                "    \"rewardPoints\": 10,\n" +
+                "    \"repeatStrategy\": {\n" +
+                "        \"type\": \"WEEKLY\",\n" +
+                "        \"weekdayMap\": {\n" +
+                "            \"MONDAY\": true,\n" +
+                "            \"WEDNESDAY\": false,\n" +
+                "            \"FRIDAY\": true\n" +
+                "        }\n" +
+                "    }\n" +
+                "}";
+
+        when(authService.isTokenValid(token)).thenReturn(true);
+        when(authService.getId(token)).thenReturn(userId);
+
+        Group group = new Group();
+        group.setId(groupId);
+        group.setUserIdList(Arrays.asList(userId));
+        when(groupService.getGroupById(groupId)).thenReturn(group);
+        when(groupService.isUserAdmin(userId, groupId)).thenReturn(true);
+
+        Habit habit = new Habit();
+        habit.setName("Habit1");
+        habit.setDescription("Description1");
+        habit.setRewardPoints(10);
+        // Assuming WeeklyRepeat and DailyRepeat are subclasses of a common RepeatStrategy interface
+        WeeklyRepeat weeklyRepeat = new WeeklyRepeat();
+        weeklyRepeat.setWeekdayToRepeat(Weekday.MONDAY, true);
+        weeklyRepeat.setWeekdayToRepeat(Weekday.WEDNESDAY, false);
+        weeklyRepeat.setWeekdayToRepeat(Weekday.FRIDAY, true);
+        habit.setRepeatStrategy(weeklyRepeat);
+        when(habitService.createHabit(any(Habit.class))).thenAnswer(invocation -> {
+            Habit habitToCreate = invocation.getArgument(0);
+            habitToCreate.setId("habitId1"); // Simulate setting the ID of the created habit
+            return habitToCreate;
+        });
+
+        mockMvc.perform(post("/groups/{groupId}/habits", groupId)
+                        .header("Authorization", token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(habitData))
+                .andExpect(status().isCreated());
+    }
+
 
     @Test //POST Mapping "/groups/{groupId}/habits" - CODE 401 Unauthorized (Error)
     public void POST_Create_GroupHabits_InvalidInput() throws Exception {
@@ -307,6 +361,89 @@ public class HabitControllerTest {
                 .andExpect(jsonPath("$[1].streaks").value(2))
                 .andExpect(jsonPath("$[1].userCheckStatus.UI").value(true));
     }
+
+    @Test
+    public void PUT_Update_GroupHabits_ValidInput_ReturnsCreated() throws Exception {
+        String token = "validToken";
+        String groupId = "group1";
+        String habitId = "habit1";
+        String habitData = "{\"name\":\"Habit1\",\"description\":\"Description1\",\"rewardPoints\":10,\"repeatStrategy\":{\"type\":\"DAILY\"}}";
+        String userId = "user1";
+
+        when(authService.isTokenValid(token)).thenReturn(true);
+        when(authService.getId(token)).thenReturn(userId);
+        when(groupService.isUserAdmin(userId, groupId)).thenReturn(true);
+
+        Habit habit = new Habit();
+        habit.setName("Habit1");
+        habit.setDescription("Description1");
+        habit.setRewardPoints(10);
+        habit.setRepeatStrategy(new DailyRepeat());
+        when(habitService.updateHabit(eq(habitId), any(Habit.class))).thenReturn(habit);
+
+        mockMvc.perform(put("/groups/{groupId}/habits/{habitId}/update", groupId, habitId)
+                        .header("Authorization", token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(habitData))
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+    public void PUT_Update_GroupHabits_InvalidWeekdayName_ReturnsBadRequest() throws Exception {
+        String token = "validToken";
+        String groupId = "group1";
+        String habitId = "habit1";
+        String habitData = "{\"name\":\"Habit1\",\"description\":\"Description1\",\"rewardPoints\":10,\"repeatStrategy\":{\"type\":\"WEEKLY\",\"weekdayMap\":{\"invalidDay\":true}}}";
+        String userId = "user1";
+
+        when(authService.isTokenValid(token)).thenReturn(true);
+        when(authService.getId(token)).thenReturn(userId);
+        when(groupService.isUserAdmin(userId, groupId)).thenReturn(true);
+
+        mockMvc.perform(put("/groups/{groupId}/habits/{habitId}/update", groupId, habitId)
+                        .header("Authorization", token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(habitData))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void PUT_Update_GroupHabits_UserNotAdmin_ReturnsUnauthorized() throws Exception {
+        String token = "validToken";
+        String groupId = "group1";
+        String habitId = "habit1";
+        String habitData = "{\"name\":\"Habit1\",\"description\":\"Description1\",\"rewardPoints\":10,\"repeatStrategy\":{\"type\":\"DAILY\"}}";
+        String userId = "user1";
+
+        when(authService.isTokenValid(token)).thenReturn(true);
+        when(authService.getId(token)).thenReturn(userId);
+        when(groupService.isUserAdmin(userId, groupId)).thenReturn(false);
+
+        mockMvc.perform(put("/groups/{groupId}/habits/{habitId}/update", groupId, habitId)
+                        .header("Authorization", token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(habitData))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void PUT_Update_GroupHabits_InvalidToken_ReturnsUnauthorized() throws Exception {
+        String token = "invalidToken";
+        String groupId = "group1";
+        String habitId = "habit1";
+        String habitData = "{\"name\":\"Habit1\",\"description\":\"Description1\",\"rewardPoints\":10,\"repeatStrategy\":{\"type\":\"DAILY\"}}";
+
+        when(authService.isTokenValid(token)).thenReturn(false);
+
+        mockMvc.perform(put("/groups/{groupId}/habits/{habitId}/update", groupId, habitId)
+                        .header("Authorization", token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(habitData))
+                .andExpect(status().isUnauthorized());
+    }
+
+
+
 
     /**
      * ------------------------------ END PUT TESTS ------------------------------ START DELETE TESTS ------------------------------
