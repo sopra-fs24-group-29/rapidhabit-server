@@ -10,7 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -174,7 +176,7 @@ class UserStatsEntryServiceTest {
         assertEquals(testEntry1.getId(), result.get(0).getId());
     }
     @Test
-    void checkHabitByUser_success() {
+    void checkHabitByUser_openToSuccess() {
         UserStatsEntry testEntry = new UserStatsEntry();
         testEntry.setStatus(UserStatsStatus.OPEN);
         when(userStatsEntryRepository.findByUserIdAndHabitIdAndDueDate("1", "2", LocalDate.now())).thenReturn(Optional.of(testEntry));
@@ -185,14 +187,44 @@ class UserStatsEntryServiceTest {
         assertEquals(UserStatsStatus.SUCCESS, result);
         assertEquals(UserStatsStatus.SUCCESS, testEntry.getStatus());
     }
+    @Test
+    void checkHabitByUser_successToOpen() {
+        UserStatsEntry testEntry = new UserStatsEntry();
+        testEntry.setStatus(UserStatsStatus.SUCCESS); // Initial status is SUCCESS
+        when(userStatsEntryRepository.findByUserIdAndHabitIdAndDueDate("1", "2", LocalDate.now())).thenReturn(Optional.of(testEntry));
+        when(userStatsEntryRepository.save(any(UserStatsEntry.class))).thenReturn(testEntry);
 
-/**
+        UserStatsStatus result = userStatsEntryService.checkHabitByUser("2", "1");
+
+        assertEquals(UserStatsStatus.OPEN, result); // Expecting the status to change to OPEN
+        assertEquals(UserStatsStatus.OPEN, testEntry.getStatus()); // Verify the status was updated in the repository
+    }
+    @Test
+    void checkHabitByUser_conflict() {
+        UserStatsEntry testEntry = new UserStatsEntry();
+        testEntry.setStatus(UserStatsStatus.FAIL);
+        when(userStatsEntryRepository.findByUserIdAndHabitIdAndDueDate("1", "2", LocalDate.now())).thenReturn(Optional.of(testEntry));
+
+        assertThrows(ResponseStatusException.class, () -> userStatsEntryService.checkHabitByUser("2", "1"));
+    }
+
+    @Test
     void allEntriesSuccess_success() {
         when(userStatsEntryRepository.countByHabitIdAndDueDateAndStatusNot("1", LocalDate.now(), UserStatsStatus.SUCCESS)).thenReturn(0L);
         boolean result = userStatsEntryService.allEntriesSuccess("1", LocalDate.now());
         assertTrue(result);
     }
- */
+    @Test
+    void allEntriesSuccess_someNotSuccess() {
+        String habitId = "habit1";
+        LocalDate date = LocalDate.now();
+        when(userStatsEntryRepository.countByHabitIdAndDueDateAndStatusNot(habitId, date, UserStatsStatus.SUCCESS)).thenReturn(1L);
+
+        boolean result = userStatsEntryService.allEntriesSuccess(habitId, date);
+
+        assertFalse(result);
+    }
+
     @Test
     void entriesExist_success() {
         when(userStatsEntryRepository.existsByHabitIdAndDueDate("1", LocalDate.now())).thenReturn(true);
@@ -220,7 +252,56 @@ class UserStatsEntryServiceTest {
 
         assertEquals(2, result);
     }
+    @Test
+    void deleteUserStatsEntriesOfToday_withEntries() {
+        String habitId = "habit1";
+        LocalDate today = LocalDate.now();
+        UserStatsEntry entry1 = new UserStatsEntry();
+        UserStatsEntry entry2 = new UserStatsEntry();
+        List<UserStatsEntry> entries = Arrays.asList(entry1, entry2);
 
+        when(userStatsEntryRepository.findByHabitIdAndDueDate(habitId, today)).thenReturn(entries);
+
+        userStatsEntryService.deleteUserStatsEntriesOfToday(habitId);
+
+        verify(userStatsEntryRepository, times(entries.size())).delete(Mockito.any(UserStatsEntry.class));
+    }
+    @Test
+    void deleteUserStatsEntriesOfToday_noEntries() {
+        String habitId = "habit1";
+        LocalDate today = LocalDate.now();
+
+        when(userStatsEntryRepository.findByHabitIdAndDueDate(habitId, today)).thenReturn(Collections.emptyList());
+
+        userStatsEntryService.deleteUserStatsEntriesOfToday(habitId);
+
+        verify(userStatsEntryRepository, times(0)).delete(Mockito.any(UserStatsEntry.class));
+    }
+    @Test
+    void deleteUserStatsEntriesByGroupId_test() {
+        String groupId = "group1";
+
+        userStatsEntryService.deleteUserStatsEntriesByGroupId(groupId);
+
+        verify(userStatsEntryRepository, times(1)).deleteByGroupId(groupId);
+    }
+    @Test
+    void deleteByUserIdAndDueDate_test() {
+        String userId = "user1";
+        LocalDate dueDate = LocalDate.now();
+
+        userStatsEntryService.deleteByUserIdAndDueDate(userId, dueDate);
+
+        verify(userStatsEntryRepository, times(1)).deleteByUserIdAndDueDate(userId, dueDate);
+    }
+    @Test
+    void deleteByGroupId_test() {
+        String groupId = "group1";
+
+        userStatsEntryService.deleteByGroupId(groupId);
+
+        verify(userStatsEntryRepository, times(1)).deleteByGroupId(groupId);
+    }
 
 
 }

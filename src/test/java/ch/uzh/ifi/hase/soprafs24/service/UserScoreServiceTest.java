@@ -86,4 +86,29 @@ class UserScoreServiceTest {
         assertEquals(15, testScore.getPoints());
         verify(userScoreRepository, times(1)).save(testScore);
     }
+    @Test
+    void deleteByUserIdAndGroupId_success() {
+        // Given
+        String userId = "1";
+        String groupId = "2";
+
+        // When
+        userScoreService.deleteByUserIdAndGroupId(userId, groupId);
+
+        // Then
+        verify(userScoreRepository, times(1)).deleteByUserIdAndGroupId(userId, groupId);
+    }
+
+    @Test
+    void deleteByGroupId_success() {
+        // Given
+        String groupId = "2";
+
+        // When
+        userScoreService.deleteByGroupId(groupId);
+
+        // Then
+        verify(userScoreRepository, times(1)).deleteByGroupId(groupId);
+    }
+
 }

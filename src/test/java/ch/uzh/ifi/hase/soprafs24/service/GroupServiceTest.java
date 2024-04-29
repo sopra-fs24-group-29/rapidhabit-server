@@ -1,6 +1,7 @@
 package ch.uzh.ifi.hase.soprafs24.service;
 
 import ch.uzh.ifi.hase.soprafs24.entity.Group;
+import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.entity.UserScore;
 import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.UserScoreRepository;
@@ -26,6 +27,8 @@ public class GroupServiceTest {
     @Mock
     private UserScoreRepository userScoreRepository;
     @Mock
+    private UserStatsEntryService userStatsEntryService;
+    @Mock
     private UserService userService;
     private Group testGroup;
     private UserScore testUserScore;
@@ -38,6 +41,7 @@ public class GroupServiceTest {
         testGroup.setId("1");
         testGroup.setName("Test Group");
         testGroup.setUserIdList(new ArrayList<>(Arrays.asList("userID1", "userID2")));
+        testGroup.setHabitIdList(new ArrayList<>(Arrays.asList("habitID1", "habitID2")));
         testUserScore = new UserScore();
         testUserScore.setUserId("1");
         testUserScore.setGroupId("1");
@@ -404,4 +408,75 @@ public class GroupServiceTest {
         verify(groupRepository, times(1)).findById(groupId);
         verify(groupRepository, times(1)).save(group);
     }
+
+    @Test
+    public void testGetUserNamesByGroupId() {
+        String groupId = "1";
+        when(groupRepository.findById(groupId)).thenReturn(Optional.of(testGroup));
+
+        User user1 = new User();
+        user1.setId("userID1");
+        user1.setFirstname("John");
+        user1.setLastname("Doe");
+        when(userService.getUserDetails("userID1")).thenReturn(user1);
+
+        User user2 = new User();
+        user2.setId("userID2");
+        user2.setFirstname("Jane");
+        user2.setLastname("Doe");
+        when(userService.getUserDetails("userID2")).thenReturn(user2);
+
+        Map<String, String> expectedUserNamesMap = new HashMap<>();
+        expectedUserNamesMap.put("userID1", "John Doe");
+        expectedUserNamesMap.put("userID2", "Jane Doe");
+
+        Map<String, String> actualUserNamesMap = groupService.getUserNamesByGroupId(groupId);
+        assertEquals(expectedUserNamesMap, actualUserNamesMap);
+    }
+    @Test
+    public void testGetGroupIdsByUserId() {
+        String userId = "userID1";
+        when(groupRepository.findByUserIdsContains(userId)).thenReturn(List.of(testGroup));
+
+        List<String> expectedGroupIds = new ArrayList<>();
+        expectedGroupIds.add("1");
+
+        List<String> actualGroupIds = groupService.getGroupIdsByUserId(userId);
+        assertEquals(expectedGroupIds, actualGroupIds);
+    }
+
+    @Test
+    public void testRemoveHabitFromHabitIdList() {
+        String groupId = "1";
+        String habitId = "habitID1";
+        when(groupRepository.findById(groupId)).thenReturn(Optional.of(testGroup));
+
+        groupService.removeHabitFromHabitIdList(groupId, habitId);
+
+        verify(groupRepository, times(1)).save(testGroup);
+        assertFalse(testGroup.getHabitIdList().contains(habitId));
+    }
+
+    @Test
+    public void testDeleteUserIdFromAllGroups() {
+        String userId = "userID1";
+        String userId2 = "userID2";
+
+        Group testGroup = new Group();
+        testGroup.setId("1");
+        testGroup.setAdminIdList(new ArrayList<>(Arrays.asList(userId)));
+        testGroup.setUserIdList(new ArrayList<>(Arrays.asList(userId2))); // Assuming "userID2" is not the admin
+        when(groupRepository.findByAdminIdListContains(userId)).thenReturn(List.of(testGroup));
+        when(groupRepository.findByUserIdsContains(userId)).thenReturn(List.of(testGroup));
+
+        groupService.deleteUserIdFromAllGroups(userId);
+
+        verify(groupRepository, times(1)).delete(testGroup);
+        verify(groupRepository, times(1)).save(any(Group.class));
+
+    }
+
+
+
+
 }

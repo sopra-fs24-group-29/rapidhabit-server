@@ -3,6 +3,7 @@ package ch.uzh.ifi.hase.soprafs24.service;
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
+import ch.uzh.ifi.hase.soprafs24.repository.UserStatsEntryRepository;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.user.UserPasswordPutDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.user.UserPutDTO;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,14 +15,21 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 public class UserServiceTest {
 
   @Mock
   private UserRepository userRepository;
+  @Mock
+  private UserStatsEntryService userStatsEntryService;
+  @Mock
+  private UserStatsEntryRepository userStatsEntryRepository;
 
   @Mock
   private BCryptPasswordEncoder passwordEncoder;
@@ -63,7 +71,7 @@ public class UserServiceTest {
         User createdUser = userService.createUser(newUser);
 
         // Then
-        Mockito.verify(userRepository, Mockito.times(1)).save(Mockito.any(User.class));
+        verify(userRepository, times(1)).save(Mockito.any(User.class));
         assertNotNull(createdUser.getId());
         assertEquals("lukas.guebeli@uzh.ch", createdUser.getEmail());
         assertEquals(UserStatus.OFFLINE, createdUser.getStatus());
@@ -114,7 +122,7 @@ public class UserServiceTest {
         // then -> assertions
         assertTrue(result);
         assertEquals(expectedStatus, testUser.getStatus());
-        Mockito.verify(userRepository).save(testUser);
+        verify(userRepository).save(testUser);
     }
 
     @Test //getUser method
@@ -130,7 +138,7 @@ public class UserServiceTest {
         // Then
         User result = userService.getUser(email);
         assertEquals(testUser, result);
-        Mockito.verify(userRepository).findByEmail(email);
+        verify(userRepository).findByEmail(email);
     }
 
     @Test //getUserDetails
@@ -146,7 +154,7 @@ public class UserServiceTest {
         // Then
         User result = userService.getUserDetails(id);
         assertEquals(testUser, result);
-        Mockito.verify(userRepository).findById(id);
+        verify(userRepository).findById(id);
     }
 
     @Test //setUserStatusToOffline
@@ -160,8 +168,8 @@ public class UserServiceTest {
 
         userService.setUserStatusToOffline(id);
         assertEquals(UserStatus.OFFLINE, testUser.getStatus());
-        Mockito.verify(userRepository).findById(id);
-        Mockito.verify(userRepository).save(testUser);
+        verify(userRepository).findById(id);
+        verify(userRepository).save(testUser);
     }
     @Test
     public void updateUser_validInput_updatesUser() {
@@ -187,9 +195,9 @@ public class UserServiceTest {
         assertEquals(userPutDTO.getFirstname(), updatedUser.getFirstname());
         assertEquals(userPutDTO.getLastname(), updatedUser.getLastname());
         assertEquals(userPutDTO.getEmail(), updatedUser.getEmail());
-        Mockito.verify(userRepository).findById(userIdToEdit);
-        Mockito.verify(userRepository).findByEmail(userPutDTO.getEmail());
-        Mockito.verify(userRepository).save(Mockito.any(User.class));
+        verify(userRepository).findById(userIdToEdit);
+        verify(userRepository).findByEmail(userPutDTO.getEmail());
+        verify(userRepository).save(Mockito.any(User.class));
     }
 
     @Test
@@ -211,9 +219,9 @@ public class UserServiceTest {
         userService.delUser(userIdToEdit, userPasswordPutDTO);
 
         // Assertions
-        Mockito.verify(userRepository).findById(userIdToEdit);
-        Mockito.verify(passwordEncoder).matches(userPasswordPutDTO.getCurrentPassword(), existingUser.getPassword());
-        Mockito.verify(userRepository).delete(existingUser);
+        verify(userRepository).findById(userIdToEdit);
+        verify(passwordEncoder).matches(userPasswordPutDTO.getCurrentPassword(), existingUser.getPassword());
+        verify(userRepository).delete(existingUser);
     }
 
     @Test
@@ -233,8 +241,6 @@ public class UserServiceTest {
 
         // Assertions
         assertEquals("JD", initials);
-        Mockito.verify(userRepository).findById(userId);
+        verify(userRepository).findById(userId);
     }
-
-
 }
