@@ -166,6 +166,10 @@ public class UserStatsEntryService {
         return userStatsEntryRepository.countDistinctHabitIdsByDueDate(date);
     }
 
+    public Integer countUniqueHabitsByGroupIdAndDate(String groupId, LocalDate date) {
+        return userStatsEntryRepository.countDistinctHabitIdsByDueDateAndGroupId(date,groupId);
+    }
+
     public void deleteUserStatsEntriesOfToday(String habitId) {
         LocalDate today = LocalDate.now();
         // Die Methode findByHabitIdAndDueDate muss List<UserStatsEntry> zurückgeben, nicht List<UserStatsStatus>

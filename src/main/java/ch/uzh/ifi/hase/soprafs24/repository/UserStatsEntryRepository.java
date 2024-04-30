@@ -49,6 +49,13 @@ public interface UserStatsEntryRepository extends MongoRepository<UserStatsEntry
     })
     Integer countDistinctHabitIdsByDueDate(LocalDate dueDate);
 
+    @Aggregation(pipeline = {
+            "{ $match: { 'dueDate': ?0, 'groupId': ?1 } }",
+            "{ $group: { _id: '$habitId' } }",
+            "{ $count: 'distinctHabitCount' }"
+    })
+    Integer countDistinctHabitIdsByDueDateAndGroupId(LocalDate dueDate, String groupId);
+
     @Query("{'habitId': ?0, 'dueDate': ?1}")
     List<UserStatsEntry> findByHabitIdAndDueDate(String habitId, LocalDate dueDate);
 
