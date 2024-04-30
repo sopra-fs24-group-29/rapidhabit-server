@@ -155,16 +155,18 @@ https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/4
 
 
 
-## Week 4 24.04 - 30.04
+## Week 4 24.04 - 30.04 and Week 5 01.05 - 07.05
 ### Lukas (lguebeli):
-- general: Wrote Test for all the new REST Mappings
+- general: Wrote Test for all the new REST Mappings & all the Services (now on 75% Coverage)
 - As well as the following issues:
 
-| IssueNr | Issue description                        | Assigned Test |
-|:--------|------------------------------------------|---------------|
-| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/107    | implement API for deleting a group Habit |               |
-| #       |                                          |               |
-| #       |                                          |               |
+| IssueNr                                                             | Issue description                        | Assigned Test |
+|:--------------------------------------------------------------------|------------------------------------------|---------------|
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/107 | implement API for deleting a group Habit |               |
+| #37                                                                 |                                          |               |
+| #113                                                                |                                          |               |
+| #114                                                                |                                          |               |
+
 
 ### Simon (SimonHafner):
 
@@ -191,42 +193,6 @@ https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/4
 | #       |                   |               |
 | #       |                   |               |
 
-## Week 5 01.05 - 07.05
-### Lukas (lguebeli):
-- general: Wrote Test for all the new REST Mappings
-- As well as the following issues:
-
-| IssueNr | Issue description | Assigned Test |
-|:--------|-------------------|---------------|
-| #       |                   |               |
-| #       |                   |               |
-| #       |                   |               |
-
-### Simon (SimonHafner):
-
-| IssueNr | Issue description | Assigned Test |
-|:--------|-------------------|---------------|
-| #       |                   |               |
-| #       |                   |               |
-| #       |                   |               |
-
-
-### Yannik (YRiederer):
-
-| IssueNr | Issue description | Assigned Test |
-|:--------|-------------------|---------------|
-| #       |                   |               |
-| #       |                   |               |
-| #       |                   |               |
-
-
-### Raksmey (rocketraksi):
-
-| IssueNr | Issue description | Assigned Test |
-|:--------|-------------------|---------------|
-| #       |                   |               |
-| #       |                   |               |
-| #       |                   |               |
 
 ## Week 6 08.05 - 14.05
 ### Lukas (lguebeli):
@@ -235,7 +201,7 @@ https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/4
 
 | IssueNr | Issue description | Assigned Test |
 |:--------|-------------------|---------------|
-| #       |                   |               |
+| #115      |                   |               |
 | #       |                   |               |
 | #       |                   |               |
 
@@ -304,14 +270,9 @@ https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/4
 
 ## Week 8 22.05 - 28.05
 ### Lukas (lguebeli):
-- general: Wrote Test for all the new REST Mappings
-- As well as the following issues:
+- JOKER
 
-| IssueNr | Issue description | Assigned Test |
-|:--------|-------------------|---------------|
-| #       |                   |               |
-| #       |                   |               |
-| #       |                   |               |
+
 
 ### Simon (SimonHafner):
 
