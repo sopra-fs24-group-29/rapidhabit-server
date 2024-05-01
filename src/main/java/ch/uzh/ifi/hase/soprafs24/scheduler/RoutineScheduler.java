@@ -134,7 +134,7 @@ public class RoutineScheduler {
             List<String> habitIds = i.getHabitIdList();
             List<String> userIds = i.getUserIdList();
             // Set counter for successful habits to zero
-            Integer habitTargetNumber = userStatsEntryService.countUniqueHabitsByDate(yesterday);
+            Integer habitTargetNumber = userStatsEntryService.countUniqueHabitsByGroupIdAndDate(groupId,yesterday);
             Integer userTargetNumber = userIds.size();
             System.out.println("The number of habits to be completed by the past day was: "+habitTargetNumber);
             Integer successfulHabits = 0;
