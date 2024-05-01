@@ -39,7 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * This tests if the UserController works.
  */
 @WebMvcTest(UserController.class)
-public class UserControllerTest {
+class UserControllerTest {
 
   @Autowired
   private MockMvc mockMvc;
@@ -179,7 +179,7 @@ public class UserControllerTest {
      */
 
     @Test //POST Mapping "/users" - CODE 204 CREATED (Pass)
-    public void POST_users_createUser_validInput_userCreated() throws Exception {
+    void POST_users_createUser_validInput_userCreated() throws Exception {
         // Given
         UserPostDTO newUser = new UserPostDTO();
         newUser.setFirstname("Simon");
@@ -213,7 +213,7 @@ public class UserControllerTest {
     }
 
     @Test //POST Mapping "/users" - CODE 409 CONFLICT (error)
-    public void POST_users_createUser_whenUsernameAlreadyExists() throws Exception {
+    void POST_users_createUser_whenUsernameAlreadyExists() throws Exception {
         // given
         UserPostDTO userPostDTO = new UserPostDTO();
         userPostDTO.setFirstname("Simon");
@@ -239,7 +239,7 @@ public class UserControllerTest {
      */
 
     @Test //PUT Mapping "/users/update" - CODE 204 No Content (pass)
-    public void PUT_usersID_updateUser_ValidUserAndToken_UpdatesUser() throws Exception {
+    void PUT_usersID_updateUser_ValidUserAndToken_UpdatesUser() throws Exception {
         Long validUserId = 1L;
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
         String firstnameUpdate = "Lukas";
@@ -273,7 +273,7 @@ public class UserControllerTest {
     }
 
     @Test //PUT Mapping "/users/update" - CODE 404 Not Found (error)
-    public void PUT_usersID_updateUser_InvalidUserId_ReturnsNotFound() throws Exception {
+    void PUT_usersID_updateUser_InvalidUserId_ReturnsNotFound() throws Exception {
         Long invalidUserId = 2L;
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
         String firstnameUpdate = "Lukas";
@@ -294,7 +294,7 @@ public class UserControllerTest {
     }
 
     @Test //PUT Mapping "/users/update" - CODE 401 Unauthorized (error)
-    public void PUT_usersID_updateUser_InvalidToken_ReturnsUnauthorized() throws Exception {
+    void PUT_usersID_updateUser_InvalidToken_ReturnsUnauthorized() throws Exception {
         Long userId = 2L;
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
         String firstnameUpdate = "Lukas";
@@ -314,7 +314,7 @@ public class UserControllerTest {
 
 
     @Test //PUT Mapping "/users/login" - CODE 200 OK (pass)
-    public void PUT_usersLogin_valid_ReturnsToken() throws Exception {
+    void PUT_usersLogin_valid_ReturnsToken() throws Exception {
         String email = "test@example.com";
         String password = "password";
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
@@ -334,7 +334,7 @@ public class UserControllerTest {
     }
 
     @Test //PUT Mapping "/users/login" - CODE 400 BadRequest (error)
-    public void PUT_usersLogin_Invalid_ReturnsNotFound() throws Exception {
+    void PUT_usersLogin_Invalid_ReturnsNotFound() throws Exception {
         String email = "test@example.com";
         String password = "password";
 
@@ -351,7 +351,7 @@ public class UserControllerTest {
     }
 
     @Test //PUT Mapping "/users/logout" - CODE 200 OK (pass)
-    public void PUT_usersLogout_valid() throws Exception {
+    void PUT_usersLogout_valid() throws Exception {
         Long userId = 1L;
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
 
@@ -365,7 +365,7 @@ public class UserControllerTest {
     }
 
     @Test //PUT Mapping "/users/logout" - CODE 404 NotFound (error)
-    public void PUT_usersLogout_Invalid_ReturnsNotFound() throws Exception {
+    void PUT_usersLogout_Invalid_ReturnsNotFound() throws Exception {
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
 
         when(authService.isTokenValid(token)).thenReturn(true);
@@ -378,7 +378,7 @@ public class UserControllerTest {
     }
 
     @Test //PUT Mapping "/users/password" - CODE 204 NoContent (pass)
-    public void PUT_usersPasswordChange_valid_ReturnsNoContent() throws Exception {
+    void PUT_usersPasswordChange_valid_ReturnsNoContent() throws Exception {
 
         Long userId = 1L;
         String current_password = "currentPassword";
@@ -406,7 +406,7 @@ public class UserControllerTest {
     }
 
     @Test //PUT Mapping "/users/password" - CODE 404 NotFound (error)
-    public void PUT_usersPasswordChange_Invalid_ReturnsNotFound() throws Exception {
+    void PUT_usersPasswordChange_Invalid_ReturnsNotFound() throws Exception {
         Long userId = 1L;
         String current_password = "currentPassword";
         String new_password = "newPassword";
@@ -429,7 +429,7 @@ public class UserControllerTest {
     }
 
     @Test //PUT Mapping "/users/password" - CODE 401 Unauthorized (error)
-    public void PUT_usersPasswordChange_Invalid_ReturnsUnauthorized() throws Exception {
+    void PUT_usersPasswordChange_Invalid_ReturnsUnauthorized() throws Exception {
         String current_password = "currentPassword";
         String new_password = "newPassword";
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
@@ -482,7 +482,7 @@ public class UserControllerTest {
     }
 
     @Test //DELETE Mapping "/users/ID" - CODE 404 NotFound (error)
-    public void DELETE_users_given_ValidToken_InvalidUserID_ReturnsNoContent() throws Exception {
+    void DELETE_users_given_ValidToken_InvalidUserID_ReturnsNoContent() throws Exception {
         Long userId = 1L;
         User user = new User();
         user.setId(String.valueOf(userId));
@@ -511,7 +511,7 @@ public class UserControllerTest {
     }
 
     @Test //DELETE Mapping "/users/ID" - CODE 401 Unauthorized (error)
-    public void DELETE_users_given_InvalidToken_ValidUserID_ReturnsNoContent() throws Exception {
+    void DELETE_users_given_InvalidToken_ValidUserID_ReturnsNoContent() throws Exception {
         Long userId = 1L;
         User user = new User();
         user.setId(String.valueOf(userId));

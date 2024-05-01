@@ -233,47 +233,8 @@ https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/4
 
 ## Week 7 15.05 - 21.05
 ### Lukas (lguebeli):
-- general: Wrote Test for all the new REST Mappings
-- As well as the following issues:
-
-| IssueNr | Issue description | Assigned Test |
-|:--------|-------------------|---------------|
-| #       |                   |               |
-| #       |                   |               |
-| #       |                   |               |
-
-### Simon (SimonHafner):
-
-| IssueNr | Issue description | Assigned Test |
-|:--------|-------------------|---------------|
-| #       |                   |               |
-| #       |                   |               |
-| #       |                   |               |
-
-
-### Yannik (YRiederer):
-
-| IssueNr | Issue description | Assigned Test |
-|:--------|-------------------|---------------|
-| #       |                   |               |
-| #       |                   |               |
-| #       |                   |               |
-
-
-### Raksmey (rocketraksi):
-
-| IssueNr | Issue description | Assigned Test |
-|:--------|-------------------|---------------|
-| #       |                   |               |
-| #       |                   |               |
-| #       |                   |               |
-
-## Week 8 22.05 - 28.05
-### Lukas (lguebeli):
 - JOKER
 
-
-
 ### Simon (SimonHafner):
 
 | IssueNr | Issue description | Assigned Test |
@@ -299,3 +260,4 @@ https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/4
 | #       |                   |               |
 | #       |                   |               |
 | #       |                   |               |
+

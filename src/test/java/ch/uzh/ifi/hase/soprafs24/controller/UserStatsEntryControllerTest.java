@@ -19,7 +19,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @WebMvcTest(UserStatsEntryController.class)
-public class UserStatsEntryControllerTest {
+class UserStatsEntryControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -28,7 +28,7 @@ public class UserStatsEntryControllerTest {
     private UserStatsEntryService userStatsEntryService;
 
     @Test
-    public void testGetAllUserStatsEntries() throws Exception {
+    void testGetAllUserStatsEntries() throws Exception {
         UserStatsEntry userStatsEntry1 = new UserStatsEntry();
         UserStatsEntry userStatsEntry2 = new UserStatsEntry();
         List<UserStatsEntry> userStatsEntries = Arrays.asList(userStatsEntry1, userStatsEntry2);
@@ -40,7 +40,7 @@ public class UserStatsEntryControllerTest {
     }
 
     @Test
-    public void testGetUserStatsEntryById() throws Exception {
+    void testGetUserStatsEntryById() throws Exception {
         UserStatsEntry userStatsEntry = new UserStatsEntry();
         String id = "1";
 
@@ -51,7 +51,7 @@ public class UserStatsEntryControllerTest {
     }
 
     @Test
-    public void testCreateUserStatsEntry() throws Exception {
+    void testCreateUserStatsEntry() throws Exception {
         UserStatsEntry userStatsEntry = new UserStatsEntry(); // Initialize with appropriate values
 
         when(userStatsEntryService.save(any(UserStatsEntry.class))).thenReturn(userStatsEntry);
@@ -63,7 +63,7 @@ public class UserStatsEntryControllerTest {
     }
 
     @Test
-    public void testDeleteUserStatsEntry() throws Exception {
+    void testDeleteUserStatsEntry() throws Exception {
         String id = "1"; // Example ID
 
         doNothing().when(userStatsEntryService).deleteById(id);
