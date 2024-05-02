@@ -113,12 +113,8 @@ public class RoutineScheduler {
     }
 
 
-    @Scheduled(cron = "0 35 1 * * ?", zone = "Europe/Zurich") // Triggered every day at midnight
+    @Scheduled(cron = "0 0 0 * * ?", zone = "Europe/Zurich") // Triggered every day at midnight
     public void checkAndScheduleHabitRoutines() {
-        // Test
-        UserStatsEntry userStatsEntryTest = new UserStatsEntry();
-        userStatsEntryService.createUserStatsEntry("ALBTRAUM", "😭", "☠️");
-        // Test
         System.out.println("Systemzeitzone: " + ZoneId.systemDefault());
         Weekday currentWeekday = WeekdayUtil.getCurrentWeekday();
         LocalDate today = LocalDate.now();
