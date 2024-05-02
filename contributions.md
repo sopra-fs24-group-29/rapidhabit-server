@@ -183,6 +183,11 @@ https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/4
 | IssueNr | Issue description |
 |:--------|-------------------|
 | https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/16       | Design and Implement Update Group Info Component and UI                  |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/43      | create a box to invite new people into a group from the habit dashboard                  |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/44       | hide settings field for non admins                  |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/45        | navigation between login and registration                  |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/46        | fix feed design/layout to the rest of the application                  |
+
 
 
 ### Raksmey (rocketraksi):
@@ -216,11 +221,11 @@ https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/4
 
 ### Yannik (YRiederer):
 
-| IssueNr | Issue description | Assigned Test |
-|:--------|-------------------|---------------|
-| #       |                   |               |
-| #       |                   |               |
-| #       |                   |               |
+| IssueNr | Issue description |
+|:--------|-------------------|
+| #       |                   |
+| #       |                   |
+| #       |                   |
 
 
 ### Raksmey (rocketraksi):
