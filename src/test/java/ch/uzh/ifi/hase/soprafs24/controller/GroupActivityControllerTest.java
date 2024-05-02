@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 
 
 @WebMvcTest(GroupActivityController.class)
-public class GroupActivityControllerTest {
+class GroupActivityControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -49,7 +49,7 @@ public class GroupActivityControllerTest {
     private GroupRepository groupRepository;
 
     @Test
-    public void GET_GroupActivity_validInput_ReturnsOk() throws Exception {
+    void GET_GroupActivity_validInput_ReturnsOk() throws Exception {
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
         String groupId = "group1";
         String userId = "user1";

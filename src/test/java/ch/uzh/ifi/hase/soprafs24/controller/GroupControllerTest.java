@@ -28,7 +28,7 @@ import java.util.*;
 
 
 @WebMvcTest(GroupController.class)
-public class GroupControllerTest {
+class GroupControllerTest {
 
 
     @Autowired
@@ -55,12 +55,15 @@ public class GroupControllerTest {
     @MockBean
     private GroupRepository groupRepository;
 
+    @MockBean
+    private ChatRoomService chatRoomService;
+
 
     /**
      * ------------------------------ START GET TESTS ------------------------------------------------------------
      */
     @Test //GET Mapping "/groups" - CODE 200 OK (Pass)
-    public void GET_Groups_validInput_ValidToken_ReturnsNoContent() throws Exception {
+    void GET_Groups_validInput_ValidToken_ReturnsNoContent() throws Exception {
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
         when(authService.isTokenValid(token)).thenReturn(true);
         Long userId = 1L;
@@ -88,7 +91,7 @@ public class GroupControllerTest {
     }
 
     @Test //GET Mapping "/groups" - CODE 401 Unaurthorized (Error)
-    public void GET_Groups_validInput_InvalidToken_ReturnsNoContent() throws Exception {
+    void GET_Groups_validInput_InvalidToken_ReturnsNoContent() throws Exception {
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
         when(authService.isTokenValid(token)).thenReturn(false);
 
@@ -109,7 +112,7 @@ public class GroupControllerTest {
     }
 
     @Test //GET Mapping "/groups/{groupId}" - CODE 401 Unaurthorized (Invalid Token) (Error)
-    public void GET_Group_validInput_InvalidToken() throws Exception {
+    void GET_Group_validInput_InvalidToken() throws Exception {
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
         when(authService.isTokenValid(token)).thenReturn(false);
         String groupId = "1";
@@ -121,7 +124,7 @@ public class GroupControllerTest {
     }
 
     @Test //GET Mapping "/groups/{groupId}/users" - CODE 200 OK (Pass)
-    public void GET_GroupUsers_validInput_ValidToken_ReturnsNoContent() throws Exception {
+    void GET_GroupUsers_validInput_ValidToken_ReturnsNoContent() throws Exception {
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
         when(authService.isTokenValid(token)).thenReturn(true);
         Long userId = 1L;
@@ -148,7 +151,7 @@ public class GroupControllerTest {
     }
 
     @Test //GET Mapping "/groups/{groupId}" - CODE 200 OK (Pass)
-    public void GET_Group_validInput_ValidToken_ReturnsNoContent() throws Exception {
+    void GET_Group_validInput_ValidToken_ReturnsNoContent() throws Exception {
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
         when(authService.isTokenValid(token)).thenReturn(true);
         Long userAdminId = 1L;
@@ -184,7 +187,7 @@ public class GroupControllerTest {
     }
 
     @Test //GET Mapping "/groups/{groupId}/ranking" - CODE 200 Ok (pass)
-    public void GET_GroupRanking_validInput_ReturnsOk() throws Exception {
+    void GET_GroupRanking_validInput_ReturnsOk() throws Exception {
         String token = "validToken123";
         String groupId = "group1";
         String userId = "user1";
@@ -210,7 +213,7 @@ public class GroupControllerTest {
     }
 
     @Test //GET Mapping "/groups/{groupId}/ranking" - CODE 401 Unaurthorized (Invalid Token) (Error)
-    public void GET_GroupRanking_InvalidInput() throws Exception {
+    void GET_GroupRanking_InvalidInput() throws Exception {
         String token = "validToken123";
         String groupId = "group1";
 
@@ -227,7 +230,7 @@ public class GroupControllerTest {
      */
 
     @Test //POST Mapping "/groups" - CODE 201 CREATED (Pass)
-    public void POST_createGroups_validInput_ReturnsNoContent() throws Exception {
+    void POST_createGroups_validInput_ReturnsNoContent() throws Exception {
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
         Long userId = 1L;
         when(authService.isTokenValid(token)).thenReturn(true);
@@ -256,7 +259,7 @@ public class GroupControllerTest {
     }
 
     @Test //POST Mapping "/groups/join" - CODE 201 CREATED (Pass)
-    public void POST_AddNewUserToGroup_validInput_ReturnsCreated() throws Exception {
+    void POST_AddNewUserToGroup_validInput_ReturnsCreated() throws Exception {
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
         Long userId = 1L;
         String groupId = "1";
@@ -266,7 +269,7 @@ public class GroupControllerTest {
         GroupJoinPostDTO groupJoinPostDTO = new GroupJoinPostDTO();
         groupJoinPostDTO.setAccessKey("accessKey123");
 
-        doNothing().when(groupService).addUserByAccessCode(eq(String.valueOf(userId)), eq(groupJoinPostDTO.getAccessKey()));
+        doNothing().when(groupService).addUserByAccessCode(String.valueOf(userId), groupJoinPostDTO.getAccessKey());
 
         Habit mockHabit = new Habit();
         mockHabit.setRepeatStrategy(new DailyRepeat());
@@ -285,7 +288,7 @@ public class GroupControllerTest {
     }
 
     @Test //POST Mapping "/groups/join" - CODE 401 Unauthorized (Error)
-    public void POST_AddNewUserToGroup_InvalidInput_ReturnsCreated() throws Exception {
+    void POST_AddNewUserToGroup_InvalidInput_ReturnsCreated() throws Exception {
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
         Long userId = 1L;
         String groupId = "1";
@@ -294,7 +297,7 @@ public class GroupControllerTest {
         GroupJoinPostDTO groupJoinPostDTO = new GroupJoinPostDTO();
         groupJoinPostDTO.setAccessKey("accessKey123");
 
-        doNothing().when(groupService).addUserByAccessCode(eq(String.valueOf(userId)), eq(groupJoinPostDTO.getAccessKey()));
+        doNothing().when(groupService).addUserByAccessCode(String.valueOf(userId), groupJoinPostDTO.getAccessKey());
 
         mockMvc.perform(post("/groups/join")
                         .header("Authorization", token)
@@ -308,7 +311,7 @@ public class GroupControllerTest {
      */
 
     @Test //PUT Mapping "/groups/{groupId}" - CODE 200 OK (Pass)
-    public void PUT_updateGroup_validInput_ReturnsOk() throws Exception {
+    void PUT_updateGroup_validInput_ReturnsOk() throws Exception {
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
         Long userId = 1L;
         String groupId = "1";
@@ -324,7 +327,7 @@ public class GroupControllerTest {
         updatedGroup.setName(groupInput.getName());
         updatedGroup.setDescription(groupInput.getDescription());
 
-        when(groupService.updateGroup(eq(groupInput), eq(groupId))).thenReturn(updatedGroup);
+        when(groupService.updateGroup(groupInput, groupId)).thenReturn(updatedGroup);
 
         mockMvc.perform(put("/groups/" + groupId)
                         .header("Authorization", token)
@@ -335,7 +338,7 @@ public class GroupControllerTest {
     }
 
     @Test //PUT Mapping "/groups/{groupId}" - CODE 404 NotFound (Pass)
-    public void PUT_updateGroup_InvalidInput_WrongGroupID() throws Exception {
+    void PUT_updateGroup_InvalidInput_WrongGroupID() throws Exception {
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
         String groupId = "1";
         when(authService.isTokenValid(token)).thenReturn(true);
@@ -354,7 +357,7 @@ public class GroupControllerTest {
     }
 
     @Test //PUT Mapping "/groups/{groupId}" - CODE 401 Unauthorized (Error)
-    public void PUT_updateGroup_InvalidInput_InvalidToken() throws Exception {
+    void PUT_updateGroup_InvalidInput_InvalidToken() throws Exception {
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
         String groupId = "1";
         when(authService.isTokenValid(token)).thenReturn(false);
@@ -368,7 +371,7 @@ public class GroupControllerTest {
         updatedGroup.setName(groupInput.getName());
         updatedGroup.setDescription(groupInput.getDescription());
 
-        when(groupService.updateGroup(eq(groupInput), eq(groupId))).thenReturn(updatedGroup);
+        when(groupService.updateGroup(groupInput, groupId)).thenReturn(updatedGroup);
 
         mockMvc.perform(put("/groups/" + groupId)
                         .header("Authorization", token)
@@ -381,7 +384,7 @@ public class GroupControllerTest {
      * ------------------------------ END PUT TESTS ------------------------------ START DELETE TESTS ------------------------------
      */
     @Test // DELETE Mapping "/groups/{groupId}" - CODE 204 NoContent (Pass)
-    public void DELETE_deleteGroup_ValidInput_Successful() throws Exception {
+    void DELETE_deleteGroup_ValidInput_Successful() throws Exception {
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
         String groupId = "1";
         when(authService.isTokenValid(token)).thenReturn(true);
@@ -396,7 +399,7 @@ public class GroupControllerTest {
     }
 
     @Test // DELETE Mapping "/groups/{groupId}" - CODE 404 NotFound (Error)
-    public void DELETE_deleteGroup_GroupNotFound() throws Exception {
+    void DELETE_deleteGroup_GroupNotFound() throws Exception {
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
         String groupId = "1";
         when(authService.isTokenValid(token)).thenReturn(true);
@@ -412,7 +415,7 @@ public class GroupControllerTest {
     }
 
     @Test // DELETE Mapping "/groups/{groupId}" - CODE 401 Unauthorized (Error)
-    public void DELETE_deleteGroup_UserNotAdmin() throws Exception {
+    void DELETE_deleteGroup_UserNotAdmin() throws Exception {
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
         String groupId = "1";
         when(authService.isTokenValid(token)).thenReturn(true);
@@ -425,7 +428,7 @@ public class GroupControllerTest {
     }
 
     @Test // DELETE Mapping "/groups/{groupId}/users" - CODE 204 NoContent (Pass)
-    public void DELETE_deleteUserFromGroup_ValidInput_Successful() throws Exception {
+    void DELETE_deleteUserFromGroup_ValidInput_Successful() throws Exception {
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
         String groupId = "1";
         String userToRemoveID = "77";
@@ -443,7 +446,7 @@ public class GroupControllerTest {
     }
 
     @Test // DELETE Mapping "/groups/{groupId}/users" - CODE 404 NotFound (Error)
-    public void DELETE_deleteUserFromGroup_UserToDeleteNotFound() throws Exception {
+    void DELETE_deleteUserFromGroup_UserToDeleteNotFound() throws Exception {
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
         String groupId = "1";
         String userToRemoveID = "77";
@@ -461,7 +464,7 @@ public class GroupControllerTest {
     }
 
     @Test // DELETE Mapping "/groups/{groupId}/users" - CODE 401 Unauthorized (Error)
-    public void DELETE_deleteUserFromGroup_UserNotAdmin() throws Exception {
+    void DELETE_deleteUserFromGroup_UserNotAdmin() throws Exception {
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
         String groupId = "1";
         String userToRemoveID = "77";

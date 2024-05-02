@@ -28,7 +28,7 @@ import java.util.*;
 
 
 @WebMvcTest(HabitController.class)
-public class HabitControllerTest {
+class HabitControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -61,7 +61,7 @@ public class HabitControllerTest {
      * ------------------------------ START GET TESTS ------------------------------------------------------------
      */
     @Test //GET Mapping "/groups/{groupId}/habits" - CODE 200 Ok (pass)
-    public void GET_GroupHabits_validInput_ReturnsOk() throws Exception {
+    void GET_GroupHabits_validInput_ReturnsOk() throws Exception {
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
         String groupId = "group1";
         String userId = "user1";
@@ -106,7 +106,7 @@ public class HabitControllerTest {
     }
 
     @Test //GET Mapping "/groups/{groupId}/habits/{habitId}" - CODE 200 Ok (pass)
-    public void GET_GroupHabitData_validInput_ReturnsOk() throws Exception {
+    void GET_GroupHabitData_validInput_ReturnsOk() throws Exception {
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
         String groupId = "group1";
         String habitId = "habit1";
@@ -147,7 +147,7 @@ public class HabitControllerTest {
     }
 
     @Test //GET Mapping "/groups/{groupId}/habits/{habitId}" - CODE 404 Not Found (Error)
-    public void GET_GroupHabitData_InvalidInput_NotFound() throws Exception {
+    void GET_GroupHabitData_InvalidInput_NotFound() throws Exception {
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
         String groupId = "group1";
         String habitId = "habit1";
@@ -169,7 +169,7 @@ public class HabitControllerTest {
                 .andExpect(status().isNotFound());
     }
     @Test //GET Mapping "/groups/{groupId}/habits/{habitId}/edit" - CODE 200 Ok (pass)
-    public void GET_GroupHabitData_ValidInput_Success() throws Exception {
+    void GET_GroupHabitData_ValidInput_Success() throws Exception {
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
         when(authService.isTokenValid(token)).thenReturn(true);
         Long userId = 1L;
@@ -196,7 +196,7 @@ public class HabitControllerTest {
      * ------------------------------ END GET TESTS ------------------------------ START POST TESTS ------------------------------
      */
     @Test //POST Mapping "/groups/{groupId}/habits" - CODE 201 CREATED (Pass)
-    public void POST_Create_GroupHabits_daily_validInput_ReturnsCreated() throws Exception {
+    void POST_Create_GroupHabits_daily_validInput_ReturnsCreated() throws Exception {
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
         String groupId = "group1";
         String userId = "user1";
@@ -230,7 +230,7 @@ public class HabitControllerTest {
     }
 
     @Test
-    public void POST_Create_GroupHabits_WeeklyRepeat_ValidInput_ReturnsCreated() throws Exception {
+    void POST_Create_GroupHabits_WeeklyRepeat_ValidInput_ReturnsCreated() throws Exception {
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
         String groupId = "group1";
         String userId = "user1";
@@ -283,7 +283,7 @@ public class HabitControllerTest {
 
 
     @Test //POST Mapping "/groups/{groupId}/habits" - CODE 401 Unauthorized (Error)
-    public void POST_Create_GroupHabits_InvalidInput() throws Exception {
+    void POST_Create_GroupHabits_InvalidInput() throws Exception {
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
         String groupId = "group1";
         String userId = "user1";
@@ -311,7 +311,7 @@ public class HabitControllerTest {
      */
 
     @Test //PUT Mapping "/groups/{groupId}/habits/{habitId}/check" - CODE 200 OK (Success)
-    public void PUT_Check_GroupHabits_ValidInput_ReturnsOk() throws Exception {
+    void PUT_Check_GroupHabits_ValidInput_ReturnsOk() throws Exception {
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
         String groupId = "group1";
         String userId = "user1";
@@ -363,7 +363,7 @@ public class HabitControllerTest {
     }
 
     @Test
-    public void PUT_Update_GroupHabits_ValidInput_ReturnsCreated() throws Exception {
+    void PUT_Update_GroupHabits_ValidInput_ReturnsCreated() throws Exception {
         String token = "validToken";
         String groupId = "group1";
         String habitId = "habit1";
@@ -389,7 +389,7 @@ public class HabitControllerTest {
     }
 
     @Test
-    public void PUT_Update_GroupHabits_InvalidWeekdayName_ReturnsBadRequest() throws Exception {
+    void PUT_Update_GroupHabits_InvalidWeekdayName_ReturnsBadRequest() throws Exception {
         String token = "validToken";
         String groupId = "group1";
         String habitId = "habit1";
@@ -408,7 +408,7 @@ public class HabitControllerTest {
     }
 
     @Test
-    public void PUT_Update_GroupHabits_UserNotAdmin_ReturnsUnauthorized() throws Exception {
+    void PUT_Update_GroupHabits_UserNotAdmin_ReturnsUnauthorized() throws Exception {
         String token = "validToken";
         String groupId = "group1";
         String habitId = "habit1";
@@ -427,7 +427,7 @@ public class HabitControllerTest {
     }
 
     @Test
-    public void PUT_Update_GroupHabits_InvalidToken_ReturnsUnauthorized() throws Exception {
+    void PUT_Update_GroupHabits_InvalidToken_ReturnsUnauthorized() throws Exception {
         String token = "invalidToken";
         String groupId = "group1";
         String habitId = "habit1";
@@ -450,7 +450,7 @@ public class HabitControllerTest {
      */
 
     @Test //DELETE Mapping "/groups/{groupId}/habits/{habitId}" - CODE 204 No Content (Success)
-    public void DELETE_GroupHabit_ValidInput_Success() throws Exception {
+    void DELETE_GroupHabit_ValidInput_Success() throws Exception {
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
         when(authService.isTokenValid(token)).thenReturn(true);
         Long userId = 1L;
