@@ -36,7 +36,7 @@ public class ChatRoomController {
                     .body("User is not part of the group.");
         }
 
-        int n = 20; // number of messages retrieved
+        int n = 20; // number of messages to be retrieved
         List<ChatMessage> chatMessages = chatRoomService.getChatMessages(groupId, n);
         return ResponseEntity.ok(chatMessages);
     }

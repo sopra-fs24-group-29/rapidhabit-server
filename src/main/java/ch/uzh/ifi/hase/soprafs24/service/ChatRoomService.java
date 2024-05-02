@@ -56,7 +56,7 @@ public class ChatRoomService {
     }
 
     public List<ChatMessage> getChatMessages(String groupId, int n) {
-        System.out.println("Getting chat messages ...");
+        // System.out.println("Getting chat messages ...");
         return chatRoomRepository.findByGroupId(groupId)
                 .map(chatRoom -> {
                     List<ChatMessage> chatMessages = chatRoom.getMessages();
