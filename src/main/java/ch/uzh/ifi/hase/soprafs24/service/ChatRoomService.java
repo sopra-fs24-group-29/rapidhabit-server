@@ -67,6 +67,16 @@ public class ChatRoomService {
                 })
                 .orElse(Collections.emptyList()); // Returns empty collection if no chat messages found
     }
+    public void saveChatMessageToDatabase(String groupId, ChatMessage chatMessage){
+        ChatRoom chatRoom = chatRoomRepository.findByGroupId(groupId).orElseThrow(()->new RuntimeException("Chatroom not found."));
+        chatRoom.addMessage(chatMessage);
+        chatRoomRepository.save(chatRoom);
+    }
+
+    public void deleteChatRoom(String groupId){
+        ChatRoom chatRoom = chatRoomRepository.findByGroupId(groupId).orElseThrow(()->new RuntimeException("Chatroom not found."));
+        chatRoomRepository.delete(chatRoom);
+    }
 
 
     public void sendMessage(String chatRoomId, String userId, String message) {

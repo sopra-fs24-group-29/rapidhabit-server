@@ -1,7 +1,6 @@
 package ch.uzh.ifi.hase.soprafs24.controller;
 
 import ch.uzh.ifi.hase.soprafs24.entity.ChatMessage;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupGetDTO;
 import ch.uzh.ifi.hase.soprafs24.service.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,24 +24,21 @@ public class ChatRoomController {
     }
 
     @GetMapping("/groups/{groupId}/chat")
-    @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
-    public ResponseEntity<?> getChatMessages(@RequestHeader("Authorization") String authToken, @PathVariable String groupId) { // retrieves the last n = 20 chat messages
-        boolean isValid = authService.isTokenValid(authToken);
-        if(isValid){
-            String userId = authService.getId(authToken);
-            if(groupService.getGroupById(groupId).getUserIdList().contains(userId)){ // check if user is part of the group
-                // fetch userId of the person who did the request
-                int n = 20; // number of messages retrieved
-                List<ChatMessage> chatMessages = chatRoomService.getChatMessages(groupId, n);
-                return ResponseEntity.ok(chatMessages);
-            }
-            else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-            }
+    public ResponseEntity<?> getChatMessages(@RequestHeader("Authorization") String authToken, @PathVariable String groupId) {
+        if (!authService.isTokenValid(authToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Invalid or expired authorization token.");
         }
-        else{
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+        String userId = authService.getId(authToken);
+        if (!groupService.getGroupById(groupId).getUserIdList().contains(userId)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("User is not part of the group.");
         }
+
+        int n = 20; // number of messages retrieved
+        List<ChatMessage> chatMessages = chatRoomService.getChatMessages(groupId, n);
+        return ResponseEntity.ok(chatMessages);
     }
+
 }

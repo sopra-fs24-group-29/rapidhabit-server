@@ -261,6 +261,7 @@ public class GroupController {
             groupService.deleteGroup(groupId);
             userScoreService.deleteByGroupId(groupId);
             userStatsEntryService.deleteByGroupId(groupId);
+            chatRoomService.deleteChatRoom(groupId);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 
         }
