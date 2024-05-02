@@ -302,6 +302,17 @@ class UserStatsEntryServiceTest {
 
         verify(userStatsEntryRepository, times(1)).deleteByGroupId(groupId);
     }
+    @Test
+    void countUniqueHabitsByGroupIdAndDate_success() {
+        String groupId = "testGroup";
+        LocalDate date = LocalDate.now(); // Using current date for simplicity
+        int expectedCount = 5; // Example expected count
 
+        when(userStatsEntryRepository.countDistinctHabitIdsByDueDateAndGroupId(date, groupId)).thenReturn(expectedCount);
+        Integer actualCount = userStatsEntryService.countUniqueHabitsByGroupIdAndDate(groupId, date);
+        assertEquals(expectedCount, actualCount, "The count of unique habits should match the expected value.");
+
+        verify(userStatsEntryRepository, times(1)).countDistinctHabitIdsByDueDateAndGroupId(date, groupId);
+    }
 
 }

@@ -1,11 +1,15 @@
 package ch.uzh.ifi.hase.soprafs24.service;
 
+import ch.uzh.ifi.hase.soprafs24.constant.Weekday;
 import ch.uzh.ifi.hase.soprafs24.entity.Habit;
+import ch.uzh.ifi.hase.soprafs24.entity.RepeatStrategy;
 import ch.uzh.ifi.hase.soprafs24.repository.HabitRepository;
+import ch.uzh.ifi.hase.soprafs24.util.WeekdayUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.*;
@@ -123,4 +127,31 @@ class HabitServiceTest {
 
         assertEquals(5, result);
     }
+    @Test
+    void isCurrentWeekdayActive_success() {
+        // Arrange
+        RepeatStrategy mockRepeatStrategy = Mockito.mock(RepeatStrategy.class);
+
+        // Assuming WeekdayUtil.getCurrentWeekday() returns MONDAY for this test
+        Weekday currentWeekday = WeekdayUtil.getCurrentWeekday();
+
+        // Stub repeatsAt for the current weekday
+        when(mockRepeatStrategy.repeatsAt(currentWeekday)).thenReturn(true); // Adjust the return value as needed
+
+        // Create a Habit instance with the mocked RepeatStrategy
+        Habit testHabit = new Habit();
+        testHabit.setRepeatStrategy(mockRepeatStrategy);
+
+        // Act
+        Boolean isActive = habitService.isCurrentWeekdayActive(testHabit);
+
+        // Assert
+        assertTrue(isActive, "The habit should be active on the current weekday.");
+
+        // Verify interactions
+        Mockito.verify(mockRepeatStrategy, Mockito.times(1)).repeatsAt(currentWeekday);
+    }
+
+
+
 }
