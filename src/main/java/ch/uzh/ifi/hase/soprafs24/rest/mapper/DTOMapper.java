@@ -50,7 +50,6 @@ public interface DTOMapper {
     @Mapping(source = "status", target = "status")
     UserGetDTO convertEntityToUserGetDTO(User user);
 
-    @Mapping(source = "date", target = "date")
     @Mapping(source = "message", target = "message")
     ChatMessage convertChatEntryPutDTOToEntity(ChatEntryPutDTO chatEntryPutDTO);
 
