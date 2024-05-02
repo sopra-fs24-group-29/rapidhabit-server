@@ -1,6 +1,7 @@
 package ch.uzh.ifi.hase.soprafs24.rest.mapper;
 
 import ch.uzh.ifi.hase.soprafs24.entity.*;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.chat.ChatEntryPutDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupGetDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.habit.DailyRepeatDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.habit.RepeatStrategyDTO;
@@ -49,6 +50,8 @@ public interface DTOMapper {
     @Mapping(source = "status", target = "status")
     UserGetDTO convertEntityToUserGetDTO(User user);
 
-    GroupGetDTO convertEntityToGroupGetDTO(Group group);
+    @Mapping(source = "date", target = "date")
+    @Mapping(source = "message", target = "message")
+    ChatMessage convertChatEntryPutDTOToEntity(ChatEntryPutDTO chatEntryPutDTO);
 
 }

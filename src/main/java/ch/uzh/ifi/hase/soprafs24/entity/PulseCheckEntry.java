@@ -19,6 +19,7 @@ public class PulseCheckEntry {
 
     private String content;
     private double value;
+    @Indexed
     private LocalDateTime creationTimestamp;
     private LocalDateTime submissionTimestamp;
     private PulseCheckStatus status;

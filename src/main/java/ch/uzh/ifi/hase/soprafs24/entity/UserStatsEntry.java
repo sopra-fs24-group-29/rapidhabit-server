@@ -12,11 +12,12 @@ public class UserStatsEntry {
     @Id
     private String id;
 
-    @Indexed(unique = true)
+    @Indexed
     private String groupId;
     private String userId;
     private String habitId;
     private LocalDate dueDate;
+    @Indexed
     private UserStatsStatus status;
 
     // Constructor

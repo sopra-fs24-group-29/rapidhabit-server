@@ -48,7 +48,7 @@ public class WebSocketChatController {
         if (!group.getUserIdList().contains(userId)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not part of this group");
         }
-        chatRoomService.sendMessage(groupId, chatMessage.getSenderId(), chatMessage.getContent());
+        chatRoomService.sendMessage(groupId, chatMessage.getUserId(), chatMessage.getMessage());
         return chatMessage;
     }
 }

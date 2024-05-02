@@ -42,6 +42,7 @@ public class GroupService {
 
     private final UserStatsEntryService userStatsEntryService;
 
+
     @Autowired
     public GroupService(GroupRepository groupRepository, BCryptPasswordEncoder encoder, UserScoreRepository userScoreRepository, UserService userService, UserStatsEntryService userStatsEntryService) {
         this.groupRepository = groupRepository;

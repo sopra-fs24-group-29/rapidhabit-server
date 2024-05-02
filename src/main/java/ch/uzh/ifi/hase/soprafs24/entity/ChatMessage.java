@@ -10,28 +10,36 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class ChatMessage {
-    private String senderId;
-    private String content;
-    private LocalDateTime timestamp;
+    private String userId;
+    private String userInitials;
+    private LocalDateTime date;
+    private String message;
 
-    public String getSenderId() {
-        return senderId;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setSenderId(String senderId) {
-        this.senderId = senderId;
+    public void setUserId(String senderId) {
+        this.userId = userId;
+    }
+    public String getUserInitials() {
+        return userInitials;
     }
 
-    public String getContent() {return content;}
-
-    public void setContent(String content) {
-        this.content = content;
+    public void setUserInitials(String userInitials) {
+        this.userInitials = userInitials;
     }
 
-    public LocalDateTime getTimestamp() {
-        return this.timestamp;
+    public String getMessage() {return message;}
+
+    public void setMessage(String message) {
+        this.message = message;
     }
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
+
+    public LocalDateTime getDate() {
+        return this.date;
+    }
+    public void setDate(LocalDateTime date) {
+        this.date = date;
     }
 }

@@ -2,6 +2,7 @@ package ch.uzh.ifi.hase.soprafs24.entity;
 
 import ch.uzh.ifi.hase.soprafs24.constant.FeedType;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
@@ -17,11 +18,13 @@ public class FeedMessage implements Serializable {
     @Id
     private String id;
     private String message;
+    @Indexed
     private String groupId;
     private String groupName;
     private FeedType type;
 
     private HashMap<String, Double> userSubmits;
+    @Indexed
     private LocalDateTime dateTime;
 
     public FeedMessage(String groupId, String groupName, String message, FeedType type, LocalDateTime dateTime) {

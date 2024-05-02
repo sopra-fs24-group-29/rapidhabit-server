@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
@@ -46,18 +47,33 @@ public class ChatRoomService {
         this.userService = userService;
     }
 
+
     public ChatRoom createChatRoom(String groupId) {
         ChatRoom chatRoom = new ChatRoom();
         chatRoom.setGroupId(groupId);
-        chatRoom.setMessages(new ArrayList<>());
+        chatRoom.setMessages(new ArrayList<ChatMessage>());
         return chatRoomRepository.save(chatRoom);
     }
 
-    public void sendMessage(String chatRoomId, String senderId, String content) {
+    public List<ChatMessage> getChatMessages(String groupId, int n) {
+        System.out.println("Getting chat messages ...");
+        return chatRoomRepository.findByGroupId(groupId)
+                .map(chatRoom -> {
+                    List<ChatMessage> chatMessages = chatRoom.getMessages();
+                    if (chatMessages.size() < n) {
+                        return chatMessages;
+                    }
+                    return chatMessages.subList(Math.max(chatMessages.size() - n, 0), chatMessages.size());
+                })
+                .orElse(Collections.emptyList()); // Returns empty collection if no chat messages found
+    }
+
+
+    public void sendMessage(String chatRoomId, String userId, String message) {
         ChatMessage chatMessage = new ChatMessage();
-        chatMessage.setSenderId(senderId);
-        chatMessage.setContent(content);
-        chatMessage.setTimestamp(LocalDateTime.now());
+        chatMessage.setUserId(userId);
+        chatMessage.setMessage(message);
+        chatMessage.setDate(LocalDateTime.now());
 
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Chat room not found"));
         chatRoom.getMessages().add(chatMessage);

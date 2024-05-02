@@ -38,13 +38,16 @@ public class GroupController {
 
     private final UserService userService;
 
-    GroupController(GroupService groupService, AuthService authService, UserService userService, UserStatsEntryService userStatsEntryService, HabitService habitService, UserScoreService userScoreService) {
+    private final ChatRoomService chatRoomService;
+
+    GroupController(GroupService groupService, AuthService authService, UserService userService, UserStatsEntryService userStatsEntryService, HabitService habitService, UserScoreService userScoreService, ChatRoomService chatRoomService) {
         this.groupService = groupService;
         this.authService = authService;
         this.userService = userService;
         this.userStatsEntryService = userStatsEntryService;
         this.habitService = habitService;
         this.userScoreService = userScoreService;
+        this.chatRoomService = chatRoomService;
     }
 
     @GetMapping("/groups")
@@ -181,6 +184,8 @@ public class GroupController {
             System.out.println("Create group ...");
             // create user
             Group createdGroup = groupService.createGroup(groupInput, userId);
+            // ... Create chatroom for group
+            chatRoomService.createChatRoom(createdGroup.getId());
             System.out.println("Convert internal representation back to API ...");
             return ResponseEntity.status(HttpStatus.CREATED).body(createdGroup);
     }

@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.messaging.Message;
 
 import javax.persistence.Id;
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -41,6 +42,10 @@ public class ChatRoom {
 
     public void setMessages(List<ChatMessage> messages) {
         this.messages = messages;
+    }
+
+    public void addMessage(ChatMessage chatMessage){
+        messages.add(chatMessage);
     }
 
 }
