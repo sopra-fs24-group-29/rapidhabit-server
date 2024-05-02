@@ -5,7 +5,6 @@ import ch.uzh.ifi.hase.soprafs24.rest.dto.group.*;
 import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs24.service.*;
 import ch.uzh.ifi.hase.soprafs24.util.WeekdayUtil;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -167,7 +166,6 @@ public class GroupController {
         return ResponseEntity.ok(groupIdList);
     }
 
-
     @PostMapping("/groups") // defines a method to for handling post methods for creating new groups
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
@@ -297,5 +295,4 @@ public class GroupController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(msg);
         }
     }
-
 }

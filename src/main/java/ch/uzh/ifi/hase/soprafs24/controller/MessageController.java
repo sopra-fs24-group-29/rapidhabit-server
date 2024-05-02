@@ -13,6 +13,8 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.time.LocalDateTime;
+
 @Controller
 public class MessageController {
 
@@ -50,7 +52,7 @@ public class MessageController {
                     // DTO Mapping
                     ChatMessage chatMessage = new ChatMessage();
                     chatMessage.setMessage(chatEntryPutDTO.getMessage());
-                    chatMessage.setDate(chatEntryPutDTO.getDate());
+                    chatMessage.setDate(LocalDateTime.now());
 
                     chatMessage.setUserId(userId);
                     chatMessage.setUserInitials(userService.getInitials(userId));
