@@ -113,7 +113,7 @@ public class RoutineScheduler {
     }
 
 
-    @Scheduled(cron = "0 20 1 * * ?", zone = "Europe/Zurich") // Triggered every day at midnight
+    @Scheduled(cron = "0 35 1 * * ?", zone = "Europe/Zurich") // Triggered every day at midnight
     public void checkAndScheduleHabitRoutines() {
         // Test
         UserStatsEntry userStatsEntryTest = new UserStatsEntry();
