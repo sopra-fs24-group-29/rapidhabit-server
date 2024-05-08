@@ -287,7 +287,7 @@ public class GroupController {
             Group delete_Group = groupService.removeUserFromGroup(groupId, userToRemoveID); // remove the user from the userIdList within the group
             userScoreService.deleteByUserIdAndGroupId(userToRemoveID, groupId); // Remove all entries from UserScores associated to the user within the group
             userScoreService.updateRanksInGroup(groupId); // Update rank of remaining group members
-            userStatsEntryService.deleteByUserIdAndDueDate(userId, LocalDate.now()); // Today's UserStats Entries from this user will be removed, historical data remains.
+            userStatsEntryService.deleteByUserIdAndDueDate(userToRemoveID, LocalDate.now()); // Today's UserStats Entries from this user will be removed, historical data remains.
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
         else {
