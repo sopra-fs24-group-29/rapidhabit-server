@@ -223,9 +223,9 @@ https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/4
 
 | IssueNr | Issue description |
 |:--------|-------------------|
-| #       |                   |
-| #       |                   |
-| #       |                   |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/47       |  feedback fix: display of group and habit description                 |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/48       |  feedback fix: button designs                 |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/49       |  feedback fix: press enter triggers functionalities                 |
 
 
 ### Raksmey (rocketraksi):
