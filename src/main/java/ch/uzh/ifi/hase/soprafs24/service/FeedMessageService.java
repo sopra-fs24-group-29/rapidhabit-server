@@ -5,8 +5,6 @@ import ch.uzh.ifi.hase.soprafs24.constant.FeedType;
 import ch.uzh.ifi.hase.soprafs24.repository.CustomFeedMessageRepositoryImpl;
 import ch.uzh.ifi.hase.soprafs24.repository.FeedMessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -25,8 +23,8 @@ public class FeedMessageService {
         this.customFeedMessageRepository = customFeedMessageRepository;
     }
 
-    public FeedMessage createFeedMessage(String groupId, String groupName, String message, FeedType type, LocalDateTime dateTime) {
-        FeedMessage newFeedMessage = new FeedMessage(groupId, groupName, message, type, dateTime);
+    public FeedMessage createFeedMessage(String formId, String groupId, String groupName, String message, FeedType type, LocalDateTime dateTime) {
+        FeedMessage newFeedMessage = new FeedMessage(formId, groupId, groupName, message, type, dateTime);
         return feedMessageRepository.save(newFeedMessage);
     }
     public FeedMessage createFeedMessage(FeedMessage feedMessage) {
@@ -43,6 +41,10 @@ public class FeedMessageService {
     }
     public FeedMessage getById(String feedId){
         return feedMessageRepository.findById(feedId).orElseThrow(()->new RuntimeException("No entry with id " +feedId +" was found."));
+    }
+    public FeedMessage getLatestPulseCheckMessage(String groupId, String formId) {
+        return feedMessageRepository.findLatestPulseCheckByGroupAndForm(groupId, formId)
+                .orElseThrow(() -> new RuntimeException("No pulse check messages found for group " + groupId));
     }
     public FeedMessage getLatestPulseCheckMessage(String groupId) {
         return feedMessageRepository.findLatestPulseCheckByGroupId(groupId)

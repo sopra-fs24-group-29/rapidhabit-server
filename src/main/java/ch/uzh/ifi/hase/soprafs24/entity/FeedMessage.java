@@ -20,6 +20,8 @@ public class FeedMessage implements Serializable {
     private String message;
     @Indexed
     private String groupId;
+
+    @Indexed String formId;
     private String groupName;
     private FeedType type;
 
@@ -27,7 +29,8 @@ public class FeedMessage implements Serializable {
     @Indexed
     private LocalDateTime dateTime;
 
-    public FeedMessage(String groupId, String groupName, String message, FeedType type, LocalDateTime dateTime) {
+    public FeedMessage(String formId, String groupId, String groupName, String message, FeedType type, LocalDateTime dateTime) {
+        this.formId = formId;
         this.groupId = groupId;
         this.groupName = groupName;
         this.message = message;
@@ -70,6 +73,14 @@ public class FeedMessage implements Serializable {
 
     public void setGroupId(String groupId) {
         this.groupId = groupId;
+    }
+
+    public String getFormId() {
+        return formId;
+    }
+
+    public void setFormId(String formId) {
+        this.formId = formId;
     }
 
     public String getGroupName() {

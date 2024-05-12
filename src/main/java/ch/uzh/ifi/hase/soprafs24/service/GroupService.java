@@ -184,6 +184,12 @@ public class GroupService {
         return userNamesMap;
     }
 
+    public List<String> getUserIdsByGroupId(String groupId) {
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found with ID: " + groupId));
+        return group.getUserIdList();
+    }
+
     public List<String> getGroupIdsByUserId(String userId){
         List<Group> groupList = groupRepository.findByUserIdsContains(userId);
         List<String> groupIds = new ArrayList<>();

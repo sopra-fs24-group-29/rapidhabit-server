@@ -12,6 +12,8 @@ import ch.uzh.ifi.hase.soprafs24.util.FormIdGenerator;
 import ch.uzh.ifi.hase.soprafs24.util.WeekdayUtil;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -34,9 +36,11 @@ public class RoutineScheduler {
 
     private final FeedMessageService feedMessageService;
 
+    private final OpenAIService openAIService;
+
     int count = 1;
 
-    RoutineScheduler(GroupService groupService, HabitService habitService, UserStatsEntryService userStatsEntryService, UserService userService, UserScoreService userScoreService, PulseCheckEntryService pulseCheckEntryService, MessageController messageController, FeedMessageService feedMessageService){
+    RoutineScheduler(GroupService groupService, HabitService habitService, UserStatsEntryService userStatsEntryService, UserService userService, UserScoreService userScoreService, PulseCheckEntryService pulseCheckEntryService, MessageController messageController, FeedMessageService feedMessageService, OpenAIService openAIService){
         this.groupService = groupService;
         this.habitService = habitService;
         this.userStatsEntryService = userStatsEntryService;
@@ -44,26 +48,39 @@ public class RoutineScheduler {
         this.pulseCheckEntryService = pulseCheckEntryService;
         this.messageController = messageController;
         this.feedMessageService = feedMessageService;
+        this.openAIService = openAIService;
     }
 
 
-    @Scheduled(cron = "0 25 0 * * ?") // Opening Pulse Check entries at 10:15 AM for each group
+    @Scheduled(cron = "0 29 23 * * ?") // Opening Pulse Check entries at 10:15 AM for each group
     public void openMorningPulseCheck() {
         LocalDateTime creationTimestamp = LocalDateTime.now();
-        LocalDateTime submissionTimestamp = LocalDateTime.now().plusMinutes(30);
-        // Generate content for pulse check:
-        String content = "Feed Content of Morning Pulse Check";
+        LocalDateTime submissionTimestamp = LocalDateTime.now().plusMinutes(1);// submission is at 12:00
         List<Group> groupsList = groupService.getGroups();
         for(Group group : groupsList){
             String groupId = group.getId();
             String formId = FormIdGenerator.generateFormId(); // each group has the same formId
+
+            // Generate group content for pulse check:
+            String content = "";
+            boolean success = false;
+            while (!success) {
+                try {
+                    content = openAIService.generatePulseCheckContentChatCompletion(40, 1);
+                    System.out.println("Pulse Check Content: " + content);
+                    success = true; // Setze den Erfolgsstatus auf true, wenn das Generieren erfolgreich ist
+                } catch (IOException e) {
+                    System.err.println("Fehler beim Generieren des Pulse Check Inhalts: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+
             List<String> userIdList = group.getUserIdList();
             for(String userId : userIdList){
-                pulseCheckEntryService.createPulseCheckEntry(formId, groupId, userId, content, creationTimestamp, submissionTimestamp, PulseCheckStatus.OPEN);
+                pulseCheckEntryService.createPulseCheckEntry(formId, groupId, userId, content, creationTimestamp, submissionTimestamp, PulseCheckStatus.OPEN); // create a submission for for each group member
             }
-            String feedMessageText = "A new day brings new opportunities! How motivated are you today to complete all the habits in the group and boost the group's streak?";
-            FeedMessage feedMessage = new FeedMessage(groupId, groupService.getGroupById(groupId).getName(),feedMessageText, FeedType.PULSECHECK, creationTimestamp); // Create Feed Message
-            messageController.sendFeedToGroup(groupId, feedMessage);
+            FeedMessage feedMessage = new FeedMessage(formId, groupId, groupService.getGroupById(groupId).getName(),content, FeedType.PULSECHECK, creationTimestamp); // Create Feed Message
+            messageController.sendFeedToGroup(groupId, feedMessage); // Send FeedMessage to websocket channel of the group
             feedMessageService.createFeedMessage(feedMessage); // Store Feed Message within database
         }
     }
@@ -71,7 +88,7 @@ public class RoutineScheduler {
 
 
 
-    @Scheduled(cron = "0 56 15 * * ?") // Corrected to run at 10:45 AM every day
+    @Scheduled(cron = "0 30 23 * * ?") // To run at 12:00 AM every day
     public void closeMorningPulseCheck() {
         List<Group> groupsList = groupService.getGroups();
         for (Group group : groupsList) {
@@ -79,20 +96,25 @@ public class RoutineScheduler {
             System.out.println("PROCESSING PULSE CHECK ENTRIES OF GROUP "+groupId+".");
             List<PulseCheckEntry> pulseCheckEntries = pulseCheckEntryService.findByGroupIdWithLatestEntryDate(groupId);
             System.out.println(pulseCheckEntries.size() +" entries were found for the last pulse check");
+            String formId = pulseCheckEntries.get(0).getFormId(); // retrieve formId
             List<Double> formDataList = new ArrayList<>(); // collects values of accepted pulse check entries
             int numberAcceptedEntries = 0;
             int numberRejectedEntries = 0;
 
-            FeedMessage groupFeedMessage = feedMessageService.getLatestPulseCheckMessage(groupId);
+            FeedMessage groupFeedMessage = feedMessageService.getLatestPulseCheckMessage(groupId,formId);
             for (PulseCheckEntry entry : pulseCheckEntries) {
                 if (entry.getStatus().equals(PulseCheckStatus.ACCEPTED)) {
+                    System.out.println("Entry accepted.");
                     formDataList.add(entry.getValue());
-                    groupFeedMessage.addUserSubmits(entry.getUserId(),entry.getValue()); // Add value to corresponding FeedMessage for rendering the deactivated slider
+                    // groupFeedMessage.addUserSubmits(entry.getUserId(),entry.getValue());// Add value to corresponding FeedMessage for rendering the deactivated slider
+                    feedMessageService.addUserSubmit(groupFeedMessage.getId(), entry.getUserId(), entry.getValue());
                     numberAcceptedEntries++;
                 } else if (entry.getStatus().equals(PulseCheckStatus.OPEN)) {
+                    System.out.println("Entry rejected");
                     pulseCheckEntryService.setPulseCheckEntryStatus(entry, PulseCheckStatus.REJECTED);// set pulse check entry to rejected if still open after the deadline
                     Double defaultValue = 0.5;
-                    groupFeedMessage.addUserSubmits(entry.getUserId(),defaultValue); // setting slider props to 0.5 which is the standard config for rendering unanswered pulse check boxes.
+                    // groupFeedMessage.addUserSubmits(entry.getUserId(),defaultValue); // setting slider props to 0.5 which is the standard config for rendering unanswered pulse check boxes.
+                    feedMessageService.addUserSubmit(groupFeedMessage.getId(), entry.getUserId(),defaultValue);
                     numberRejectedEntries++;
                 }
             }
@@ -106,7 +128,7 @@ public class RoutineScheduler {
                     "                    \"' was answered by \" + numberAcceptedEntries +\n" +
                     "                    \" of \" + group.getUserIdList().size() +\n" +
                     "                    \" users. The average rating was \" + average + \".\");";
-            FeedMessage outputFeedMessage = new FeedMessage(groupId, groupService.getGroupById(groupId).getName(), outputStatement, FeedType.STANDARD, LocalDateTime.now());
+            FeedMessage outputFeedMessage = new FeedMessage(formId, groupId, groupService.getGroupById(groupId).getName(), outputStatement, FeedType.STANDARD, LocalDateTime.now());
             messageController.sendFeedToGroup(groupId,outputFeedMessage);
             feedMessageService.createFeedMessage(outputFeedMessage); // Store Output Feed Message within database
         }

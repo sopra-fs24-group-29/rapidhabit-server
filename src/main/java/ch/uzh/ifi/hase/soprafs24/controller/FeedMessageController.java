@@ -46,12 +46,14 @@ public class FeedMessageController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
-    @PutMapping("/groups/{groupId}/feed/pulsecheck/") // Endpoint to update pulse check responses
+    @PutMapping("/groups/{groupId}/feed/pulsecheck") // Endpoint to update pulse check responses
     public ResponseEntity<?> putPulseCheckResponse(
             @RequestBody FeedMessagePulseCheckPutDTO feedMessagePulseCheckPutDTO,
             @RequestHeader("Authorization") String authToken,
             @PathVariable String groupId) {
 
+        System.out.println("REQUEST RECEIVED ...");
+        System.out.println("...");
         if (!authService.isTokenValid(authToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -59,15 +61,25 @@ public class FeedMessageController {
         if (!groupService.getGroupById(groupId).getUserIdList().contains(userId)){ // check if user is part of group
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-
-        FeedMessage feedMessage = feedMessageService.getLatestPulseCheckMessage(groupId); // retrieve latest pulse check feed message from group with groupId
+        System.out.println("User is authorized!");
+        String formId = feedMessagePulseCheckPutDTO.getFormId();
+        System.out.println("Get latest Pulse Check Message of Group ...");
+        FeedMessage feedMessage = feedMessageService.getLatestPulseCheckMessage(groupId,formId); // retrieve latest pulse check feed message from group with groupId
         String feedId = feedMessage.getId();
 
         try {
+            System.out.println("Update value is:");
             Double value = feedMessagePulseCheckPutDTO.getValue(); // retrieve update value
-            pulseCheckEntryService.updateEntryByUserId(userId, value); // includes validity check with regard to submissionDeadline
+            System.out.println(value);
+            System.out.println("Updating PulseCheckEntry ...");
+            pulseCheckEntryService.updateEntryByUserId(userId, formId, value); // includes validity check with regard to submissionDeadline
+            System.out.println("Update successful.");
+            System.out.println("Add User Submit ...");
             feedMessageService.addUserSubmit(feedId, userId, value);
+            System.out.println("Update successful.");
+            System.out.println("Get Feed MSG ...");
             feedMessage = feedMessageService.getById(feedId);
+            System.out.println("Return response ...");
             return ResponseEntity.ok(feedMessage);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());

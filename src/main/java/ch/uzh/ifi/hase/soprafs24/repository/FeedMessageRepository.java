@@ -14,4 +14,7 @@ public interface FeedMessageRepository extends MongoRepository<FeedMessage, Stri
     // Custom query to find the latest FeedMessage of type 'PULSECHECK' for a specific group
     @Query(value = "{ 'groupId': ?0, 'type': 'PULSECHECK' }", sort = "{ 'dateTime': -1 }")
     Optional<FeedMessage> findLatestPulseCheckByGroupId(String groupId);
+
+    @Query(value = "{ 'groupId': ?0, 'formId': ?1, 'type': 'PULSECHECK' }", sort = "{ 'dateTime': -1 }")
+    Optional<FeedMessage> findLatestPulseCheckByGroupAndForm(String groupId, String formId);
 }

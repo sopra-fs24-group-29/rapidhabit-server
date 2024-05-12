@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs24.service;
 import ch.uzh.ifi.hase.soprafs24.constant.PulseCheckStatus;
+import ch.uzh.ifi.hase.soprafs24.entity.FeedMessage;
 import ch.uzh.ifi.hase.soprafs24.entity.PulseCheckEntry;
 import ch.uzh.ifi.hase.soprafs24.repository.PulseCheckEntryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +35,10 @@ public class PulseCheckEntryService {
         entry.setStatus(status);
         pulseCheckEntryRepository.save(entry);
     }
-    public void updateEntryByUserId(String userId, Double value) throws Exception {
-        PulseCheckEntry pulseCheckEntry = pulseCheckEntryRepository.findLatestEntryByUserId(userId, mongoTemplate)
+    public void updateEntryByUserId(String userId, String formId, Double value) throws Exception {
+        PulseCheckEntry pulseCheckEntry = pulseCheckEntryRepository.findByUserIdAndFormId(userId, formId, mongoTemplate)
                 .orElseThrow(() -> new RuntimeException("No such entry was found."));
-
+        System.out.println("Pulse Check Entry was found.");
         // Check if the update takes place before the submissionTimestamp
         if (LocalDateTime.now().isBefore(pulseCheckEntry.getSubmissionTimestamp())) {
             pulseCheckEntry.setValue(value);
