@@ -10,5 +10,3 @@ network:
 
 automatic_scaling:
   min_total_instances: 1
-
-version: neue-version
