@@ -62,8 +62,6 @@ public class OpenAIService {
         }
     }
 
-
-
     public String generatePulseCheckContentCompletions(int maxTokenSize, double temperature) throws IOException {
         JsonObject messageContent = new JsonObject();
         messageContent.addProperty("role", "user");
@@ -95,7 +93,6 @@ public class OpenAIService {
             return response.body().string();
         }
     }
-
 
     String template = "In a collaborative habit tracking app, AI Coach Alan conducts regular Pulse Checks with group members. These are small surveys that are fed into the stream, where each group member is asked to give a personal rating. The questions in these surveys should be psychologically meaningful and engaging, encouraging each user to reflect on their behavior. For technical reasons, it is particularly important that each question can be answered with a magnitude from 0 to 1 (this is done using a slider).";
 

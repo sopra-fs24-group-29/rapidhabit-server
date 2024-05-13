@@ -7,6 +7,7 @@ import ch.uzh.ifi.hase.soprafs24.service.AuthService;
 import ch.uzh.ifi.hase.soprafs24.service.ChatRoomService;
 import ch.uzh.ifi.hase.soprafs24.service.GroupService;
 import ch.uzh.ifi.hase.soprafs24.service.UserService;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -43,7 +44,7 @@ public class MessageController {
     }
 
     @MessageMapping("/groups/{groupId}/chat")
-    public void sendChatMessageToGroup(@Payload ChatEntryPutDTO chatEntryPutDTO, @PathVariable("groupId") String groupId) {
+    public void sendChatMessageToGroup(@Payload ChatEntryPutDTO chatEntryPutDTO, @DestinationVariable("groupId") String groupId) {
         try {
             if (authService.isTokenValid(chatEntryPutDTO.getToken())) {
                 String userId = authService.getId(chatEntryPutDTO.getToken());
