@@ -7,3 +7,8 @@ instance_class: F2
 
 network:
   session_affinity: true
+
+automatic_scaling:
+  min_total_instances: 1
+
+version: neue-version
