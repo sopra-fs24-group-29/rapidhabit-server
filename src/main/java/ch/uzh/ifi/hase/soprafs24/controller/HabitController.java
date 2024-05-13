@@ -170,6 +170,7 @@ public class HabitController {
         Habit habit = habitService.getHabitById(habitId).orElseThrow(()->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Habit was not found."));
         String name = habit.getName();
+        String description = habit.getDescription();
 
         int currentStreak = habit.getCurrentStreak();
 
@@ -189,6 +190,7 @@ public class HabitController {
         groupHabitDataDTO.setCurrentTeamStreak(currentStreak);
         groupHabitDataDTO.setStatusMap(statusMap);
         groupHabitDataDTO.setName(name);
+        groupHabitDataDTO.setDescription(description);
 
         return ResponseEntity.ok(groupHabitDataDTO);
     }

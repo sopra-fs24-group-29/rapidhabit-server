@@ -7,6 +7,7 @@ import java.util.Map;
 
 public class GroupHabitDataGetDTO {
     private String name;
+    private String description;
     private int currentTeamStreak;
     private Map<LocalDate, Map<String, UserStatsStatus>> statusMap;
 
@@ -16,6 +17,12 @@ public class GroupHabitDataGetDTO {
 
     public void setName(String name){
         this.name = name;
+    }
+    public String getDescription(){
+        return description;
+    }
+    public void setDescription(String description){
+        this.description = description;
     }
 
     public int getCurrentTeamStreak() {
