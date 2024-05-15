@@ -29,7 +29,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.addEndpoint("/ws")
                 .setAllowedOrigins("*")
                 .setHandshakeHandler(new DefaultHandshakeHandler())
-                .addInterceptors(new AuthHandshakeInterceptor(authService));
+                // .addInterceptors(new AuthHandshakeInterceptor(authService));
     }
 
 }
