@@ -10,7 +10,7 @@ runtime_config:
   runtime_version: "17"
 
 manual_scaling:
-instances: 1
+  instances: 1
 
 handlers:
   - url: /ws
