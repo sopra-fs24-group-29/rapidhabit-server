@@ -12,8 +12,6 @@ import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-    private static final String ORIGIN_TEST = "*";
-
     private final AuthService authService;
 
     public WebSocketConfig(AuthService authService) {
