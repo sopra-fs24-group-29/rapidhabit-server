@@ -8,7 +8,6 @@ import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.HandshakeInterceptor;
 
-
 import java.util.Map;
 
 public class AuthHandshakeInterceptor implements HandshakeInterceptor {
@@ -16,21 +15,30 @@ public class AuthHandshakeInterceptor implements HandshakeInterceptor {
 
     @Autowired
     public AuthHandshakeInterceptor(AuthService authService) {
-        this.authService = authService;;
+        this.authService = authService;
     }
 
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
         String authToken = request.getHeaders().getFirst("Authorization");
+
+        if (authToken == null) {
+            System.out.println("Authorization header is missing");
+            response.setStatusCode(HttpStatus.UNAUTHORIZED);
+            return false;
+        } else {
+            System.out.println("Authorization header: " + authToken);
+        }
+
         if (authService.isTokenValid(authToken)) {
             System.out.println("Handshake accepted!");
             return true;
         }
+
         System.out.println("Handshake rejected!");
         response.setStatusCode(HttpStatus.UNAUTHORIZED);
         return false;
     }
-
 
     @Override
     public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Exception exception) {
