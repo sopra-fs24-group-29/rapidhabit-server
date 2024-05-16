@@ -23,7 +23,7 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class FeedMessageServiceTest {
+class FeedMessageServiceTest {
 
     @Mock
     private FeedMessageRepository feedMessageRepository;
@@ -38,14 +38,14 @@ public class FeedMessageServiceTest {
 
     @BeforeEach
     void setUp() {
-        testFeedMessage = new FeedMessage("groupId", "groupName", "message", FeedType.PULSECHECK, LocalDateTime.now());
+        testFeedMessage = new FeedMessage("formId","groupId", "groupName", "message", FeedType.PULSECHECK, LocalDateTime.now());
     }
 
     @Test
     void createFeedMessage_success() {
         when(feedMessageRepository.save(any(FeedMessage.class))).thenReturn(testFeedMessage);
 
-        FeedMessage result = feedMessageService.createFeedMessage(testFeedMessage.getGroupId(), testFeedMessage.getGroupName(), testFeedMessage.getMessage(), testFeedMessage.getType(), testFeedMessage.getDateTime());
+        FeedMessage result = feedMessageService.createFeedMessage(testFeedMessage.getFormId(), testFeedMessage.getGroupId(), testFeedMessage.getGroupName(), testFeedMessage.getMessage(), testFeedMessage.getType(), testFeedMessage.getDateTime());
 
         assertEquals(testFeedMessage, result);
         verify(feedMessageRepository, times(1)).save(any(FeedMessage.class));

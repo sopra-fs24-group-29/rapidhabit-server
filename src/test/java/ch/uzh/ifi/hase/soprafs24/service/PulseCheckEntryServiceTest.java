@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class PulseCheckEntryServiceTest {
+class PulseCheckEntryServiceTest {
 
     @Mock
     private PulseCheckEntryRepository pulseCheckEntryRepository;
@@ -68,21 +68,40 @@ public class PulseCheckEntryServiceTest {
     @Test
     void updateEntryByUserId_success() throws Exception {
         Double newValue = 10.0;
-        when(pulseCheckEntryRepository.findLatestEntryByUserId(anyString(), any(MongoTemplate.class))).thenReturn(Optional.of(testEntry));
 
-        pulseCheckEntryService.updateEntryByUserId("userId", newValue);
+        // Explicitly set a future submissionTimestamp to ensure it's definitely later than the current time
+        LocalDateTime futureTime = LocalDateTime.now().plusDays(2); // Adjust the duration as necessary
+
+        testEntry = new PulseCheckEntry("formId", "groupId", "userId", "content", LocalDateTime.now(), futureTime, PulseCheckStatus.OPEN);
+
+        testEntry.setUserId("userId");
+        testEntry.setFormId("formId");
+
+        when(pulseCheckEntryRepository.findByUserIdAndFormId(eq("userId"), eq("formId"), any(MongoTemplate.class))).thenReturn(Optional.of(testEntry));
+
+        pulseCheckEntryService.updateEntryByUserId("userId", "formId", newValue);
 
         assertEquals(newValue, testEntry.getValue());
         assertEquals(PulseCheckStatus.ACCEPTED, testEntry.getStatus());
         verify(pulseCheckEntryRepository, times(1)).save(any(PulseCheckEntry.class));
     }
 
+
     @Test
     void updateEntryByUserId_failure() {
         Double newValue = 10.0;
-        testEntry.setSubmissionTimestamp(LocalDateTime.now().minusDays(1));
-        when(pulseCheckEntryRepository.findLatestEntryByUserId(anyString(), any(MongoTemplate.class))).thenReturn(Optional.of(testEntry));
 
-        assertThrows(Exception.class, () -> pulseCheckEntryService.updateEntryByUserId("userId", newValue));
+        // Set the submissionTimestamp to a time before the current time
+        LocalDateTime pastTime = LocalDateTime.now().minusDays(1);
+        testEntry.setSubmissionTimestamp(pastTime);
+
+        testEntry.setUserId("userId");
+        testEntry.setFormId("formId");
+
+        when(pulseCheckEntryRepository.findByUserIdAndFormId(eq("userId"), eq("formId"), any(MongoTemplate.class)))
+                .thenReturn(Optional.of(testEntry));
+
+        // Expect the updateEntryByUserId method to throw an Exception
+        assertThrows(Exception.class, () -> pulseCheckEntryService.updateEntryByUserId("userId", "formId", newValue));
     }
 }
