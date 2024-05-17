@@ -11,9 +11,3 @@ runtime_config:
 
 manual_scaling:
   instances: 1
-
-handlers:
-  - url: /ws
-    script: auto
-    secure: always
-    login: optional
