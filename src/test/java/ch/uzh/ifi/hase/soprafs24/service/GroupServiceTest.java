@@ -19,7 +19,7 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class GroupServiceTest {
+class GroupServiceTest {
     @Mock
     private GroupRepository groupRepository;
     @InjectMocks
@@ -50,7 +50,7 @@ public class GroupServiceTest {
     }
 
     @Test
-    public void createGroup_validInputs_success() {
+    void createGroup_validInputs_success() {
         Group newGroup = new Group();
         newGroup.setName("New Group");
         String creatorId = "1";
@@ -82,7 +82,7 @@ public class GroupServiceTest {
         assertEquals(0, createdGroup.getCurrentStreak());
     }
     @Test
-    public void addHabitIdToGroup_success() {
+    void addHabitIdToGroup_success() {
         // Prepare test data
         String groupId = "1";
         String habitId = "habit1";
@@ -105,7 +105,7 @@ public class GroupServiceTest {
     }
 
     @Test
-    public void addHabitIdToGroup_groupNotFound() {
+    void addHabitIdToGroup_groupNotFound() {
         // Prepare test data
         String groupId = "1";
         String habitId = "habit1";
@@ -121,7 +121,7 @@ public class GroupServiceTest {
     }
 
     @Test
-    public void addUserByAccessCode_success() {
+    void addUserByAccessCode_success() {
         String userId = "user1";
         String accessCode = "accessCode1";
         Group group = new Group();
@@ -140,7 +140,7 @@ public class GroupServiceTest {
     }
 
     @Test
-    public void addUserByAccessCode_userAlreadyExists() {
+    void addUserByAccessCode_userAlreadyExists() {
         // Prepare test data
         String userId = "user1";
         String accessCode = "accessCode1";
@@ -159,7 +159,7 @@ public class GroupServiceTest {
     }
 
     @Test
-    public void addUserByAccessCode_groupNotFound() {
+    void addUserByAccessCode_groupNotFound() {
         // Prepare test data
         String userId = "user1";
         String accessCode = "accessCode1";
@@ -175,7 +175,7 @@ public class GroupServiceTest {
     }
 
     @Test
-    public void removeUserFromGroup_success() {
+    void removeUserFromGroup_success() {
         String groupId = "1";
         String userId = "user1";
         Group group = new Group();
@@ -194,7 +194,7 @@ public class GroupServiceTest {
     }
 
     @Test
-    public void removeUserFromGroup_userNotFound() {
+    void removeUserFromGroup_userNotFound() {
         String groupId = "1";
         String userId = "user1";
         Group group = new Group();
@@ -208,7 +208,7 @@ public class GroupServiceTest {
         verify(groupRepository, times(1)).findById(groupId);
     }
     @Test
-    public void removeUserFromGroup_groupNotFound() {
+    void removeUserFromGroup_groupNotFound() {
         String groupId = "1";
         String userId = "user1";
 
@@ -220,7 +220,7 @@ public class GroupServiceTest {
     }
 
     @Test
-    public void getGroupById_success() {
+    void getGroupById_success() {
         String groupId = "1";
         Group group = new Group();
         group.setId(groupId);
@@ -233,7 +233,7 @@ public class GroupServiceTest {
         verify(groupRepository, times(1)).findById(groupId);
     }
     @Test
-    public void getGroupById_notFound() {
+    void getGroupById_notFound() {
         String groupId = "1";
 
         when(groupRepository.findById(groupId)).thenReturn(Optional.empty());
@@ -243,7 +243,7 @@ public class GroupServiceTest {
     }
 
     @Test
-    public void getGroupByAccessCode_success() {
+    void getGroupByAccessCode_success() {
         String accessCode = "accessCode1";
         Group group = new Group();
         group.setAccessCode(accessCode);
@@ -257,7 +257,7 @@ public class GroupServiceTest {
     }
 
     @Test
-    public void getGroupByAccessCode_notFound() {
+    void getGroupByAccessCode_notFound() {
         String accessCode = "accessCode1";
 
         when(groupRepository.findByAccessCode(accessCode)).thenReturn(Optional.empty());
@@ -267,7 +267,7 @@ public class GroupServiceTest {
     }
 
     @Test
-    public void updateGroup_success() {
+    void updateGroup_success() {
         String groupId = "1";
         Group groupInput = new Group();
         groupInput.setName("Updated Group");
@@ -287,7 +287,7 @@ public class GroupServiceTest {
         Mockito.verify(groupRepository, Mockito.times(1)).save(Mockito.any(Group.class));
     }
     @Test
-    public void deleteGroup_success() {
+    void deleteGroup_success() {
         String groupId = "1";
         Group group = new Group();
         group.setId(groupId);
@@ -300,7 +300,7 @@ public class GroupServiceTest {
         verify(groupRepository, times(1)).delete(group);
     }
     @Test
-    public void isUserAdmin_success() {
+    void isUserAdmin_success() {
         String userId = "user1";
         String groupId = "1";
         Group group = new Group();
@@ -316,7 +316,7 @@ public class GroupServiceTest {
     }
 
     @Test
-    public void isUserAdmin_notAdmin() {
+    void isUserAdmin_notAdmin() {
         String userId = "user1";
         String groupId = "1";
         Group group = new Group();
@@ -331,7 +331,7 @@ public class GroupServiceTest {
         verify(groupRepository, times(1)).findById(groupId);
     }
     @Test
-    public void getGroupMenuDataByUserId_success() {
+    void getGroupMenuDataByUserId_success() {
         String userId = "user1";
         String groupId = "group1";
         String userInitials = "UI";
@@ -366,7 +366,7 @@ public class GroupServiceTest {
     }
 
     @Test
-    public void getGroupMenuDataByUserId_emptyList() {
+    void getGroupMenuDataByUserId_emptyList() {
         String userId = "user1";
 
         when(groupRepository.findByUserIdsContains(userId)).thenReturn(Collections.emptyList());
@@ -378,7 +378,7 @@ public class GroupServiceTest {
         verify(groupRepository, times(1)).findByUserIdsContains(userId);
     }
     @Test
-    public void incrementCurrentStreak_success() {
+    void incrementCurrentStreak_success() {
         String groupId = "group1";
         Group group = new Group();
         group.setId(groupId);
@@ -394,7 +394,7 @@ public class GroupServiceTest {
     }
 
     @Test
-    public void resetCurrentStreak_success() {
+    void resetCurrentStreak_success() {
         String groupId = "group1";
         Group group = new Group();
         group.setId(groupId);
@@ -410,7 +410,7 @@ public class GroupServiceTest {
     }
 
     @Test
-    public void testGetUserNamesByGroupId() {
+    void testGetUserNamesByGroupId() {
         String groupId = "1";
         when(groupRepository.findById(groupId)).thenReturn(Optional.of(testGroup));
 
@@ -434,7 +434,7 @@ public class GroupServiceTest {
         assertEquals(expectedUserNamesMap, actualUserNamesMap);
     }
     @Test
-    public void testGetGroupIdsByUserId() {
+    void testGetGroupIdsByUserId() {
         String userId = "userID1";
         when(groupRepository.findByUserIdsContains(userId)).thenReturn(List.of(testGroup));
 
@@ -446,7 +446,7 @@ public class GroupServiceTest {
     }
 
     @Test
-    public void testRemoveHabitFromHabitIdList() {
+    void testRemoveHabitFromHabitIdList() {
         String groupId = "1";
         String habitId = "habitID1";
         when(groupRepository.findById(groupId)).thenReturn(Optional.of(testGroup));
@@ -458,7 +458,7 @@ public class GroupServiceTest {
     }
 
     @Test
-    public void testDeleteUserIdFromAllGroups() {
+    void testDeleteUserIdFromAllGroups() {
         String userId = "userID1";
         String userId2 = "userID2";
 
@@ -473,10 +473,37 @@ public class GroupServiceTest {
 
         verify(groupRepository, times(1)).delete(testGroup);
         verify(groupRepository, times(1)).save(any(Group.class));
-
     }
 
+    @Test
+    void testGetUserIdsByGroupId_GroupExists_ReturnsUserIdList() {
+        // Given
+        String groupId = "123";
+        List<String> userIds = Arrays.asList("user1", "user2");
+        Group group = new Group(); // Assuming Group has a getUserIdList method
+        group.setId(groupId);
+        group.setUserIdList(userIds);
 
+        when(groupRepository.findById(groupId)).thenReturn(Optional.of(group));
 
+        // When
+        List<String> result = groupService.getUserIdsByGroupId(groupId);
+
+        // Then
+        assertEquals(userIds, result);
+        verify(groupRepository, times(1)).findById(groupId);
+    }
+
+    @Test
+    void testGetUserIdsByGroupId_GroupNotFound_ThrowsResponseStatusException() {
+        // Given
+        String groupId = "123";
+
+        when(groupRepository.findById(groupId)).thenReturn(Optional.empty());
+
+        // When & Then
+        assertThrows(ResponseStatusException.class, () -> groupService.getUserIdsByGroupId(groupId));
+        verify(groupRepository, times(1)).findById(groupId);
+    }
 
 }
