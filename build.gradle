@@ -89,7 +89,7 @@ test {
     useJUnitPlatform()
     testLogging.showStandardStreams = true
     maxParallelForks = 1
-    environment 'GOOGLE_APPLICATION_CREDENTIALS', '../sopra-fs24-group29-server-670017ef725b.json'
+    // environment 'GOOGLE_APPLICATION_CREDENTIALS', '../sopra-fs24-group29-server-670017ef725b.json'
 }
 
 File secretPropsFile = file('./local.properties')
