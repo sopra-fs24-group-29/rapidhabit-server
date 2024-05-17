@@ -26,10 +26,20 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
+        // Endpoint without using SockJS
         registry.addEndpoint("/ws")
                 .setAllowedOrigins("*")
+                .setHandshakeHandler(new DefaultHandshakeHandler())
+                .addInterceptors(new AuthHandshakeInterceptor(authService));
+
+        // Endpoint using SockJS
+        registry.addEndpoint("/ws-sockjs")
+                .setAllowedOrigins("*")
+                .setHandshakeHandler(new DefaultHandshakeHandler())
+                .addInterceptors(new AuthHandshakeInterceptor(authService))
                 .withSockJS();
     }
+
 
 
 }
