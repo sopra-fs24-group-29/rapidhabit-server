@@ -23,6 +23,11 @@ jobs:
           distribution: "temurin"
           java-version: "17"
 
+      - name: Set up GCP Credentials
+        run: |
+          echo '${{ secrets.GCP_SERVICE_CREDENTIALS }}' > gcp-creds.json
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$PWD/gcp-creds.json" >> $GITHUB_ENV
+
       - name: Test and analyze
         run: ./gradlew test jacocoTestReport sonar
         env:
@@ -30,6 +35,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           MONGO_DB_URI: ${{ secrets.MONGO_DB_URI }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}
 
   deploy:
     name: Deploying to Google Cloud
