@@ -52,7 +52,7 @@ public class RoutineScheduler {
     }
 
 
-    @Scheduled(cron = "0 15 10 * * ?", zone = "Europe/Zurich") // Opening Pulse Check entries at 10:15 AM for each group
+    @Scheduled(cron = "0 15 7 * * ?", zone = "Europe/Zurich") // Opening Pulse Check entries at 10:15 AM for each group
     public void openMorningPulseCheck() {
         LocalDateTime creationTimestamp = LocalDateTime.now();
         LocalDateTime submissionTimestamp = LocalDateTime.now().plusMinutes(1);// submission is at 12:00
@@ -88,33 +88,31 @@ public class RoutineScheduler {
 
 
 
-    @Scheduled(cron = "0 0 12 * * ?", zone = "Europe/Zurich") // To run at 12:00 AM every day
+    @Scheduled(cron = "0 0 12 * * ?", zone = "Europe/Zurich") // To run at 12:00 PM every day
     public void closeMorningPulseCheck() {
         List<Group> groupsList = groupService.getGroups();
         for (Group group : groupsList) {
             String groupId = group.getId();
-            System.out.println("PROCESSING PULSE CHECK ENTRIES OF GROUP "+groupId+".");
+            System.out.println("PROCESSING PULSE CHECK ENTRIES OF GROUP " + groupId + ".");
             List<PulseCheckEntry> pulseCheckEntries = pulseCheckEntryService.findByGroupIdWithLatestEntryDate(groupId);
-            System.out.println(pulseCheckEntries.size() +" entries were found for the last pulse check");
+            System.out.println(pulseCheckEntries.size() + " entries were found for the last pulse check");
             String formId = pulseCheckEntries.get(0).getFormId(); // retrieve formId
             List<Double> formDataList = new ArrayList<>(); // collects values of accepted pulse check entries
             int numberAcceptedEntries = 0;
             int numberRejectedEntries = 0;
 
-            FeedMessage groupFeedMessage = feedMessageService.getLatestPulseCheckMessage(groupId,formId);
+            FeedMessage groupFeedMessage = feedMessageService.getLatestPulseCheckMessage(groupId, formId);
             for (PulseCheckEntry entry : pulseCheckEntries) {
                 if (entry.getStatus().equals(PulseCheckStatus.ACCEPTED)) {
                     System.out.println("Entry accepted.");
                     formDataList.add(entry.getValue());
-                    // groupFeedMessage.addUserSubmits(entry.getUserId(),entry.getValue());// Add value to corresponding FeedMessage for rendering the deactivated slider
                     feedMessageService.addUserSubmit(groupFeedMessage.getId(), entry.getUserId(), entry.getValue());
                     numberAcceptedEntries++;
                 } else if (entry.getStatus().equals(PulseCheckStatus.OPEN)) {
                     System.out.println("Entry rejected");
-                    pulseCheckEntryService.setPulseCheckEntryStatus(entry, PulseCheckStatus.REJECTED);// set pulse check entry to rejected if still open after the deadline
+                    pulseCheckEntryService.setPulseCheckEntryStatus(entry, PulseCheckStatus.REJECTED); // set pulse check entry to rejected if still open after the deadline
                     Double defaultValue = 0.5;
-                    // groupFeedMessage.addUserSubmits(entry.getUserId(),defaultValue); // setting slider props to 0.5 which is the standard config for rendering unanswered pulse check boxes.
-                    feedMessageService.addUserSubmit(groupFeedMessage.getId(), entry.getUserId(),defaultValue);
+                    feedMessageService.addUserSubmit(groupFeedMessage.getId(), entry.getUserId(), defaultValue);
                     numberRejectedEntries++;
                 }
             }
@@ -123,16 +121,28 @@ public class RoutineScheduler {
             double sum = formDataList.stream().mapToDouble(Double::doubleValue).sum();
             double average = formDataList.isEmpty() ? 0.0 : sum / formDataList.size();
 
-            String outputStatement = "System.out.println(\"The form \" + pulseCheckEntries.get(0).getFormId() +\n" +
-                    "                    \" with content '\" + pulseCheckEntries.get(0).getContent() +\n" +
-                    "                    \"' was answered by \" + numberAcceptedEntries +\n" +
-                    "                    \" of \" + group.getUserIdList().size() +\n" +
-                    "                    \" users. The average rating was \" + average + \".\");";
-            FeedMessage outputFeedMessage = new FeedMessage(formId, groupId, groupService.getGroupById(groupId).getName(), outputStatement, FeedType.STANDARD, LocalDateTime.now());
-            messageController.sendFeedToGroup(groupId,outputFeedMessage);
+            String outputStatement = String.format(
+                    "The form with content '%s' was answered by %d of %d users. The average rating was %.2f.",
+                    pulseCheckEntries.get(0).getContent(),
+                    numberAcceptedEntries,
+                    group.getUserIdList().size(),
+                    average
+            );
+
+            FeedMessage outputFeedMessage = new FeedMessage(
+                    formId,
+                    groupId,
+                    groupService.getGroupById(groupId).getName(),
+                    outputStatement,
+                    FeedType.STANDARD,
+                    LocalDateTime.now()
+            );
+
+            messageController.sendFeedToGroup(groupId, outputFeedMessage);
             feedMessageService.createFeedMessage(outputFeedMessage); // Store Output Feed Message within database
         }
     }
+
 
 
     @Scheduled(cron = "0 0 0 * * ?", zone = "Europe/Zurich") // Triggered every day at midnight
