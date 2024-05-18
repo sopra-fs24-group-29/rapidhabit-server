@@ -19,7 +19,7 @@ public class ChatMessage {
         return userId;
     }
 
-    public void setUserId(String senderId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
     public String getUserInitials() {
