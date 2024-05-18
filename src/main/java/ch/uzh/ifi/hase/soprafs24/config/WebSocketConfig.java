@@ -33,15 +33,15 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         // Endpoint without using SockJS
         registry.addEndpoint("/ws")
                 .setAllowedOrigins(ORIGIN_LOCALHOST, ORIGIN_PROD)
-                .setHandshakeHandler(new DefaultHandshakeHandler())
-                .addInterceptors(new AuthHandshakeInterceptor(authService));
+                .setHandshakeHandler(new DefaultHandshakeHandler());
+                // .addInterceptors(new AuthHandshakeInterceptor(authService));
 
         // Endpoint using SockJS
         registry.addEndpoint("/ws-sockjs")
                 .setAllowedOrigins("*")
-                .setHandshakeHandler(new DefaultHandshakeHandler())
-                .addInterceptors(new AuthHandshakeInterceptor(authService))
-                .withSockJS();
+                .setHandshakeHandler(new DefaultHandshakeHandler());
+                //.addInterceptors(new AuthHandshakeInterceptor(authService))
+                //.withSockJS();
     }
 
 }
