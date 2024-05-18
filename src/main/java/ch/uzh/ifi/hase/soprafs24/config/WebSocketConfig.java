@@ -1,6 +1,5 @@
 package ch.uzh.ifi.hase.soprafs24.config;
 
-import ch.uzh.ifi.hase.soprafs24.service.AuthService;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
@@ -8,12 +7,14 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
 
+import ch.uzh.ifi.hase.soprafs24.service.AuthService;
+
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     private static final String ORIGIN_LOCALHOST = "http://localhost:3000";
-    private static final String ORIGIN_PROD = "https://sopra-fs23-group29-client-new.oa.r.appspot.com";
+    private static final String ORIGIN_PROD = "https://sopra-fs24-group29-client.oa.r.appspot.com";
 
     private final AuthService authService;
 
