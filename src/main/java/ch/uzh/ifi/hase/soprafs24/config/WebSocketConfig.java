@@ -12,6 +12,9 @@ import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
+    private static final String ORIGIN_LOCALHOST = "http://localhost:3000";
+    private static final String ORIGIN_PROD = "https://sopra-fs23-group29-client-new.oa.r.appspot.com";
+
     private final AuthService authService;
 
     public WebSocketConfig(AuthService authService) {
@@ -28,7 +31,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         // Endpoint without using SockJS
         registry.addEndpoint("/ws")
-                .setAllowedOrigins("*")
+                .setAllowedOrigins(ORIGIN_LOCALHOST, ORIGIN_PROD)
                 .setHandshakeHandler(new DefaultHandshakeHandler())
                 .addInterceptors(new AuthHandshakeInterceptor(authService));
 
@@ -39,7 +42,5 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 .addInterceptors(new AuthHandshakeInterceptor(authService))
                 .withSockJS();
     }
-
-
 
 }

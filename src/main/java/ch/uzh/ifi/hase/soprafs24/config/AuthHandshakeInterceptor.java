@@ -20,6 +20,7 @@ public class AuthHandshakeInterceptor implements HandshakeInterceptor {
 
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
+        System.out.println("Incoming Headers: " + request.getHeaders());
         String connectionHeader = request.getHeaders().getFirst("Connection");
         String upgradeHeader = request.getHeaders().getFirst("Upgrade");
         String authToken = request.getHeaders().getFirst("Authorization");
