@@ -5,6 +5,7 @@ import ch.uzh.ifi.hase.soprafs24.rest.dto.group.*;
 import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs24.service.*;
 import ch.uzh.ifi.hase.soprafs24.util.WeekdayUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +29,6 @@ public class GroupController {
     private final GroupService groupService;
     private final AuthService authService;
 
-
     private final HabitService habitService;
 
     private final UserStatsEntryService userStatsEntryService;
@@ -39,7 +39,9 @@ public class GroupController {
 
     private final ChatRoomService chatRoomService;
 
-    GroupController(GroupService groupService, AuthService authService, UserService userService, UserStatsEntryService userStatsEntryService, HabitService habitService, UserScoreService userScoreService, ChatRoomService chatRoomService) {
+    private final FeedMessageService feedMessageService;
+
+    GroupController(GroupService groupService, AuthService authService, UserService userService, UserStatsEntryService userStatsEntryService, HabitService habitService, UserScoreService userScoreService, ChatRoomService chatRoomService, FeedMessageService feedMessageService) {
         this.groupService = groupService;
         this.authService = authService;
         this.userService = userService;
@@ -47,6 +49,7 @@ public class GroupController {
         this.habitService = habitService;
         this.userScoreService = userScoreService;
         this.chatRoomService = chatRoomService;
+        this.feedMessageService = feedMessageService;
     }
 
     @GetMapping("/groups")
@@ -212,6 +215,7 @@ public class GroupController {
                     userStatsEntryService.createUserStatsEntry(userId, groupId, habitId);
                 }
             }
+            feedMessageService.appendUserSubmitWithFixedValue(groupId,userId);
             return ResponseEntity.status(HttpStatus.CREATED).build();
         }
         else {

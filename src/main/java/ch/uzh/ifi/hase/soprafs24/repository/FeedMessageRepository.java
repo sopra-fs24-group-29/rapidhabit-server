@@ -5,6 +5,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository("feedMessageRepository")
@@ -17,4 +18,8 @@ public interface FeedMessageRepository extends MongoRepository<FeedMessage, Stri
 
     @Query(value = "{ 'groupId': ?0, 'formId': ?1, 'type': 'PULSECHECK' }", sort = "{ 'dateTime': -1 }")
     Optional<FeedMessage> findLatestPulseCheckByGroupAndForm(String groupId, String formId);
+
+    @Query(value = "{ 'groupId': ?0 }")
+    List<FeedMessage> findAllByGroupId(String groupId); // find all entries of groupId
+
 }

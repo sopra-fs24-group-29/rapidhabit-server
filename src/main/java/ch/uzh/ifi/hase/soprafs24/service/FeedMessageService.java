@@ -50,4 +50,13 @@ public class FeedMessageService {
         return feedMessageRepository.findLatestPulseCheckByGroupId(groupId)
                 .orElseThrow(() -> new RuntimeException("No pulse check messages found for group " + groupId));
     }
+
+    public void appendUserSubmitWithFixedValue(String groupId, String userId) {
+        List<FeedMessage> feedMessages = feedMessageRepository.findAllByGroupId(groupId);
+        for (FeedMessage feedMessage : feedMessages) {
+            feedMessage.addUserSubmits(userId, 0.5);
+            feedMessageRepository.save(feedMessage);
+        }
+    }
+
 }
