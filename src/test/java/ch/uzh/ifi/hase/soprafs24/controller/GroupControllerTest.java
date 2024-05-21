@@ -21,8 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.*;
 
@@ -153,6 +152,33 @@ class GroupControllerTest {
                 .andExpect(jsonPath("$.2").value("Jane Smith"));
     }
 
+    @Test //GET Mapping "/groups/{groupId}/users" - CODE 401 Unauthorized (error)
+    void GET_GroupUsers_validInput_InvalidToken() throws Exception {
+        String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
+        Long userId = 1L;
+        String groupId = "1";
+        when(authService.isTokenValid(token)).thenReturn(false);
+
+        mockMvc.perform(get("/groups/" + groupId + "/users")
+                        .header("Authorization", token)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
+    }
+    @Test //GET Mapping "/groups/{groupId}/users" - CODE 401 Unauthorized (error)
+    void GET_GroupUsers_InvalidInput_ValidToken() throws Exception {
+        String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
+        when(authService.isTokenValid(token)).thenReturn(true);
+        Long userId = 1L;
+        String groupId = "1";
+        when(authService.getId(token)).thenReturn(String.valueOf(userId));
+        when(groupService.isUserAdmin(String.valueOf(userId), groupId)).thenReturn(false);
+
+        mockMvc.perform(get("/groups/" + groupId + "/users")
+                        .header("Authorization", token)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
+    }
+
     @Test //GET Mapping "/groups/{groupId}" - CODE 200 OK (Pass)
     void GET_Group_validInput_ValidToken_ReturnsNoContent() throws Exception {
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
@@ -188,6 +214,29 @@ class GroupControllerTest {
                 //.andExpect(jsonPath("$.habitIdList").value(Collections.singletonList("habit1")))
                 //.andExpect(jsonPath("$.userInitials").value(Collections.singletonList("Initials")));
     }
+    @Test //GET Mapping "/groups/{groupId}" - CODE 401 Unauthorized (fail)
+    void GET_getSpecificGroup_userNotInGroup_ReturnsUnauthorized() throws Exception {
+        String token = "validToken123";
+        String groupId = "group1";
+        String userId = "user2"; // A user ID that is not in the userIdList
+
+        when(authService.isTokenValid(token)).thenReturn(true);
+        when(authService.getId(token)).thenReturn(userId);
+
+        Group group = new Group();
+        group.setUserIdList(Collections.singletonList("user1")); // Only "user1" is in the userIdList
+
+        when(groupService.getGroupById(groupId)).thenReturn(group);
+
+        // Mock userService.getInitials since it's called inside the method but we're expecting a 401 Unauthorized response
+        when(userService.getInitials(anyString())).thenThrow(new RuntimeException("Mocked exception"));
+
+        mockMvc.perform(get("/groups/{groupId}", groupId)
+                        .header("Authorization", token)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized()); // Expecting 401 Unauthorized status
+    }
+
 
     @Test //GET Mapping "/groups/{groupId}/ranking" - CODE 200 Ok (pass)
     void GET_GroupRanking_validInput_ReturnsOk() throws Exception {
@@ -227,6 +276,54 @@ class GroupControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
     }
+    @Test //GET Mapping "/groups/{groupId}/ranking" - CODE 401 Unauthorized (fail)
+    void GET_GroupRanking_userNotInGroup_ReturnsUnauthorized() throws Exception {
+        String token = "validToken123";
+        String groupId = "group1";
+        String userId = "user2"; // A user ID that is not in the userIdList
+
+        when(authService.isTokenValid(token)).thenReturn(true);
+        when(authService.getId(token)).thenReturn(userId);
+
+        Group group = new Group();
+        group.setUserIdList(Collections.singletonList("user1")); // Only "user1" is in the userIdList
+
+        when(groupService.getGroupById(groupId)).thenReturn(group);
+
+        // No need to mock userScoreService.getUserScore and userService.getInitials since we're expecting a 401 Unauthorized response
+
+        mockMvc.perform(get("/groups/{groupId}/ranking", groupId)
+                        .header("Authorization", token)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized()); // Expecting 401 Unauthorized status
+    }
+
+
+
+    @Test
+    void GET_getRanking_success_ReturnsOkWithGroupIds() throws Exception {
+        String validAuthToken = "validAuthToken"; // Use a valid token for testing
+        when(authService.isTokenValid(validAuthToken)).thenReturn(true); // Simulate a valid token
+        when(authService.getId(validAuthToken)).thenReturn("validUserId"); // Simulate getting a valid user ID
+        when(groupService.getGroupIdsByUserId("validUserId")).thenReturn(Arrays.asList("group1", "group2")); // Simulate returning group IDs
+
+        mockMvc.perform(get("/groups/groupIds")
+                        .header("Authorization", validAuthToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()) // Expecting 200 OK status
+                .andExpect(content().json("[\"group1\", \"group2\"]")); // Expecting the specific group IDs in the response
+    }
+    @Test
+    void GET_getRanking_unauthorized_ReturnsUnauthorized() throws Exception {
+        String invalidAuthToken = "invalidAuthToken"; // Use an invalid token for testing
+        when(authService.isTokenValid(invalidAuthToken)).thenReturn(false); // Simulate an invalid token
+
+        mockMvc.perform(get("/groups/groupIds")
+                        .header("Authorization", invalidAuthToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized()); // Expecting 401 Unauthorized status
+    }
+
 
     /**
      * ------------------------------ END GET TESTS ------------------------------ START POST TESTS ------------------------------
@@ -260,6 +357,38 @@ class GroupControllerTest {
                 .andExpect(jsonPath("$.name").value("Group1"))
                 .andExpect(jsonPath("$.description").value("Description of Group1"));
     }
+
+    @Test
+    void POST_createGroups_invalidToken_ReturnsUnauthorized() throws Exception {
+        String invalidToken = "invalidToken"; // Use an invalid token for testing
+        when(authService.isTokenValid(invalidToken)).thenReturn(false); // Simulate an invalid token
+
+        GroupPostDTO groupPostDTO = new GroupPostDTO();
+        groupPostDTO.setName("Group1");
+        groupPostDTO.setDescription("Description of Group1");
+
+        mockMvc.perform(post("/groups")
+                        .header("Authorization", invalidToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(groupPostDTO)))
+                .andExpect(status().isUnauthorized()); // Expecting 401 Unauthorized status
+    }
+    @Test
+    void POST_createGroups_emptyGroupName_ReturnsBadRequest() throws Exception {
+        String validToken = "validToken"; // Use a valid token for testing
+        when(authService.isTokenValid(validToken)).thenReturn(true); // Simulate a valid token
+        when(authService.getId(validToken)).thenReturn("userId"); // Simulate getting a valid user ID
+
+        GroupPostDTO groupPostDTO = new GroupPostDTO();
+        groupPostDTO.setName(""); // Set the name to an empty string
+
+        mockMvc.perform(post("/groups")
+                        .header("Authorization", validToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(groupPostDTO)))
+                .andExpect(status().isBadRequest()); // Expecting 400 Bad Request status
+    }
+
 
     @Test //POST Mapping "/groups/join" - CODE 201 CREATED (Pass)
     void POST_AddNewUserToGroup_validInput_ReturnsCreated() throws Exception {
@@ -383,6 +512,24 @@ class GroupControllerTest {
                 .andExpect(status().isUnauthorized());
     }
 
+    @Test
+    void PUT_updateGroup_emptyName_ReturnsBadRequest() throws Exception {
+        String validAuthToken = "validAuthToken";
+        String groupId = "group1";
+        GroupPutDTO groupPutDTO = new GroupPutDTO();
+        groupPutDTO.setName("");
+
+        when(authService.isTokenValid(validAuthToken)).thenReturn(true);
+        when(authService.getId(validAuthToken)).thenReturn("validUserId");
+
+        mockMvc.perform(put("/groups/" + groupId)
+                        .header("Authorization", validAuthToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(groupPutDTO)))
+                .andExpect(status().isBadRequest());
+    }
+
+
     /**
      * ------------------------------ END PUT TESTS ------------------------------ START DELETE TESTS ------------------------------
      */
@@ -424,6 +571,17 @@ class GroupControllerTest {
         when(authService.isTokenValid(token)).thenReturn(true);
         when(authService.getId(token)).thenReturn("userId");
         when(groupService.isUserAdmin("userId", groupId)).thenReturn(false);
+
+        mockMvc.perform(delete("/groups/" + groupId)
+                        .header("Authorization", token))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test // DELETE Mapping "/groups/{groupId}" - CODE 401 Unauthorized (Error)
+    void DELETE_deleteGroup_InvalidToken() throws Exception {
+        String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
+        String groupId = "1";
+        when(authService.isTokenValid(token)).thenReturn(false);
 
         mockMvc.perform(delete("/groups/" + groupId)
                         .header("Authorization", token))
@@ -480,7 +638,35 @@ class GroupControllerTest {
                         .param("userToRemoveID", userToRemoveID))
                 .andExpect(status().isUnauthorized());
     }
-     /**
-     * ------------------------------ END DELETE TESTS ------------------------------------------------------------
-     */
+    @Test // DELETE Mapping "/groups/{groupId}/users" - CODE 401 Unauthorized (Error)
+    void DELETE_deleteUserFromGroup_InvalidToken() throws Exception {
+        String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
+        String groupId = "1";
+        String userToRemoveID = "77";
+        when(authService.isTokenValid(token)).thenReturn(false);
+
+        mockMvc.perform(delete("/groups/" + groupId + "/users")
+                        .header("Authorization", token)
+                        .param("userToRemoveID", userToRemoveID))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void DELETE_deleteUserFromGroup_selfDeletion_ReturnsBadRequest() throws Exception {
+        String validAuthToken = "validAuthToken";
+        String groupId = "group1";
+        String userToRemoveID = "selfUserId";
+
+        when(authService.isTokenValid(validAuthToken)).thenReturn(true);
+        when(authService.getId(validAuthToken)).thenReturn(userToRemoveID);
+
+        mockMvc.perform(delete("/groups/" + groupId + "/users")
+                        .header("Authorization", validAuthToken)
+                        .param("userToRemoveID", userToRemoveID))
+                .andExpect(status().isBadRequest()); // Expecting 400 Bad Request status
+    }
+
+    /**
+    * ------------------------------ END DELETE TESTS ------------------------------------------------------------
+    */
 }

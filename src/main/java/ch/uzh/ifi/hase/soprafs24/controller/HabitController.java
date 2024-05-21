@@ -84,7 +84,6 @@ public class HabitController {
                         // If weekday in JSON is true, set weekday in object to true as well
                         weeklyRepeat.setWeekdayToRepeat(weekday, value);
                     } catch (IllegalArgumentException e) {
-                        // Log error or handle it accordingly
                         return new ResponseEntity<>("Invalid weekday name: " + day, HttpStatus.BAD_REQUEST);
                     }
                 }
