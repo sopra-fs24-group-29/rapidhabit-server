@@ -160,12 +160,12 @@ https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/4
 - general: Wrote Test for all the new REST Mappings & all the Services (now on 75% Coverage)
 - As well as the following issues:
 
-| IssueNr                                                             | Issue description                                                                               | Assigned Test |
-|:--------------------------------------------------------------------|-------------------------------------------------------------------------------------------------|---------------|
-| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/107 | implement API for deleting a group Habit                                                        |               |
-| #37                                                                 | Implement an API for receiving chat messages in a specific Group.                               |               |
-| #113                                                                | Implement the Backend so that Users can send chat messages in specific group.                   |               |
-| #114                                                                | implement security features that only members of group can send messages in group specific chat |               |
+| IssueNr                                                             | Issue description                                                                                         | Assigned Test |
+|:--------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------|---------------|
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/107 | implement API for deleting a group Habit                                                                  | - DELETE Mapping "/groups/{groupId}/habits/{habitId}" - CODE 204 No Content (Success)            |
+| #37                                                                 | Implement an API for receiving chat messages in a specific Group.                                         |               |
+| #113                                                                | Implement the Backend so that Users can send chat messages in specific group.                             |               |
+| #115                                                                | implement security features that only members of group can fetch previous messages in group specific chat |               |
 
 
 ### Simon (SimonHafner):
@@ -194,9 +194,9 @@ https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/4
 
 | IssueNr | Issue description | Assigned Test |
 |:--------|-------------------|---------------|
-| #       |                   |               |
-| #       |                   |               |
-| #       |                   |               |
+| #     https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/9  |     Create the chat in the frontend              |               |
+| #       |          bug fixes fromm feedback         |               |
+| #       |                   |    front end clean-up           |
 
 
 ## Week 6 08.05 - 14.05
@@ -204,13 +204,12 @@ https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/4
 - general: Wrote Test for all the new REST Mappings
 - As well as the following issues:
 
-| IssueNr | Issue description                                                                                  | Assigned Test |
-|:--------|----------------------------------------------------------------------------------------------------|---------------|
-| #115    | implement security features that only members of group can receive messages in group specific chat |               |
-| #116    | Create REST-API to retrieve the chat history from the chat                                         |               |
-| #117    | Clean Up User controller file with SonarLint (code smells and bad code)                            |               |
-| #118    | Clean Up group controller file with SonarLint (code smells and bad code)                           |               |
-| #119    | Clean Up habit controller file with SonarLint (code smells and bad code)                           |               |
+| IssueNr | Issue description                                                                                  | Assigned Test                                                                                                                                                                                                                                                         |
+|:--------|----------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| #116    | Create REST-API to retrieve the chat history from the chat                                         | - GET Mapping "/groups/{groupId}/chat" - CODE 200 OK (Pass)  <br> - GET Mapping "/groups/{groupId}/chat" - CODE 401 Unauthorized because invalid Token (Error)  <br> - GET Mapping "/groups/{groupId}/chat" - CODE 401 Unauthorized because user not in group (Error) |
+| #117    | Clean Up User controller file with SonarLint (code smells and bad code)                            | None                                                                                                                                                                                                                                                                  |
+| #118    | Clean Up group controller file with SonarLint (code smells and bad code)                           | None                                                                                                                                                                                                                                                                  |
+| #119    | Clean Up habit controller file with SonarLint (code smells and bad code)                           | None                                                                                                                                                                                                                                                                  |
 
 
 ### Simon (SimonHafner):
@@ -235,21 +234,22 @@ https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/4
 
 | IssueNr | Issue description | Assigned Test |
 |:--------|-------------------|---------------|
-| #       |                   |               |
-| #       |                   |               |
-| #       |                   |               |
+| #     https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/9  |      Make the chat work in the front end            |               |
+| #       |         QA Tasks, Bug Fixes          |               |
+
+
 
 ## Week 7 15.05 - 21.05
 ### Lukas (lguebeli):
 - general: Wrote Test for all the new REST Mappings
 - As well as the following issues:
 
-| IssueNr | Issue description                                                            | Assigned Test |
-|:--------|------------------------------------------------------------------------------|---------------|
-| #120    | Clean Up Chat controller file with SonarLint (code smells and bad code)      |               |
-| #121    | Clean Up ALL other controller file with SonarLint (code smells and bad code) |               |
-| #122    | Clean Up User Service file with SonarLint (code smells and bad code)         |               |
-| #123    | Clean Up group Service file with SonarLint (code smells and bad code)        |               |
+| IssueNr | Issue description                                                            |
+|:--------|------------------------------------------------------------------------------|
+| #120    | Clean Up Chat controller file with SonarLint (code smells and bad code)      |
+| #121    | Clean Up ALL other controller file with SonarLint (code smells and bad code) |
+| #122    | Clean Up User Service file with SonarLint (code smells and bad code)         |
+| #123    | Clean Up group Service file with SonarLint (code smells and bad code)        |
 
 
 ### Simon (SimonHafner):
@@ -263,18 +263,18 @@ https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/4
 
 ### Yannik (YRiederer):
 
-| IssueNr | Issue description | Assigned Test |
-|:--------|-------------------|---------------|
-| #       |                   |               |
-| #       |                   |               |
-| #       |                   |               |
+| IssueNr | Issue description |
+|:--------|-------------------|
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/50       | input validation for updating group                  |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/51       | input validation for profile update                  |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/52       | enter key sends chat msg                  |
 
 
 ### Raksmey (rocketraksi):
 
 | IssueNr | Issue description | Assigned Test |
 |:--------|-------------------|---------------|
-| #       |                   |               |
-| #       |                   |               |
-| #       |                   |               |
+
+| #       |       Added Validation            |               |
+| #       |       Added clear error handleing            |               |
 

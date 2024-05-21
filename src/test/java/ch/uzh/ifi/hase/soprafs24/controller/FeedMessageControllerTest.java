@@ -9,6 +9,7 @@ import ch.uzh.ifi.hase.soprafs24.service.AuthService;
 import ch.uzh.ifi.hase.soprafs24.service.FeedMessageService;
 import ch.uzh.ifi.hase.soprafs24.service.GroupService;
 import ch.uzh.ifi.hase.soprafs24.service.PulseCheckEntryService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,6 +22,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -78,11 +80,76 @@ class FeedMessageControllerTest {
 
     @Test
     void testGetSpecificGroupUsers_UnauthorizedUser_ReturnsUnauthorized() throws Exception {
-        String authToken = "validAuthToken";
+        String authToken = "invalidToken";
         when(authService.isTokenValid(authToken)).thenReturn(false);
 
         mockMvc.perform(get("/feed")
                         .header("Authorization", authToken))
                 .andExpect(status().isUnauthorized());
        }
+
+    @Test
+    void putPulseCheckResponse_invalidToken_returnsUnauthorized() throws Exception {
+        String invalidAuthToken = "invalidToken";
+        String groupId = "group1";
+        FeedMessagePulseCheckPutDTO feedMessagePulseCheckPutDTO = new FeedMessagePulseCheckPutDTO(); // Initialize DTO as needed
+
+        // Mock the AuthService to return false when checking if the token is valid
+        when(authService.isTokenValid(invalidAuthToken)).thenReturn(false);
+
+        mockMvc.perform(put("/groups/{groupId}/feed/pulsecheck", groupId)
+                        .header("Authorization", invalidAuthToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(feedMessagePulseCheckPutDTO)))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void putPulseCheckResponse_userNotInGroupIdList_returnsUnauthorized() throws Exception {
+        String validAuthToken = "validToken"; // Use a valid token obtained from AuthService
+        String groupId = "group1";
+        FeedMessagePulseCheckPutDTO feedMessagePulseCheckPutDTO = new FeedMessagePulseCheckPutDTO(); // Initialize DTO as needed
+
+        // Mock AuthService to return a valid token
+        when(authService.isTokenValid(validAuthToken)).thenReturn(true);
+        when(authService.getId(validAuthToken)).thenReturn("userId"); // Return a known userId
+
+        // Mock GroupService to return a group that does not contain the userId
+        Group group = new Group(); // Assuming Group class has a default constructor
+        group.setUserIdList(Collections.singletonList("otherUserId")); // Add other users but not the userId we're testing
+        when(groupService.getGroupById(groupId)).thenReturn(group);
+
+        mockMvc.perform(put("/groups/{groupId}/feed/pulsecheck", groupId)
+                        .header("Authorization", validAuthToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(feedMessagePulseCheckPutDTO)))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void putPulseCheckResponse_successfulExecution_returnsOk() throws Exception {
+        String validAuthToken = "validToken";
+        String groupId = "group1";
+        FeedMessagePulseCheckPutDTO feedMessagePulseCheckPutDTO = new FeedMessagePulseCheckPutDTO(); // Initialize DTO as needed
+
+        // Mock AuthService to return true for token validation
+        when(authService.isTokenValid(validAuthToken)).thenReturn(true);
+        when(authService.getId(validAuthToken)).thenReturn("userId");
+
+        // Mock GroupService to return a group containing the userId
+        Group group = new Group(); // Assuming Group class has a default constructor
+        group.setUserIdList(Collections.singletonList("userId"));
+        when(groupService.getGroupById(groupId)).thenReturn(group);
+
+        // Mock FeedMessageService to return a valid FeedMessage
+        testFeedMessage = new FeedMessage("formId","groupId", "groupName", "message", FeedType.PULSECHECK, LocalDateTime.now());
+
+        when(feedMessageService.getLatestPulseCheckMessage(groupId, feedMessagePulseCheckPutDTO.getFormId())).thenReturn(testFeedMessage);
+
+        mockMvc.perform(put("/groups/{groupId}/feed/pulsecheck", groupId)
+                        .header("Authorization", validAuthToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(feedMessagePulseCheckPutDTO)))
+                .andExpect(status().isOk());
+    }
 }

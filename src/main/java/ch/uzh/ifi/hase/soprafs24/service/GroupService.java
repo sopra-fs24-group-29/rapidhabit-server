@@ -274,5 +274,4 @@ public class GroupService {
             groupRepository.save(group);
         }
     }
-
 }

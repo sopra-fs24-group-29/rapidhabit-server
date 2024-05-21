@@ -55,7 +55,6 @@ public class HabitService {
         habit.setCurrentStreak(0);
         habitRepository.save(habit);
     }
-
     public int getStreak(String habitId){
         Habit habit = habitRepository.findById(habitId)
                 .orElseThrow(() -> new IllegalArgumentException("Habit not found with id: " + habitId));

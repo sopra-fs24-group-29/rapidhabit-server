@@ -20,9 +20,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -105,6 +105,40 @@ class HabitControllerTest {
                 .andExpect(jsonPath("$[1].userCheckStatus.UI").value(true));
     }
 
+    @Test
+    void GET_getHabits_invalidToken_ReturnsUnauthorized() throws Exception {
+        String invalidAuthToken = "invalidToken";
+        String groupId = "group1";
+
+        when(authService.isTokenValid(invalidAuthToken)).thenReturn(false);
+
+        mockMvc.perform(get("/groups/{groupId}/habits", groupId)
+                        .header("Authorization", invalidAuthToken))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().string("Invalid token"));
+    }
+
+    @Test
+    void GET_getHabits_userNotPartOfGroup_ReturnsUnauthorized() throws Exception {
+        String token = "validToken";
+        String groupId = "group1";
+        String userId = "user2";
+        when(authService.isTokenValid(token)).thenReturn(true);
+        when(authService.getId(token)).thenReturn(userId);
+
+        Group group = new Group();
+        group.setUserIdList(Collections.singletonList("user1")); // Only "user1" is in the userIdList
+
+        when(groupService.getGroupById(groupId)).thenReturn(group);
+
+        mockMvc.perform(get("/groups/{groupId}/habits", groupId)
+                        .header("Authorization", token))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().string("User is not part of this group"));
+    }
+
+
+
     @Test //GET Mapping "/groups/{groupId}/habits/{habitId}" - CODE 200 Ok (pass)
     void GET_GroupHabitData_validInput_ReturnsOk() throws Exception {
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
@@ -168,6 +202,21 @@ class HabitControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
+    @Test //GET Mapping "/groups/{groupId}/habits/{habitId}" - CODE 404 Not Found (Error)
+    void GET_GroupHabitData_validInput_InvalidToken() throws Exception {
+        String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
+        String groupId = "group1";
+        String habitId = "habit1";
+        String userId = "user1";
+
+        when(authService.isTokenValid(token)).thenReturn(false);
+
+        mockMvc.perform(get("/groups/{groupId}/habits/{habitId}", groupId, habitId)
+                        .header("Authorization", token)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
+    }
+
     @Test //GET Mapping "/groups/{groupId}/habits/{habitId}/edit" - CODE 200 Ok (pass)
     void GET_GroupHabitData_ValidInput_Success() throws Exception {
         String token = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
@@ -306,6 +355,22 @@ class HabitControllerTest {
                 .andExpect(status().isUnauthorized());
     }
 
+    @Test
+    void POST_createHabit_invalidToken_ReturnsUnauthorized() throws Exception {
+        String invalidAuthHeaderToken = "invalidToken";
+        String groupId = "group1";
+        String habitData = "{\"name\":\"Test Habit\",\"description\":\"A test habit\",\"rewardPoints\":10,\"repeatStrategy\":{\"type\":\"DAILY\"}}";
+
+        when(authService.isTokenValid(invalidAuthHeaderToken)).thenReturn(false);
+
+        mockMvc.perform(post("/groups/{groupId}/habits", groupId)
+                        .header("Authorization", invalidAuthHeaderToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(habitData))
+                .andExpect(status().isUnauthorized());
+    }
+
+
     /**
      * ------------------------------ END POST TESTS ------------------------------ START PUT TESTS ------------------------------
      */
@@ -441,8 +506,6 @@ class HabitControllerTest {
                         .content(habitData))
                 .andExpect(status().isUnauthorized());
     }
-
-
 
 
     /**

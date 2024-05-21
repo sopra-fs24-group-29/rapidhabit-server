@@ -84,7 +84,6 @@ public class HabitController {
                         // If weekday in JSON is true, set weekday in object to true as well
                         weeklyRepeat.setWeekdayToRepeat(weekday, value);
                     } catch (IllegalArgumentException e) {
-                        // Log error or handle it accordingly
                         return new ResponseEntity<>("Invalid weekday name: " + day, HttpStatus.BAD_REQUEST);
                     }
                 }
@@ -171,9 +170,7 @@ public class HabitController {
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Habit was not found."));
         String name = habit.getName();
         String description = habit.getDescription();
-
         int currentStreak = habit.getCurrentStreak();
-
         Map<LocalDate, Map<String, UserStatsStatus>> statusMap = new TreeMap<>();
         for (String memberId : group.getUserIdList()) {
             List<UserStatsEntry> memberEntries = userStatsEntryService.getEntriesByUserIdAndHabitId(memberId, habitId);
@@ -211,7 +208,6 @@ public class HabitController {
         if (!group.getAdminIdList().contains(userId)) {
             return new ResponseEntity<>("User is not part of this group", HttpStatus.UNAUTHORIZED);
         }
-
         Habit habit = habitService.getHabitById(habitId).orElseThrow(()->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Habit was not found."));
         return ResponseEntity.ok(habit);
@@ -237,11 +233,8 @@ public class HabitController {
         Habit habit = habitService.getHabitById(habitId).orElseThrow(()->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Habit was not found."));
 
-
         UserStatsStatus statsStatus = userStatsEntryService.checkHabitByUser(habitId,userId);
         String msg = "Habit status changed to " +statsStatus;
-
-        // finally return the updated list presenting all group habits
         return getHabits(authToken,groupId);
     }
 
@@ -354,7 +347,6 @@ public class HabitController {
                 // create an user stats entry for each user of this group refered to the current habitId
                 for (String userId : groupUserIds){
                     UserStatsEntry userStatsEntry = userStatsEntryService.createUserStatsEntry(userId, groupId,habitId);
-                   // System.out.println(userStatsEntry.getDueDate());
                 }
             }
             else if (repeatType.equals(RepeatType.WEEKLY)) {
