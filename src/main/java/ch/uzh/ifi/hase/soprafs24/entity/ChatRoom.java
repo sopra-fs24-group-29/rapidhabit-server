@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Builder;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.messaging.Message;
 
 import javax.persistence.Id;
 import java.util.ArrayList;

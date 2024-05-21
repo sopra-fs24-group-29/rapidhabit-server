@@ -1,7 +1,5 @@
 package ch.uzh.ifi.hase.soprafs24.rest.dto.habit;
 
-import ch.uzh.ifi.hase.soprafs24.entity.RepeatStrategy;
-
 public class HabitPostDTO {
 
     private String name;

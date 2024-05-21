@@ -2,16 +2,11 @@ package ch.uzh.ifi.hase.soprafs24.rest.mapper;
 
 import ch.uzh.ifi.hase.soprafs24.entity.*;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.chat.ChatEntryPutDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupGetDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.habit.DailyRepeatDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.habit.RepeatStrategyDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.habit.WeeklyRepeatDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.user.*;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupPostDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.group.GroupPutDTO;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.habit.HabitPostDTO;
 
 
 

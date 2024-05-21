@@ -1,7 +1,6 @@
 package ch.uzh.ifi.hase.soprafs24.rest.dto.habit;
 
 import ch.uzh.ifi.hase.soprafs24.constant.RepeatType;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.habit.WeeklyRepeatDTO;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 

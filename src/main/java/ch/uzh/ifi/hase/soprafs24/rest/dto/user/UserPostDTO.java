@@ -1,7 +1,5 @@
 package ch.uzh.ifi.hase.soprafs24.rest.dto.user;
 
-import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
-
 public class UserPostDTO {
     private String firstname;
     private String lastname;
