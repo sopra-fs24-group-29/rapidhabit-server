@@ -176,6 +176,8 @@ https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/4
 | https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/105     | Implement Pulse Check (Full-Stack) | Tested via interface |
 | https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/106     | Implement Feed (Full-Stack) | Tested via interface | |
 | https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/110     | Implemented Routine Scheduler of daily close-up procesdure | Tested on MongoDB Compass | https://github.com/sopra-fs24-group-29/rapidhabit-server/commit/ece246c31190548454fcb679fa7d25fdf8cfb08a |
+| [#109](https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/109)                 | Implement API for submitting Pulse Check Response                 | ...                                                                                                              |
+| [#127](https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/127)                 | Implement API for retrieving user scores                 | ...                                                                                                              |
 
 
 ### Yannik (YRiederer):
@@ -206,7 +208,7 @@ https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/4
 
 | IssueNr | Issue description                                                                                  | Assigned Test                                                                                                                                                                                                                                                         |
 |:--------|----------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| #116    | Create REST-API to retrieve the chat history from the chat                                         | - GET Mapping "/groups/{groupId}/chat" - CODE 200 OK (Pass)  <br> - GET Mapping "/groups/{groupId}/chat" - CODE 401 Unauthorized because invalid Token (Error)  <br> - GET Mapping "/groups/{groupId}/chat" - CODE 401 Unauthorized because user not in group (Error) |
+| #116    | Create REST-API to retrieve the chat history from the chat (Pair Coding)                                         | - GET Mapping "/groups/{groupId}/chat" - CODE 200 OK (Pass)  <br> - GET Mapping "/groups/{groupId}/chat" - CODE 401 Unauthorized because invalid Token (Error)  <br> - GET Mapping "/groups/{groupId}/chat" - CODE 401 Unauthorized because user not in group (Error) |
 | #117    | Clean Up User controller file with SonarLint (code smells and bad code)                            | None                                                                                                                                                                                                                                                                  |
 | #118    | Clean Up group controller file with SonarLint (code smells and bad code)                           | None                                                                                                                                                                                                                                                                  |
 | #119    | Clean Up habit controller file with SonarLint (code smells and bad code)                           | None                                                                                                                                                                                                                                                                  |
@@ -216,9 +218,10 @@ https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/4
 
 | IssueNr | Issue description | Assigned Test |
 |:--------|-------------------|---------------|
-| #       |                   |               |
-| #       |                   |               |
-| #       |                   |               |
+| [#116](https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/116)                 | Create REST-API to retrieve the chat history from the chat (Pair Coding)                  | - GET Mapping "/groups/{groupId}/chat" - CODE 200 OK (Pass)  <br> - GET Mapping "/groups/{groupId}/chat" - CODE 401 Unauthorized because invalid Token (Error)  <br> - GET Mapping "/groups/{groupId}/chat" - CODE 401 Unauthorized because user not in group (Error)                                                                                                              |
+| [#129](https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/129)                 | Implement Secret Manager for retrieving Mongo DB and OpenAI API Key                 | Manually tested                                                                                                              |
+| [#111](https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/111)                 | Integrate OpenAI API into the backend infrastructure to generate content for evening and mornign notifications                 | Manually tested                                                                                                              |
+| [#133](https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/133)                 | Integrate Google Cloud Secret plugin into Spring Boot Project                  | ...                                                                                                              |
 
 
 ### Yannik (YRiederer):
@@ -256,9 +259,8 @@ https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/4
 
 | IssueNr | Issue description | Assigned Test |
 |:--------|-------------------|---------------|
-| #       |                   |               |
-| #       |                   |               |
-| #       |                   |               |
+| [#112](https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/112)                 | Develop functionality for evening notifiactions                 | Manually tested                                                                                                              |
+| [#132](https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/112)                 | Configure Server for WebSocket Support                 | Manually tested                                                                                                              |
 
 
 ### Yannik (YRiederer):
