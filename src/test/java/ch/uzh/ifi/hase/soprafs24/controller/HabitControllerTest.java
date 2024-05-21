@@ -443,8 +443,6 @@ class HabitControllerTest {
     }
 
 
-
-
     /**
      * ------------------------------ END PUT TESTS ------------------------------ START DELETE TESTS ------------------------------
      */

@@ -108,5 +108,42 @@ class FeedMessageServiceTest {
         assertEquals(testFeedMessage, result);
         verify(feedMessageRepository, times(1)).findLatestPulseCheckByGroupId(anyString());
     }
+    @Test
+    void getLatestPulseCheckMessage_withForm_success() {
+        String groupId = "testGroupId";
+        String formId = "testFormId";
 
+        // Mock the repository to return a specific FeedMessage when findLatestPulseCheckByGroupAndForm is called
+        when(feedMessageRepository.findLatestPulseCheckByGroupAndForm(anyString(), anyString()))
+                .thenReturn(Optional.of(testFeedMessage));
+
+        // Call the service method with the groupId and formId
+        FeedMessage result = feedMessageService.getLatestPulseCheckMessage(groupId, formId);
+
+        // Assert that the returned message matches the expected one
+        assertEquals(testFeedMessage, result);
+
+        // Verify that the repository method was called once with the correct arguments
+        verify(feedMessageRepository, times(1))
+                .findLatestPulseCheckByGroupAndForm(eq(groupId), eq(formId));
+    }
+    @Test
+    void appendUserSubmitWithFixedValue_success() {
+        // Setup
+        String groupId = "testGroupId";
+        String userId = "testUserId";
+        List<FeedMessage> initialFeedMessages = Arrays.asList(
+                new FeedMessage("formId1", groupId, "groupName1", "message1", FeedType.PULSECHECK, LocalDateTime.now()),
+                new FeedMessage("formId2", groupId, "groupName2", "message2", FeedType.PULSECHECK, LocalDateTime.now())
+        );
+
+        // Mock the repository to return the initial list of FeedMessages
+        when(feedMessageRepository.findAllByGroupId(anyString())).thenReturn(initialFeedMessages);
+
+        // Execute method under test
+        feedMessageService.appendUserSubmitWithFixedValue(groupId, userId);
+
+        // Verify that save was called on the feedMessageRepository for each FeedMessage in the list
+        verify(feedMessageRepository, times(initialFeedMessages.size())).save(any(FeedMessage.class));
+    }
 }
