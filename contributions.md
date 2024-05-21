@@ -194,9 +194,9 @@ https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/4
 
 | IssueNr | Issue description | Assigned Test |
 |:--------|-------------------|---------------|
-| #       |                   |               |
-| #       |                   |               |
-| #       |                   |               |
+| #     https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/9  |     Create the chat in the frontend              |               |
+| #       |          bug fixes fromm feedback         |               |
+| #       |                   |    front end clean-up           |
 
 
 ## Week 6 08.05 - 14.05
@@ -234,9 +234,10 @@ https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/4
 
 | IssueNr | Issue description | Assigned Test |
 |:--------|-------------------|---------------|
-| #       |                   |               |
-| #       |                   |               |
-| #       |                   |               |
+| #     https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/9  |      Make the chat work in the front end            |               |
+| #       |         QA Tasks, Bug Fixes          |               |
+
+
 
 ## Week 7 15.05 - 21.05
 ### Lukas (lguebeli):
@@ -273,7 +274,7 @@ https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/4
 
 | IssueNr | Issue description | Assigned Test |
 |:--------|-------------------|---------------|
-| #       |                   |               |
-| #       |                   |               |
-| #       |                   |               |
+
+| #       |       Added Validation            |               |
+| #       |       Added clear error handleing            |               |
 
