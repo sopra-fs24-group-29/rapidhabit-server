@@ -41,6 +41,9 @@ class GroupControllerTest {
     private UserService userService;
 
     @MockBean
+    private FeedMessageService feedMessageService;
+
+    @MockBean
     private UserStatsEntryService userStatsEntryService;
 
     @MockBean
