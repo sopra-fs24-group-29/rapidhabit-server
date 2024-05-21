@@ -52,10 +52,10 @@ public class RoutineScheduler {
     }
 
 
-    @Scheduled(cron = "0 40 9 * * ?", zone = "Europe/Zurich") // Opening Pulse Check entries at 10:15 AM for each group
+    @Scheduled(cron = "0 0 7 * * ?", zone = "Europe/Zurich") // Opening Pulse Check entries at 10:15 AM for each group
     public void openMorningPulseCheck() {
         LocalDateTime creationTimestamp = LocalDateTime.now();
-        LocalDateTime submissionTimestamp = LocalDateTime.now().plusMinutes(1);// submission is at 12:00
+        LocalDateTime submissionTimestamp = LocalDateTime.now().plusHours(5); // submission is at 12:00
         List<Group> groupsList = groupService.getGroups();
         for(Group group : groupsList){
             String groupId = group.getId();
@@ -85,10 +85,7 @@ public class RoutineScheduler {
         }
     }
 
-
-
-
-    @Scheduled(cron = "0 45 9 * * ?", zone = "Europe/Zurich") // To run at 12:00 PM every day
+    @Scheduled(cron = "0 0 12 * * ?", zone = "Europe/Zurich") // To run at 12:00 PM every day
     public void closeMorningPulseCheck() {
         List<Group> groupsList = groupService.getGroups();
         for (Group group : groupsList) {
@@ -143,6 +140,53 @@ public class RoutineScheduler {
         }
     }
 
+    @Scheduled(cron = "0 0 18 * * *", zone = "Europe/Zurich") // Evening notification
+    public void checkOpenHabitRoutines() {
+        List<Group> groupsList = groupService.getGroups();
+        for (Group group : groupsList) {
+            String outputMessage = "";
+            String groupId = group.getId();
+            System.out.println("PROCESSING GROUP " + groupId + " FOR SENDING EVENING NOTIFICATION ...");
+            List<String> habitIds = group.getHabitIdList();
+            List<String> habitsSuccess = new ArrayList<>();
+            List<String> habitsOpen = new ArrayList<>();
+
+            // Iterate through each habit
+            for (String habitId : habitIds) {
+                Habit habit = habitService.getHabitById(habitId)
+                        .orElseThrow(() -> new RuntimeException("No habit with id " + habitId + " was found."));
+                String habitName = habit.getName();
+                System.out.println("PROCESSING HABIT " + habitName + " ...");
+                if (userStatsEntryService.allEntriesSuccess(habitId, LocalDate.now())) {
+                    habitsSuccess.add(habitName);
+                } else {
+                    habitsOpen.add(habitName);
+                }
+            }
+
+            if (habitsOpen.isEmpty()) {
+                outputMessage = "Good job, " + group.getName() + "! Each member of your group has already checked all habits for today. Keep being consistent! ;)";
+            } else {
+                outputMessage = "Good evening, team " + group.getName() + "! How is it going? For some member there are still some open habits to be checked: " +
+                        String.join(", ", habitsOpen) + ". Finish all your tasks and your streak will be incremented by the end of the day. ;)";
+            }
+
+            System.out.println(outputMessage);
+
+            String formId = FormIdGenerator.generateFormId();
+            FeedMessage outputFeedMessage = new FeedMessage(
+                    formId,
+                    groupId,
+                    groupService.getGroupById(groupId).getName(),
+                    outputMessage,
+                    FeedType.STANDARD,
+                    LocalDateTime.now()
+            );
+
+            messageController.sendFeedToGroup(groupId, outputFeedMessage);
+            feedMessageService.createFeedMessage(outputFeedMessage); // Store Output Feed Message within database
+        }
+    }
 
 
     @Scheduled(cron = "0 0 0 * * ?", zone = "Europe/Zurich") // Triggered every day at midnight
