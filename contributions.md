@@ -263,11 +263,11 @@ https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/4
 
 ### Yannik (YRiederer):
 
-| IssueNr | Issue description | Assigned Test |
-|:--------|-------------------|---------------|
-| #       |                   |               |
-| #       |                   |               |
-| #       |                   |               |
+| IssueNr | Issue description |
+|:--------|-------------------|
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/50       | input validation for updating group                  |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/51       | input validation for profile update                  |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/52       | enter key sends chat msg                  |
 
 
 ### Raksmey (rocketraksi):
