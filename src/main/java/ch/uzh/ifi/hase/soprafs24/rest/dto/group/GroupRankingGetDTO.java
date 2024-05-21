@@ -1,7 +1,5 @@
 package ch.uzh.ifi.hase.soprafs24.rest.dto.group;
 
-import java.time.LocalDate;
-
 public class GroupRankingGetDTO {
     private String id;
     private String initials;

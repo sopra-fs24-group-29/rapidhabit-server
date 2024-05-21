@@ -16,18 +16,6 @@ public class OpenAIController {
         this.openAIService = openAIService;
     }
 
-    @GetMapping("/coach")
-    public ResponseEntity<String> chatWithCoach(@RequestHeader("Prompt") String prompt) {
-        try {
-            String response = openAIService.sendPrompt(prompt);
-            return ResponseEntity.ok(response);
-        } catch (IOException e) {
-            // Log the exception details here or handle it according to your log strategy
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Failed to get response from OpenAI: " + e.getMessage());
-        }
-    }
-
     @GetMapping("/pulsecheck")
     public ResponseEntity<String> requestPulseCheck() {
         try {

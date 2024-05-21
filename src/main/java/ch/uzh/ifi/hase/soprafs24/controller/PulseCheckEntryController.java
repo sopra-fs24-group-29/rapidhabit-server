@@ -1,5 +1,4 @@
 package ch.uzh.ifi.hase.soprafs24.controller;
-import ch.uzh.ifi.hase.soprafs24.entity.PulseCheckEntry;
 import ch.uzh.ifi.hase.soprafs24.service.PulseCheckEntryService;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,8 +1,4 @@
 package ch.uzh.ifi.hase.soprafs24.rest.dto.user;
-import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
-
-import java.time.LocalDate;
-import java.util.Optional;
 
 public class UserPutDTO {
     private String firstname;

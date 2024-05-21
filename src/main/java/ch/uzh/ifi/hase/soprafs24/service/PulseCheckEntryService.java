@@ -1,6 +1,5 @@
 package ch.uzh.ifi.hase.soprafs24.service;
 import ch.uzh.ifi.hase.soprafs24.constant.PulseCheckStatus;
-import ch.uzh.ifi.hase.soprafs24.entity.FeedMessage;
 import ch.uzh.ifi.hase.soprafs24.entity.PulseCheckEntry;
 import ch.uzh.ifi.hase.soprafs24.repository.PulseCheckEntryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
