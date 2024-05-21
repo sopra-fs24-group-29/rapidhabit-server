@@ -19,10 +19,9 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
-public class UserServiceTest {
+class UserServiceTest {
 
   @Mock
   private UserRepository userRepository;
@@ -52,11 +51,11 @@ public class UserServiceTest {
 
     // when -> any object is being save in the userRepository -> return the dummy
     // testUser
-    Mockito.when(userRepository.save(Mockito.any())).thenReturn(testUser);
+    when(userRepository.save(Mockito.any())).thenReturn(testUser);
   }
 
     @Test
-    public void createUser_validInputs_success() {
+    void createUser_validInputs_success() {
         // Given
         User newUser = new User();
         newUser.setEmail("lukas.guebeli@uzh.ch");
@@ -65,7 +64,7 @@ public class UserServiceTest {
         savedUser.setId(String.valueOf(1L));
         savedUser.setEmail("lukas.guebeli@uzh.ch");
         savedUser.setStatus(UserStatus.OFFLINE); // Assuming default status is OFFLINE
-        Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(savedUser);
+        when(userRepository.save(Mockito.any(User.class))).thenReturn(savedUser);
 
         // When
         User createdUser = userService.createUser(newUser);
@@ -79,9 +78,9 @@ public class UserServiceTest {
 
 
   @Test
-  public void createUser_duplicateName_throwsException() {
+  void createUser_duplicateName_throwsException() {
     // when -> setup additional mocks for UserRepository
-      Mockito.when(userRepository.findByEmail("lukas.guebeli@uzh.ch")).thenReturn(Optional.ofNullable(testUser));
+      when(userRepository.findByEmail("lukas.guebeli@uzh.ch")).thenReturn(Optional.ofNullable(testUser));
 
     // then -> attempt to create second user with same user -> check that an error
     // is thrown
@@ -89,10 +88,10 @@ public class UserServiceTest {
   }
 
   @Test
-  public void createUser_duplicateInputs_throwsException() {
+  void createUser_duplicateInputs_throwsException() {
 
     // when -> setup additional mocks for UserRepository
-      Mockito.when(userRepository.findByEmail("lukas.guebeli@uzh.ch")).thenReturn(Optional.ofNullable(testUser));
+      when(userRepository.findByEmail("lukas.guebeli@uzh.ch")).thenReturn(Optional.ofNullable(testUser));
 
     // then -> attempt to create second user with same user -> check that an error
     // is thrown
@@ -100,7 +99,7 @@ public class UserServiceTest {
   }
 
     @Test
-    public void authenticateUser_correctCredentials_returnsTrue() {
+    void authenticateUser_correctCredentials_returnsTrue() {
         // Given
         String email = "test@example.com";
         String password = "password";
@@ -112,9 +111,9 @@ public class UserServiceTest {
         testUser.setStatus(UserStatus.OFFLINE);
 
         // when -> setup mocks for UserRepository and PasswordEncoder
-        Mockito.when(userRepository.findByEmail(email)).thenReturn(Optional.of(testUser));
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(testUser));
         // Ensure passwordEncoder is a mock and correctly mock the matches method
-        Mockito.when(passwordEncoder.matches(password, testUser.getPassword())).thenReturn(true);
+        when(passwordEncoder.matches(password, testUser.getPassword())).thenReturn(true);
 
         // when -> call method under test
         boolean result = userService.authenticateUser(email, password);
@@ -126,14 +125,14 @@ public class UserServiceTest {
     }
 
     @Test //getUser method
-    public void getUser_validEmail_returnsUser() {
+    void getUser_validEmail_returnsUser() {
         // Given
         String email = "test@example.com";
         User testUser = new User();
         testUser.setEmail(email);
 
         // When
-        Mockito.when(userRepository.findByEmail(email)).thenReturn(Optional.of(testUser));
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(testUser));
 
         // Then
         User result = userService.getUser(email);
@@ -142,14 +141,14 @@ public class UserServiceTest {
     }
 
     @Test //getUserDetails
-    public void getUserDetails_validId_returnsUser() {
+    void getUserDetails_validId_returnsUser() {
         // Given
         String id = "1";
         User testUser = new User();
         testUser.setId(id);
 
         // When
-        Mockito.when(userRepository.findById(id)).thenReturn(Optional.of(testUser));
+        when(userRepository.findById(id)).thenReturn(Optional.of(testUser));
 
         // Then
         User result = userService.getUserDetails(id);
@@ -158,13 +157,13 @@ public class UserServiceTest {
     }
 
     @Test //setUserStatusToOffline
-    public void setUserStatusToOffline_validId_updatesStatus() {
+    void setUserStatusToOffline_validId_updatesStatus() {
         String id = "1";
         User testUser = new User();
         testUser.setId(id);
         testUser.setStatus(UserStatus.ONLINE);
 
-        Mockito.when(userRepository.findById(id)).thenReturn(Optional.of(testUser));
+        when(userRepository.findById(id)).thenReturn(Optional.of(testUser));
 
         userService.setUserStatusToOffline(id);
         assertEquals(UserStatus.OFFLINE, testUser.getStatus());
@@ -172,7 +171,7 @@ public class UserServiceTest {
         verify(userRepository).save(testUser);
     }
     @Test
-    public void updateUser_validInput_updatesUser() {
+    void updateUser_validInput_updatesUser() {
         String tokenId = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
         String userIdToEdit = "1";
         UserPutDTO userPutDTO = new UserPutDTO();
@@ -186,9 +185,9 @@ public class UserServiceTest {
         existingUser.setLastname("OldLastName");
         existingUser.setEmail("oldemail@example.com");
 
-        Mockito.when(userRepository.findById(userIdToEdit)).thenReturn(Optional.of(existingUser));
-        Mockito.when(userRepository.findByEmail(userPutDTO.getEmail())).thenReturn(Optional.empty());
-        Mockito.when(userRepository.save(Mockito.any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(userRepository.findById(userIdToEdit)).thenReturn(Optional.of(existingUser));
+        when(userRepository.findByEmail(userPutDTO.getEmail())).thenReturn(Optional.empty());
+        when(userRepository.save(Mockito.any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         User updatedUser = userService.updateUser(tokenId, userIdToEdit, userPutDTO);
 
@@ -199,9 +198,32 @@ public class UserServiceTest {
         verify(userRepository).findByEmail(userPutDTO.getEmail());
         verify(userRepository).save(Mockito.any(User.class));
     }
+    @Test
+    void updateUser_emailChangedButExists_throwsResponseStatusException() {
+        String tokenId = "JaZAJ6m4_wh7_ClFK5jr6vvnyRA";
+        String userIdToEdit = "1";
+        UserPutDTO userPutDTO = new UserPutDTO();
+        userPutDTO.setFirstname("NewFirstName");
+        userPutDTO.setLastname("NewLastName");
+        userPutDTO.setEmail("newemail@example.com");
+
+        User existingUser = new User();
+        existingUser.setId(userIdToEdit);
+        existingUser.setFirstname("OldFirstName");
+        existingUser.setLastname("OldLastName");
+        existingUser.setEmail("oldemail@example.com");
+
+        when(userRepository.findById(userIdToEdit)).thenReturn(Optional.of(existingUser));
+        when(userRepository.findByEmail(userPutDTO.getEmail())).thenReturn(Optional.of(new User())); // Simulating an existing email
+
+        assertThrows(ResponseStatusException.class, () -> userService.updateUser(tokenId, userIdToEdit, userPutDTO), "Email already used");
+
+        verify(userRepository, times(1)).findById(userIdToEdit);
+        verify(userRepository, times(1)).findByEmail(userPutDTO.getEmail());
+    }
 
     @Test
-    public void delUser_validInput_deletesUser() {
+    void delUser_validInput_deletesUser() {
         // Given
         String userIdToEdit = "1";
         UserPasswordPutDTO userPasswordPutDTO = new UserPasswordPutDTO();
@@ -212,8 +234,8 @@ public class UserServiceTest {
         existingUser.setPassword("hashedCurrentPassword");
 
         // When
-        Mockito.when(userRepository.findById(userIdToEdit)).thenReturn(Optional.of(existingUser));
-        Mockito.when(passwordEncoder.matches(userPasswordPutDTO.getCurrentPassword(), existingUser.getPassword())).thenReturn(true);
+        when(userRepository.findById(userIdToEdit)).thenReturn(Optional.of(existingUser));
+        when(passwordEncoder.matches(userPasswordPutDTO.getCurrentPassword(), existingUser.getPassword())).thenReturn(true);
 
         // Then
         userService.delUser(userIdToEdit, userPasswordPutDTO);
@@ -225,7 +247,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void getInitials_validId_returnsInitials() {
+    void getInitials_validId_returnsInitials() {
         // Given
         String userId = "1";
         User existingUser = new User();
@@ -234,7 +256,7 @@ public class UserServiceTest {
         existingUser.setLastname("Doe");
 
         // When
-        Mockito.when(userRepository.findById(userId)).thenReturn(Optional.of(existingUser));
+        when(userRepository.findById(userId)).thenReturn(Optional.of(existingUser));
 
         // Then
         String initials = userService.getInitials(userId);
@@ -243,4 +265,51 @@ public class UserServiceTest {
         assertEquals("JD", initials);
         verify(userRepository).findById(userId);
     }
+    @Test
+    void updateUserPassword_unauthorized_dueToIncorrectCurrentPassword() {
+        String userIdToEdit = "1";
+        UserPasswordPutDTO userPasswordPutDTO = new UserPasswordPutDTO();
+        userPasswordPutDTO.setCurrentPassword("wrongPassword");
+        userPasswordPutDTO.setNewPassword("newPassword456");
+
+        User user = new User();
+        user.setId(userIdToEdit);
+        user.setPassword("hashedCorrectPassword");
+
+        when(userRepository.findById(userIdToEdit)).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches(anyString(), anyString())).thenReturn(false);
+
+        assertThrows(ResponseStatusException.class, () -> userService.updateUserPassword(userIdToEdit, userPasswordPutDTO));
+        verify(userRepository).findById(userIdToEdit);
+    }
+
+    @Test
+    void updateUserPassword_notFound() {
+        String userIdToEdit = "1";
+        UserPasswordPutDTO userPasswordPutDTO = new UserPasswordPutDTO();
+
+        when(userRepository.findById(userIdToEdit)).thenReturn(Optional.empty());
+
+        assertThrows(ResponseStatusException.class, () -> userService.updateUserPassword(userIdToEdit, userPasswordPutDTO));
+        verify(userRepository).findById(userIdToEdit);
+    }
+
+    @Test
+    void delUser_throwsUnauthorizedException_whenCurrentPasswordIsIncorrect() {
+        // Arrange
+        String userIdToEdit = "1";
+        UserPasswordPutDTO userPasswordPutDTO = new UserPasswordPutDTO();
+        userPasswordPutDTO.setCurrentPassword("wrongPassword"); // Incorrect password
+
+        User user = new User();
+        user.setId(userIdToEdit);
+        user.setPassword("correctPassword"); // Correct password stored in database
+
+        when(userRepository.findById(userIdToEdit)).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches(anyString(), anyString())).thenReturn(false); // Simulate incorrect password match
+
+        // Act & Assert
+        assertThrows(ResponseStatusException.class, () -> userService.delUser(userIdToEdit, userPasswordPutDTO), "Expected Unauthorized Exception");
+    }
+
 }
