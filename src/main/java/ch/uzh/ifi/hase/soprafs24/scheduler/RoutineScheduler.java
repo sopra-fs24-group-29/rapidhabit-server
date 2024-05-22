@@ -189,7 +189,7 @@ public class RoutineScheduler {
     }
 
 
-    @Scheduled(cron = "0 54 8 * * ?", zone = "Europe/Zurich") // Triggered every day at midnight
+    @Scheduled(cron = "0 0 0 * * ?", zone = "Europe/Zurich") // Triggered every day at midnight
     public void checkAndScheduleHabitRoutines() {
         System.out.println("Systemzeitzone: " + ZoneId.systemDefault());
         Weekday currentWeekday = WeekdayUtil.getCurrentWeekday();
