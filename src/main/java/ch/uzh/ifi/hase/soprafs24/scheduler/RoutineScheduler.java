@@ -52,7 +52,7 @@ public class RoutineScheduler {
     }
 
 
-    @Scheduled(cron = "0 0 7 * * ?", zone = "Europe/Zurich") // Opening Pulse Check entries at 10:15 AM for each group
+    @Scheduled(cron = "0 0 7 * * ?", zone = "Europe/Zurich") // Opening Pulse Check entries at 7:00 AM for each group
     public void openMorningPulseCheck() {
         LocalDateTime creationTimestamp = LocalDateTime.now();
         LocalDateTime submissionTimestamp = LocalDateTime.now().plusHours(5); // submission is at 12:00
@@ -189,7 +189,7 @@ public class RoutineScheduler {
     }
 
 
-    @Scheduled(cron = "0 0 0 * * ?", zone = "Europe/Zurich") // Triggered every day at midnight
+    @Scheduled(cron = "0 54 8 * * ?", zone = "Europe/Zurich") // Triggered every day at midnight
     public void checkAndScheduleHabitRoutines() {
         System.out.println("Systemzeitzone: " + ZoneId.systemDefault());
         Weekday currentWeekday = WeekdayUtil.getCurrentWeekday();
@@ -210,10 +210,14 @@ public class RoutineScheduler {
             List<String> habitIds = i.getHabitIdList();
             List<String> userIds = i.getUserIdList();
             // Set counter for successful habits to zero
-            Integer habitTargetNumber = userStatsEntryService.countUniqueHabitsByGroupIdAndDate(groupId,yesterday);
+            Integer habitTargetNumber = userStatsEntryService.countUniqueHabitsByGroupIdAndDate(groupId, yesterday);
+            if (habitTargetNumber == null) {
+                habitTargetNumber = 0; // Default value to avoid NullPointerException
+            }
             Integer userTargetNumber = userIds.size();
-            System.out.println("The number of habits to be completed by the past day was: "+habitTargetNumber);
+            System.out.println("The number of habits to be completed by the past day was: " + habitTargetNumber);
             Integer successfulHabits = 0;
+
 
             // Iterate through each habit of the current group:
             for (String habitId : habitIds){
