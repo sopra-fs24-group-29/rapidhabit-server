@@ -151,24 +151,28 @@ public class RoutineScheduler {
             List<String> habitsSuccess = new ArrayList<>();
             List<String> habitsOpen = new ArrayList<>();
 
-            // Iterate through each habit
-            for (String habitId : habitIds) {
-                Habit habit = habitService.getHabitById(habitId)
-                        .orElseThrow(() -> new RuntimeException("No habit with id " + habitId + " was found."));
-                String habitName = habit.getName();
-                System.out.println("PROCESSING HABIT " + habitName + " ...");
-                if (userStatsEntryService.allEntriesSuccess(habitId, LocalDate.now())) {
-                    habitsSuccess.add(habitName);
-                } else {
-                    habitsOpen.add(habitName);
-                }
-            }
-
-            if (habitsOpen.isEmpty()) {
-                outputMessage = "Good job, " + group.getName() + "! Each member of your group has already checked all habits for today. Keep being consistent! ;)";
+            if (habitIds.isEmpty()) {
+                outputMessage = "Hello, " + group.getName() + "! It seems like there are no habits set for your group today. Please add some habits to track your progress.";
             } else {
-                outputMessage = "Good evening, team " + group.getName() + "! How is it going? For some member there are still some open habits to be checked: " +
-                        String.join(", ", habitsOpen) + ". Finish all your tasks and your streak will be incremented by the end of the day. ;)";
+                // Iterate through each habit
+                for (String habitId : habitIds) {
+                    Habit habit = habitService.getHabitById(habitId)
+                            .orElseThrow(() -> new RuntimeException("No habit with id " + habitId + " was found."));
+                    String habitName = habit.getName();
+                    System.out.println("PROCESSING HABIT " + habitName + " ...");
+                    if (userStatsEntryService.allEntriesSuccess(habitId, LocalDate.now())) {
+                        habitsSuccess.add(habitName);
+                    } else {
+                        habitsOpen.add(habitName);
+                    }
+                }
+
+                if (habitsOpen.isEmpty()) {
+                    outputMessage = "Good job, " + group.getName() + "! Each member of your group has already checked all habits for today. Keep being consistent! ;)";
+                } else {
+                    outputMessage = "Good evening, team " + group.getName() + "! How is it going? For some member there are still some open habits to be checked: " +
+                            String.join(", ", habitsOpen) + ". Finish all your tasks and your streak will be incremented by the end of the day. ;)";
+                }
             }
 
             System.out.println(outputMessage);
@@ -187,6 +191,7 @@ public class RoutineScheduler {
             feedMessageService.createFeedMessage(outputFeedMessage); // Store Output Feed Message within database
         }
     }
+
 
 
     @Scheduled(cron = "0 0 0 * * ?", zone = "Europe/Zurich") // Triggered every day at midnight
