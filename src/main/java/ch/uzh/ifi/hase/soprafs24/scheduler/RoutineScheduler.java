@@ -209,6 +209,7 @@ public class RoutineScheduler {
 
         List<Group> groups = groupService.getGroups();
         for (Group i : groups){
+            System.out.println("Processing group: "+i.getName());
             String groupId = i.getId();
             Group group = groupService.getGroupById(groupId);
             List<String> groupUserIds = i.getUserIdList();
