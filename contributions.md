@@ -1,3 +1,4 @@
+
 # Contributions  
 
 ## ❕IMPORTANT: Please note that you can find all commit links within the comment section of the corresponding issues. With our tables, we hope to make your reviewing process as convenient as possible. 😊
@@ -43,12 +44,12 @@
 
 ### Raksmey (rocketraksi):
 
-| IssueNr | Issue description | Assigned Test |
-|:--------|-------------------|---------------|
-| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/41  | Set up and adapt the codebase to full typescript           |               |
-| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/40  | Set up tailwind for the whole application and adapt current design           |               |
-| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/39   | Set up Manifest for PWA       |               |
-| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/42| Set up Vite instead of create-react      |               |
+| IssueNr | Issue description |
+|:--------|-------------------|
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/41  | Set up and adapt the codebase to full typescript           |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/40  | Set up tailwind for the whole application and adapt current design           |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/39   | Set up Manifest for PWA       |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/42| Set up Vite instead of create-react      |
 
 
 
@@ -87,13 +88,13 @@
 
 ### Raksmey (rocketraksi):
 
-| IssueNr | Issue description | Assigned Test |
-|:--------|-------------------|---------------|
-| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/90    | Create sticky navigation bar|               |
-| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/24  | Group detail overview|               |
-| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/14  | Create Group Compnent |               |
-| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/6  | Group Dashboard |               |
-| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/29 | A lot of fixes that the app works |               |
+| IssueNr | Issue description |
+|:--------|-------------------|
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/90    | Create sticky navigation bar|
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/24  | Group detail overview|
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/14  | Create Group Compnent |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/6  | Group Dashboard |
+| https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/29 | A lot of fixes that the app works |
 
 
 
@@ -133,25 +134,25 @@
 
 ### Raksmey (rocketraksi):
 
-| IssueNr | Issue description | Assigned Test |
-|:--------|-------------------|---------------|
-https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/35
-https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/26
-https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/14
-https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/14
-https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/10
-https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/13
-https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/10
-https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/2
-https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/9
-https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/6
-https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/3
-https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/5
-https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/11
-https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/27
-https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/21
-https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/22
-https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/4
+| IssueNr | Issue description |
+|:--------|-------------------|
+|https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/35|
+|https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/26|
+|https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/14|
+|https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/14|
+|https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/10|
+|https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/13|
+|https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/10|
+|https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/2|
+|https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/9|
+|https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/6|
+|https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/3|
+|https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/5|
+|https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/11|
+|https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/27|
+|https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/21|
+|https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/22|
+|https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/4|
 
 
 
@@ -163,9 +164,9 @@ https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/4
 | IssueNr                                                             | Issue description                                                                                         | Assigned Test |
 |:--------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------|---------------|
 | https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/107 | implement API for deleting a group Habit                                                                  | - DELETE Mapping "/groups/{groupId}/habits/{habitId}" - CODE 204 No Content (Success)            |
-| #37                                                                 | Implement an API for receiving chat messages in a specific Group.                                         |               |
-| #113                                                                | Implement the Backend so that Users can send chat messages in specific group.                             |               |
-| #115                                                                | implement security features that only members of group can fetch previous messages in group specific chat |               |
+| #37                                                                 | Implement an API for receiving chat messages in a specific Group.      |  - GET Mapping "/groups/{groupId}/chat" - CODE 200 OK (Pass)             |
+| #113                                                                | Implement the Backend so that Users can send chat messages in specific group.                             |    - testSendMessage  <br> - testSaveChatMessageToDatabase           |
+| #115                                                                | implement security features that only members of group can fetch previous messages in group specific chat | - GET Mapping "/groups/{groupId}/chat" - CODE 401 Unauthorized because invalid Token (Error)  <br> - GET Mapping "/groups/{groupId}/chat" - CODE 401 Unauthorized because user not in group (Error)               |
 
 
 ### Simon (SimonHafner):
@@ -194,11 +195,11 @@ https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/4
 
 ### Raksmey (rocketraksi):
 
-| IssueNr | Issue description | Assigned Test |
-|:--------|-------------------|---------------|
-| #     https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/9  |     Create the chat in the frontend              |               |
-| #       |          bug fixes fromm feedback         |               |
-| #       |                   |    front end clean-up           |
+| IssueNr | Issue description |
+|:--------|-------------------|
+| #     https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/9  |     Create the chat in the frontend              |
+| #       |          bug fixes fromm feedback         |
+| #       |  front end clean-up                    |
 
 
 ## Week 6 08.05 - 14.05
@@ -235,10 +236,10 @@ https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/4
 
 ### Raksmey (rocketraksi):
 
-| IssueNr | Issue description | Assigned Test |
-|:--------|-------------------|---------------|
-| #     https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/9  |      Make the chat work in the front end            |               |
-| #       |         QA Tasks, Bug Fixes          |               |
+| IssueNr | Issue description |
+|:--------|-------------------|
+| #     https://github.com/sopra-fs24-group-29/rapidhabit-client/issues/9  |      Make the chat work in the front end            |
+| #       |         QA Tasks, Bug Fixes          |
 
 
 
@@ -249,10 +250,10 @@ https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/4
 
 | IssueNr | Issue description                                                            |
 |:--------|------------------------------------------------------------------------------|
-| #120    | Clean Up Chat controller file with SonarLint (code smells and bad code)      |
-| #121    | Clean Up ALL other controller file with SonarLint (code smells and bad code) |
-| #122    | Clean Up User Service file with SonarLint (code smells and bad code)         |
-| #123    | Clean Up group Service file with SonarLint (code smells and bad code)        |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/120    | Clean Up Chat controller file with SonarLint (code smells and bad code)      |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/121    | Clean Up ALL other controller file with SonarLint (code smells and bad code) |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/122  | Clean Up User Service file with SonarLint (code smells and bad code)         |
+| https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/123  | Clean Up group Service file with SonarLint (code smells and bad code)        |
 
 
 ### Simon (SimonHafner):
@@ -274,9 +275,7 @@ https://github.com/sopra-fs24-group-29/rapidhabit-server/issues/4
 
 ### Raksmey (rocketraksi):
 
-| IssueNr | Issue description | Assigned Test |
-|:--------|-------------------|---------------|
-
-| #       |       Added Validation            |               |
-| #       |       Added clear error handleing            |               |
-
+| IssueNr | Issue description |
+|:--------|-------------------|
+| #       |       Added Validation            |
+| #       |       Added clear error handleing            |
