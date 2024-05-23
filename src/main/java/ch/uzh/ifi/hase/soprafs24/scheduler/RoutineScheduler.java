@@ -52,7 +52,7 @@ public class RoutineScheduler {
     }
 
 
-    @Scheduled(cron = "0 0 7 * * ?", zone = "Europe/Zurich") // Opening Pulse Check entries at 7:00 AM for each group
+    @Scheduled(cron = "0 25 16 * * ?", zone = "Europe/Zurich") // Opening Pulse Check entries at 7:00 AM for each group
     public void openMorningPulseCheck() {
         LocalDateTime creationTimestamp = LocalDateTime.now();
         LocalDateTime submissionTimestamp = LocalDateTime.now().plusHours(5); // submission is at 12:00
@@ -85,7 +85,7 @@ public class RoutineScheduler {
         }
     }
 
-    @Scheduled(cron = "0 0 12 * * ?", zone = "Europe/Zurich") // To run at 12:00 PM every day
+    @Scheduled(cron = "0 30 16 * * ?", zone = "Europe/Zurich") // To run at 12:00 PM every day
     public void closeMorningPulseCheck() {
         List<Group> groupsList = groupService.getGroups();
         for (Group group : groupsList) {
@@ -140,7 +140,7 @@ public class RoutineScheduler {
         }
     }
 
-    @Scheduled(cron = "0 0 18 * * *", zone = "Europe/Zurich") // Evening notification
+    @Scheduled(cron = "0 35 16 * * *", zone = "Europe/Zurich") // Evening notification
     public void checkOpenHabitRoutines() {
         List<Group> groupsList = groupService.getGroups();
         for (Group group : groupsList) {
