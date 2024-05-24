@@ -40,11 +40,11 @@ Maintaining motivation while forming good habits and defeating bad ones can some
 
 <!-- TOC --><a name="technologies"></a>
 ## Technologies
-- Springboot
-- Gradle
-- MongoDb
-- Google Cloud
-- Sonarcloud
+- SpringBoot (Backend Framework)
+- Gradle (Build Automation-Tool)
+- MongoDB (Database Technology)
+- Google Cloud (Cloud Platform)
+- Sonarcloud (Code Analysis and Testing)
 
 <!-- TOC --><a name="high-level-components"></a>
 ## High-level components
