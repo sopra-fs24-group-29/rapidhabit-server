@@ -6,9 +6,9 @@
 - [High-level components](#high-level-components)
    * [Users and Groups](#users-and-groups)
    * [Habits](#habits)
-   * [Groupchat](#groupchat)
-   * [Pulse check](#pulse-check)
-   * [AI coach](#ai-coach)
+   * [ChatRooms](#chatrooms)
+   * [FeedMessages](#feedmessages)
+   * [OpenAI API](#openai-api)
 - [Roadmap](#roadmap)
    * [Feature 1 - Adding pre-defined Habits](#feature-1-adding-pre-defined-habits)
    * [Feature 2 - Adding public groups](#feature-2-adding-public-groups)
@@ -59,19 +59,19 @@ Maintaining motivation while forming good habits and defeating bad ones can some
 - Relation: The habits are group-specific and not cross-group.
 
 <!-- TOC --><a name="groupchat"></a>
-### [Groupchat](src/main/java/ch/uzh/ifi/hase/soprafs24/service/ChatRoomService.java)
+### [ChatRooms](src/main/java/ch/uzh/ifi/hase/soprafs24/service/ChatRoomService.java)
 - Role: So that users can support and motivate each other, there is a group chat in which messages can be sent.
 - Relation: The group chat is created directly when a group is created and also loads a certain number of past messages each time so that new group members can also read the messages.
 
 <!-- TOC --><a name="pulse-check"></a>
-### [Pulse check](src/main/java/ch/uzh/ifi/hase/soprafs24/service/PulseCheckEntryService.java)
-- Role: Once a day, a survey should be sent to group members asking them to assess their state of mind. This is then evaluated and feedback is returned to the group.
+### [FeedMessages](src/main/java/ch/uzh/ifi/hase/soprafs24/service/FeedMessageService.java)
+- Role: This component is used to send messages with group-related content to each user. These messages include Pulse Check Messages as well as Evening Notification.
 - Relation: The meetings are group-specific and not cross-group. They also serve to motivate and network the group.
 
 <!-- TOC --><a name="ai-coach"></a>
-### [AI coach](src/main/java/ch/uzh/ifi/hase/soprafs24/service/OpenAIService.java)
-- Role: Twice a day, the AI coach gives users tips on how they can improve their everyday life to achieve the habits even better in the future.
-- Relation: The messages are sent to all users via feed, but are of course highly individualized and further support the user in achieving their goals.
+### [OpenAI API](src/main/java/ch/uzh/ifi/hase/soprafs24/service/OpenAIService.java)
+- Role: At 07:00 AM (Zurich Time) each morning, the OpenAI API is utilized to generate a questionare (Pulse Check) for each group. These questions are sent to the feed of each user. After the Pulse Check gets closed at 12:00 AM (Zurich Time) each user receives a feedback about the result.
+- Relation: The messages are sent to all users via feed and are individualized to support the users in achieving their goals.
 
 <!-- TOC --><a name="roadmap"></a>
 ## Roadmap
