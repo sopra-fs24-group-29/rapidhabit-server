@@ -58,17 +58,17 @@ Maintaining motivation while forming good habits and defeating bad ones can some
 - Role: Habits can be created with a name, a description, a specific repeat strategy (daily, or on certain days of the week), and a score to be obtained by achieving the habit. The habits can then be checked on/off by all group members.
 - Relation: The habits are group-specific and not cross-group.
 
-<!-- TOC --><a name="groupchat"></a>
+<!-- TOC --><a name="chatrooms"></a>
 ### [ChatRooms](src/main/java/ch/uzh/ifi/hase/soprafs24/service/ChatRoomService.java)
 - Role: So that users can support and motivate each other, there is a group chat in which messages can be sent.
 - Relation: The group chat is created directly when a group is created and also loads a certain number of past messages each time so that new group members can also read the messages.
 
-<!-- TOC --><a name="pulse-check"></a>
+<!-- TOC --><a name="feedmessages"></a>
 ### [FeedMessages](src/main/java/ch/uzh/ifi/hase/soprafs24/service/FeedMessageService.java)
 - Role: This component is used to send messages with group-related content to each user. These messages include Pulse Check Messages as well as Evening Notification.
 - Relation: The meetings are group-specific and not cross-group. They also serve to motivate and network the group.
 
-<!-- TOC --><a name="ai-coach"></a>
+<!-- TOC --><a name="openai-api"></a>
 ### [OpenAI API](src/main/java/ch/uzh/ifi/hase/soprafs24/service/OpenAIService.java)
 - Role: At 07:00 AM (Zurich Time) each morning, the OpenAI API is utilized to generate a questionare (Pulse Check) for each group. These questions are sent to the feed of each user. After the Pulse Check gets closed at 12:00 AM (Zurich Time) each user receives a feedback about the result.
 - Relation: The messages are sent to all users via feed and are individualized to support the users in achieving their goals.
